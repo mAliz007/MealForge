@@ -15,3 +15,11 @@
 * **What worked:** Fluid setup of utility styling rules via post-processing configuration engines.
 * **What was confusing:** Organizing properties cleanly for forward-referenced TypeScript components.
 * **What I need help with:** Ready to shift to state logic hooks and complete form management.
+
+## Day 3 — Mock Data Dashboard Sub-Screens
+* **Date:** June 30, 2026
+* **What I read:** React Router nested tree configurations, structural layout fallback paths, and data list parsing strategies.
+* **What I built:** Implemented domain-specific TypeScript models (`Restaurant`, `MenuItem`, `Order`), constructed modular collection data sheets, and wired nested layout modules under `/dashboard`. Built an interactive public entry routing gateway at the application root directory.
+* **What worked:** Designing uniform loading, empty, and data-grid views using pre-built UI cards and buttons.
+* **What was confusing:** Synchronizing active matching navigation highlighting with client routes using live location variables.
+* **What I need help with:** None, all acceptance criteria are met and ready for review.

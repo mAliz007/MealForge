@@ -37,3 +37,13 @@
 ### Technical Notes & Edge Cases Handled
 > **⚠️ Zod HTML Input Coercion Conflict:**
 > When handling numeric inputs (like price or ID attributes) from native HTML DOM elements, standard inputs provide `string` formats. Using `z.coerce.number()` creates a split between validation Input shapes and parsed Output schemas. We resolved this cleanly by setting up a form-specific input layout schema interface (`MenuItemFormInput`) to capture DOM strings and explicitly pass type contracts downstream.
+
+
+## Day 5 Implementation Log: Automated Testing Infrastructure
+
+### Completed Milestones
+* **Testing Framework Engine:** Installed and integrated `vitest` unit-testing runner with `jsdom` simulated browser environments seamlessly into the Tailwind v4 compilation pipeline.
+* **Global Configuration Layer:** Established `src/test/setup.ts` to manage structural UI cleanup states automatically between runtime evaluation steps.
+* **Component Testing:** Authored comprehensive unit suites for `<Button />` layouts checking custom event triggers, variations, and active loading parameters.
+* **Validation Testing:** Completed isolated validation test coverage for `<LoginForm />` proving reactive schema constraints work flawlessly under dummy data submissions.
+* **API Interception Mocking:** Formed an isolated Mock Service Worker (`msw`) node engine pipeline to securely catch and mock REST network layers during component mounting.

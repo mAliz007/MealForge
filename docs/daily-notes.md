@@ -23,3 +23,17 @@
 * **What worked:** Designing uniform loading, empty, and data-grid views using pre-built UI cards and buttons.
 * **What was confusing:** Synchronizing active matching navigation highlighting with client routes using live location variables.
 * **What I need help with:** None, all acceptance criteria are met and ready for review.
+
+
+## Day 4 Implementation Log: Form Architecture & Schema Validation
+
+### Completed Milestones
+* **Reusable UI Components:** Enhanced `<Input />` layout to support real-time reactive error message states.
+* **Schema Validation Engine:** Established `zod` validation profiles (`loginSchema`, `registerSchema`, `restaurantSchema`, `menuItemSchema`).
+* **Interactive Form Elements:** Created `<LoginForm />`, `<RegisterForm />`, `<RestaurantForm />`, and `<MenuItemForm />` powered completely by `react-hook-form` and `@hookform/resolvers/zod`.
+* **State Operations:** Configured client-side mock mutations (Create/Update operations) dynamically mapped directly across the dashboard table panels.
+* **Core Navigation Linkage:** Resolved route tree nesting structures to accurately forward authenticated flows straight from auth portals to administrative panels.
+
+### Technical Notes & Edge Cases Handled
+> **⚠️ Zod HTML Input Coercion Conflict:**
+> When handling numeric inputs (like price or ID attributes) from native HTML DOM elements, standard inputs provide `string` formats. Using `z.coerce.number()` creates a split between validation Input shapes and parsed Output schemas. We resolved this cleanly by setting up a form-specific input layout schema interface (`MenuItemFormInput`) to capture DOM strings and explicitly pass type contracts downstream.

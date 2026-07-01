@@ -4,7 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 // Import Views Explicitly
-import LandingView from "../views/LandingView"; // ◄── Added this import line
+import LandingView from "../views/LandingView";
+import LoginView from "../views/auth/LoginView";       // ◄── Added real view import
+import RegisterView from "../views/auth/RegisterView"; // ◄── Added real view import
 import RestaurantsView from "../views/dashboard/RestaurantsView";
 import MenuItemsView from "../views/dashboard/MenuItemsView";
 import OrdersView from "../views/dashboard/OrdersView";
@@ -18,12 +20,12 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {/* Main Entry Points */}
-          <Route path="/" element={<LandingView />} /> {/* ◄── Swapped out text for component */}
-          <Route path="/login" element={<div className="p-8 text-xl font-bold">Auth Portal Login Screen Placeholder</div>} />
-          <Route path="/register" element={<div className="p-8 text-xl font-bold">Auth Portal Registration Screen Placeholder</div>} />
+          <Route path="/" element={<LandingView />} /> 
+          <Route path="/login" element={<LoginView />} />       {/* ◄── Swapped out placeholder for component */}
+          <Route path="/register" element={<RegisterView />} /> {/* ◄── Swapped out placeholder for component */}
 
           {/* Nested Dashboard Router Wrapper Subtree */}
-          <Route path="/dashboard" element={
+          <Route path="/dashboard/*" element={
             <DashboardLayout>
               <Routes>
                 <Route index element={<Navigate to="/dashboard/restaurants" replace />} />

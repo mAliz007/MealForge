@@ -1,25 +1,19 @@
 // frontend/src/components/forms/RegisterForm.tsx
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, type RegisterFormData } from "../../utils/schemas";
+import { useFormContext } from "react-hook-form";
+import { registerSchema } from "../../utils/schemas";
+import type { RegisterFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
+import { AuthFormLayout } from "./layouts/AuthFormLayout";
 
 interface RegisterFormProps {
   onSubmitSuccess: (data: RegisterFormData) => void;
 }
 
-export function RegisterForm({ onSubmitSuccess }: RegisterFormProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-  });
+function RegisterFields() {
+  const { register, formState: { errors } } = useFormContext<RegisterFormData>();
 
   return (
-    <form onSubmit={handleSubmit(onSubmitSuccess)} className="space-y-4 w-full max-w-sm">
+    <>
       <Input
         label="Full Name"
         id="name"
@@ -44,9 +38,18 @@ export function RegisterForm({ onSubmitSuccess }: RegisterFormProps) {
         error={errors.password?.message}
         {...register("password")}
       />
-      <Button type="submit" variant="primary" className="w-full" isLoading={isSubmitting}>
-        Create Account
-      </Button>
-    </form>
+    </>
+  );
+}
+
+export function RegisterForm({ onSubmitSuccess }: RegisterFormProps) {
+  return (
+    <AuthFormLayout
+      schema={registerSchema}
+      onSubmitSuccess={onSubmitSuccess}
+      submitButtonText="Create Account"
+    >
+      <RegisterFields />
+    </AuthFormLayout>
   );
 }

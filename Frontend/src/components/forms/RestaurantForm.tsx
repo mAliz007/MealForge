@@ -1,10 +1,9 @@
 // frontend/src/components/forms/RestaurantForm.tsx
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { restaurantSchema, type RestaurantFormData } from "../../utils/schemas";
+import { useFormContext } from "react-hook-form";
+import { restaurantSchema } from "../../utils/schemas";
+import type { RestaurantFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
+import { EntityFormLayout } from "./layouts/EntityFormLayout";
 
 interface RestaurantFormProps {
   defaultValues?: RestaurantFormData;
@@ -12,24 +11,11 @@ interface RestaurantFormProps {
   onCancel?: () => void;
 }
 
-export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: RestaurantFormProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<RestaurantFormData>({
-    resolver: zodResolver(restaurantSchema),
-    defaultValues,
-  });
-
-  // Keep the form updated if the default values change (like selecting a different row to edit)
-  useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
+function RestaurantFields() {
+  const { register, formState: { errors } } = useFormContext<RestaurantFormData>();
 
   return (
-    <form onSubmit={handleSubmit(onSubmitSuccess)} className="space-y-4 w-full">
+    <>
       <Input
         label="Restaurant Name"
         id="name"
@@ -67,17 +53,20 @@ export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: Res
           <p className="text-xs font-medium text-red-600 mt-0.5">{errors.status.message}</p>
         )}
       </div>
+    </>
+  );
+}
 
-      <div className="flex justify-end gap-3 pt-2">
-        {onCancel && (
-          <Button type="button" variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" variant="primary" isLoading={isSubmitting}>
-          {defaultValues ? "Save Changes" : "Create Restaurant"}
-        </Button>
-      </div>
-    </form>
+export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: RestaurantFormProps) {
+  return (
+    <EntityFormLayout<RestaurantFormData>
+      schema={restaurantSchema}
+      defaultValues={defaultValues}
+      onSubmitSuccess={onSubmitSuccess}
+      onCancel={onCancel}
+      submitButtonText={defaultValues ? "Save Changes" : "Create Restaurant"}
+    >
+      <RestaurantFields />
+    </EntityFormLayout>
   );
 }

@@ -1,20 +1,9 @@
-// frontend/src/components/forms/layouts/EntityFormLayout.tsx
-import type { ReactNode } from "react";
 import { useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
-import type { FieldValues, DefaultValues } from "react-hook-form";
+import type { FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ZodType } from "zod";
 import { Button } from "../../ui/Button";
-
-interface EntityFormLayoutProps<T extends FieldValues> {
-  schema: ZodType<any, any, any>;
-  defaultValues?: DefaultValues<T>;
-  onSubmitSuccess: (data: any) => void;
-  onCancel?: () => void;
-  submitButtonText: string;
-  children: ReactNode;
-}
+import type { EntityFormLayoutProps } from "../../../types";
 
 export function EntityFormLayout<T extends FieldValues>({
   schema,

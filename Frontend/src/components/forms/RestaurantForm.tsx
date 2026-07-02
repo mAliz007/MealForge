@@ -1,15 +1,10 @@
-// frontend/src/components/forms/RestaurantForm.tsx
 import { useFormContext } from "react-hook-form";
 import { restaurantSchema } from "../../utils/schemas";
 import type { RestaurantFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
-
-interface RestaurantFormProps {
-  defaultValues?: RestaurantFormData;
-  onSubmitSuccess: (data: RestaurantFormData) => void;
-  onCancel?: () => void;
-}
+// Import the interface from your centralized types hub
+import type { RestaurantFormProps } from "../../types";
 
 function RestaurantFields() {
   const { register, formState: { errors } } = useFormContext<RestaurantFormData>();

@@ -1,22 +1,11 @@
-// frontend/src/components/forms/MenuItemForm.tsx
 import { useFormContext } from "react-hook-form";
 import { menuItemSchema } from "../../utils/schemas";
 import type { MenuItemFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { mockRestaurants } from "../../utils/mockData";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
-
-type MenuItemFormInput = {
-  name: string;
-  price: string;
-  restaurantId: string;
-};
-
-interface MenuItemFormProps {
-  defaultValues?: MenuItemFormData;
-  onSubmitSuccess: (data: MenuItemFormData) => void;
-  onCancel?: () => void;
-}
+// Import the types from your centralized types hub
+import type { MenuItemFormInput, MenuItemFormProps } from "../../types";
 
 function MenuItemFields() {
   const { register, formState: { errors } } = useFormContext<MenuItemFormInput>();

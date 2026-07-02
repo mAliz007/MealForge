@@ -1,17 +1,9 @@
-// frontend/src/components/forms/layouts/AuthFormLayout.tsx
-import type { ReactNode } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import type { FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ZodType } from "zod";
 import { Button } from "../../ui/Button";
-
-interface AuthFormLayoutProps<T extends FieldValues> {
-  schema: ZodType<T, any, any>;
-  onSubmitSuccess: (data: T) => void;
-  submitButtonText: string;
-  children: ReactNode;
-}
+// Import the interface from your global types hub
+import type { AuthFormLayoutProps } from "../../../types";
 
 export function AuthFormLayout<T extends FieldValues>({
   schema,

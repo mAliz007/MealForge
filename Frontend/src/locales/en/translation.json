@@ -1,0 +1,36 @@
+{
+  "home": {
+    "title": "SmartSplit Commerce Platform",
+    "subtitle": "Public Landing Page — System Operational."
+  },
+  "landing": {
+    "header": {
+      "dashboardBtn": "Go to Dashboard"
+    },
+    "hero": {
+      "tag": "✨ Milestone 3 Live Viewports Available",
+      "titleMain": "Group Meal Splitting",
+      "titleSub": "Simplified Perfectly.",
+      "description": "Welcome to the FoodSplits platform prototype layout shell. Navigate across integrated restaurant menus, simulated catalog arrays, and mock active item carts instantly.",
+      "launchBtn": "Launch Workspace App",
+      "signInBtn": "Sign In Screen"
+    },
+    "features": {
+      "router": {
+        "title": "Nested Router Framework",
+        "desc": "Clean validation paradigms passing static variables down layout routes smoothly."
+      },
+      "matrix": {
+        "title": "Mock Data Matrix",
+        "desc": "Provides interactive loading states and empty view toggles out-of-the-box."
+      },
+      "compliant": {
+        "title": "Fully Compliant Type Interfaces",
+        "desc": "Enforces explicit properties for Restaurants, Menu Items, and active Orders ledger sheets."
+      }
+    },
+    "footer": {
+      "copyright": "FOODSPLITS WORKSPACE INTERNSHIP © 2026"
+    }
+  }
+}

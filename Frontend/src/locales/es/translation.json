@@ -1,0 +1,36 @@
+{
+  "home": {
+    "title": "Plataforma de Comercio SmartSplit",
+    "subtitle": "Página de Destino Pública — Sistema Operativo."
+  },
+  "landing": {
+    "header": {
+      "dashboardBtn": "Ir al Panel"
+    },
+    "hero": {
+      "tag": "✨ Milestone 3 Ventanas de Visualización Disponibles",
+      "titleMain": "División de Comidas en Grupo",
+      "titleSub": "Simplificado a la Perfección.",
+      "description": "Bienvenido al diseño prototipo de la plataforma FoodSplits. Navegue instantáneamente a través de menús de restaurantes integrados, matrices de catálogos simulados y carritos de artículos activos simulados.",
+      "launchBtn": "Iniciar Aplicación de Espacio de Trabajo",
+      "signInBtn": "Pantalla de Inicio de Sesión"
+    },
+    "features": {
+      "router": {
+        "title": "Estructura de Enrutador Anidado",
+        "desc": "Paradigmas limpios de validación que pasan variables estáticas a través de las rutas de diseño sin problemas."
+      },
+      "matrix": {
+        "title": "Matriz de Datos Simulados",
+        "desc": "Proporciona estados de carga interactivos y selectores de vista vacíos listos para usar."
+      },
+      "compliant": {
+        "title": "Interfaces de Tipo Totalmente Compatibles",
+        "desc": "Impone propiedades explícitas para Restaurantes, Artículos de Menú y hojas de registro de Pedidos activos."
+      }
+    },
+    "footer": {
+      "copyright": "PRÁCTICAS EN EL ESPACIO DE TRABAJO DE FOODSPLITS © 2026"
+    }
+  }
+}

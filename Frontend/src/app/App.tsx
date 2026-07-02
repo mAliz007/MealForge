@@ -1,20 +1,28 @@
 // frontend/src/app/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Providers } from "./providers"; // ◄── Clean import!
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 // Import Views Explicitly
-import LandingView from "../views/LandingView";
-import LoginView from "../views/auth/LoginView"; 
-import RegisterView from "../views/auth/RegisterView"; 
-import RestaurantsView from "../views/dashboard/RestaurantsView";
-import MenuItemsView from "../views/dashboard/MenuItemsView";
-import OrdersView from "../views/dashboard/OrdersView";
-import CartView from "../views/dashboard/CartView";
+import LandingView from "~views/LandingView";
+import LoginView from "~views/auth/LoginView"; 
+import RegisterView from "~views/auth/RegisterView"; 
+import RestaurantsView from "~views/dashboard/RestaurantsView";
+import MenuItemsView from "~views/dashboard/MenuItemsView";
+import OrdersView from "~views/dashboard/OrdersView";
+import CartView from "~views/dashboard/CartView";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // Prevents aggressive reloading when clicking tabs
+      retry: 1,                    // Tries failed requests only once
+    },
+  },
+});
 export default function App() {
   return (
-    <Providers> {/* ◄── Wraps the whole app cleanly */}
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           {/* Main Entry Points */}
@@ -38,6 +46,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
-    </Providers>
+    </QueryClientProvider>
   );
 }

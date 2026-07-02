@@ -1,5 +1,5 @@
 // frontend/vite.config.ts
-import { defineConfig } from 'vitest/config' // ◄── Switched this to vitest/config
+import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  resolve: {
+    tsconfigPaths: true,
+  },
   test: {
     globals: true,
     environment: 'jsdom',

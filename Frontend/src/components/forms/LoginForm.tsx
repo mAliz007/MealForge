@@ -31,11 +31,12 @@ function LoginFields() {
   );
 }
 
-export function LoginForm({ onSubmitSuccess }: LoginFormProps) {
+export function LoginForm({ onSubmit, isLoading }: LoginFormProps) {
   return (
     <AuthFormLayout
       schema={loginSchema}
-      onSubmitSuccess={onSubmitSuccess}
+      onSubmitSuccess={onSubmit} // Bridging 'onSubmit' down to layout
+      isLoading={isLoading}       // Passing the mutation loading state down
       submitButtonText="Sign In"
     >
       <LoginFields />

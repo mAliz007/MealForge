@@ -7,4 +7,5 @@ export interface AuthFormLayoutProps<T extends FieldValues> {
   onSubmitSuccess: (data: T) => void;
   submitButtonText: string;
   children: ReactNode;
+  isLoading?: boolean;
 }

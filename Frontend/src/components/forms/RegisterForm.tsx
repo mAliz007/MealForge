@@ -39,11 +39,12 @@ function RegisterFields() {
   );
 }
 
-export function RegisterForm({ onSubmitSuccess }: RegisterFormProps) {
+export function RegisterForm({ onSubmit, isLoading }: RegisterFormProps) {
   return (
     <AuthFormLayout
       schema={registerSchema}
-      onSubmitSuccess={onSubmitSuccess}
+      onSubmitSuccess={onSubmit} // Bridging 'onSubmit' down to layout
+      isLoading={isLoading}       // Passing the mutation loading state down
       submitButtonText="Create Account"
     >
       <RegisterFields />

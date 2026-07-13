@@ -9,6 +9,7 @@ export function AuthFormLayout<T extends FieldValues>({
   schema,
   onSubmitSuccess,
   submitButtonText,
+  isLoading, // Destructured cleanly now that it's in your global interface!
   children,
 }: AuthFormLayoutProps<T>) {
   const methods = useForm<T>({
@@ -31,7 +32,9 @@ export function AuthFormLayout<T extends FieldValues>({
           type="submit"
           variant="primary"
           className="w-full"
-          isLoading={isSubmitting}
+          // Activates the loading state if react-hook-form validation runs 
+          // OR if our TanStack Query backend request is pending
+          isLoading={isSubmitting || isLoading}
         >
           {submitButtonText}
         </Button>

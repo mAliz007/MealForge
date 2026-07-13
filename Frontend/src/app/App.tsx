@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "../layouts/DashboardLayout";
-import { ROUTES } from "./router"; // Import the routes configuration
+import { ROUTES } from "./router"; 
+import { ProtectedRoute } from "../components/auth/ProtectedRoute"; // <-- 1. IMPORT YOUR NEW GUARD
 
 // Import Views Explicitly
 import LandingView from "~views/LandingView";
@@ -33,15 +34,18 @@ export default function App() {
 
           {/* Nested Dashboard Router Wrapper Subtree */}
           <Route path={ROUTES.DASHBOARD_ROOT} element={
-            <DashboardLayout>
-              <Routes>
-                <Route index element={<Navigate to={ROUTES.DASHBOARD.DEFAULT} replace />} />
-                <Route path={ROUTES.DASHBOARD.RESTAURANTS} element={<RestaurantsView />} />
-                <Route path={ROUTES.DASHBOARD.MENU_ITEMS} element={<MenuItemsView />} />
-                <Route path={ROUTES.DASHBOARD.ORDERS} element={<OrdersView />} />
-                <Route path={ROUTES.DASHBOARD.CART} element={<CartView />} />
-              </Routes>
-            </DashboardLayout>
+            // 2. WRAP THE DASHBOARD SYSTEM HERE
+            <ProtectedRoute>
+              <DashboardLayout>
+                <Routes>
+                  <Route index element={<Navigate to={ROUTES.DASHBOARD.DEFAULT} replace />} />
+                  <Route path={ROUTES.DASHBOARD.RESTAURANTS} element={<RestaurantsView />} />
+                  <Route path={ROUTES.DASHBOARD.MENU_ITEMS} element={<MenuItemsView />} />
+                  <Route path={ROUTES.DASHBOARD.ORDERS} element={<OrdersView />} />
+                  <Route path={ROUTES.DASHBOARD.CART} element={<CartView />} />
+                </Routes>
+              </DashboardLayout>
+            </ProtectedRoute>
           } />
 
           <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />

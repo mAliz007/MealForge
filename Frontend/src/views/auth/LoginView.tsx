@@ -1,15 +1,36 @@
-// frontend/src/views/auth/LoginView.tsx
 import { useNavigate, Link } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authService } from "../../services/authService";
 import { LoginForm } from "../../components/forms/LoginForm";
 import { Card } from "../../components/ui/Card";
+import { useState } from "react";
 
 export default function LoginView() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLoginSuccess = (data: any) => {
-    console.log("Logged in successfully:", data);
-    // Professional fake authentication state trigger: route them directly to dashboard
-    navigate("/dashboard");
+  // TanStack Query Mutation replaces the old fake handlers
+  const loginMutation = useMutation({
+    mutationFn: authService.login,
+    onSuccess: (data) => {
+      console.log("Logged in successfully via backend cookie:", data);
+      
+      // Seed the query cache immediately with our updated user session details
+      queryClient.setQueryData(["auth", "me"], data);
+      
+      setErrorMessage(null);
+      navigate("/dashboard");
+    },
+    onError: (error: any) => {
+      // Pulls standard API error payload structural text if it exists
+      const apiError = error.response?.data?.error || "Invalid email or password. Please try again.";
+      setErrorMessage(apiError);
+    }
+  });
+
+  const handleLoginSubmit = (formData: Record<string, any>) => {
+    loginMutation.mutate(formData);
   };
 
   return (
@@ -20,7 +41,18 @@ export default function LoginView() {
           <p className="text-sm text-gray-500 mt-1">Sign in to manage your dining platform</p>
         </div>
 
-        <LoginForm onSubmitSuccess={handleLoginSuccess} />
+        {/* Display dynamic backend feedback when invalid strings occur */}
+        {errorMessage && (
+          <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Passing state variables down so buttons can render disable/loading modes */}
+        <LoginForm 
+          onSubmit={handleLoginSubmit} 
+          isLoading={loginMutation.isPending} 
+        />
 
         <div className="text-center mt-6 text-sm text-gray-500">
           Don't have an account?{" "}

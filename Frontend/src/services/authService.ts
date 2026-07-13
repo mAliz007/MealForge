@@ -1,22 +1,15 @@
 import { apiClient } from './apiClient'
-
-// We will refine these types as you grow your user models
-export interface AuthResponse {
-  user: {
-    id: number
-    name: string
-    email: string
-    role: string
-  }
-}
+import type { LoginFormData, RegisterFormData } from '../utils/schemas'
+import type { AuthResponse } from '../types/auth.ts'
 
 export const authService = {
-  login: async (credentials: Record<string, any>): Promise<AuthResponse> => {
+  login: async (credentials: LoginFormData): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/v1/auth/login', credentials)
     return response.data
   },
 
-  register: async (userData: Record<string, any>): Promise<AuthResponse> => {
+  // Strictly typed to enforce name, email, and password properties
+  register: async (userData: RegisterFormData): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/v1/auth/register', userData)
     return response.data
   },
@@ -27,8 +20,7 @@ export const authService = {
   },
 
   getCurrentUser: async (): Promise<any> => {
-  // Triggers GET /api/v1/auth/me using your authenticated apiClient
-  const response = await apiClient.get('/v1/auth/me');
-  return response.data; // This returns the { user: ... } payload from your Rails serializer
- }
+    const response = await apiClient.get('/v1/auth/me')
+    return response.data
+  }
 }

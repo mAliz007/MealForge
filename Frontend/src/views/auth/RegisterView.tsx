@@ -1,33 +1,11 @@
-import { useNavigate, Link } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { authService } from "../../services/authService";
+import { Link } from "react-router-dom";
 import { RegisterForm } from "../../components/forms/RegisterForm";
 import { Card } from "../../components/ui/Card";
-import { useState } from "react";
+import { useRegister } from "../../hooks/useRegister"; // Adjust this path to your hooks directory
 
 export default function RegisterView() {
-  const navigate = useNavigate();
-  const [errorMessages, setErrorMessages] = useState<string[] | null>(null);
-
-  // TanStack Mutation for processing the backend user creation flow
-  const registerMutation = useMutation({
-    mutationFn: authService.register,
-    onSuccess: (data) => {
-      console.log("Registered account successfully via backend:", data);
-      setErrorMessages(null);
-      // Route straight to login view so they can establish their cookie session
-      navigate("/login");
-    },
-    onError: (error: any) => {
-      // Pull down full validation message arrays if Rails ActiveRecord validates trigger
-      const apiErrors = error.response?.data?.errors || ["Registration failed. Please check your details."];
-      setErrorMessages(apiErrors);
-    }
-  });
-
-  const handleRegisterSubmit = (formData: Record<string, any>) => {
-    registerMutation.mutate(formData);
-  };
+  // Extract clean, fully typed handlers and error metrics directly from your hook
+  const { onSubmit, isLoading, errorMessages } = useRegister();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -37,7 +15,7 @@ export default function RegisterView() {
           <p className="text-sm text-gray-500 mt-1">Get started as a platform administrator</p>
         </div>
 
-        {/* Display clear error messaging if registration validations fail */}
+        {/* Render systemic error arrays clean without cluttering view files */}
         {errorMessages && (
           <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
             <ul className="list-disc pl-4 space-y-1">
@@ -48,9 +26,10 @@ export default function RegisterView() {
           </div>
         )}
 
+        {/* Custom hook parameters flawlessly bind to RegisterFormProps definitions */}
         <RegisterForm 
-          onSubmit={handleRegisterSubmit} 
-          isLoading={registerMutation.isPending}
+          onSubmit={onSubmit} 
+          isLoading={isLoading}
         />
 
         <div className="text-center mt-6 text-sm text-gray-500">

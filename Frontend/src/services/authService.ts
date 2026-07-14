@@ -8,7 +8,6 @@ export const authService = {
     return response.data
   },
 
-  // Strictly typed to enforce name, email, and password properties
   register: async (userData: RegisterFormData): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>('/v1/auth/register', userData)
     return response.data
@@ -19,8 +18,9 @@ export const authService = {
     return response.data
   },
 
-  getCurrentUser: async (): Promise<any> => {
-    const response = await apiClient.get('/v1/auth/me')
+
+  getCurrentUser: async (): Promise<AuthResponse> => {
+    const response = await apiClient.get<AuthResponse>('/v1/auth/me')
     return response.data
   }
 }

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const restaurantSchema = z.object({
   name: z.string().min(1, "Restaurant name is required"),
   location: z.string().min(1, "Location is required"),
-  status: z.enum(["active", "inactive"]),
+  status: z.enum(["open", "closed"]),
 });
 
 export const menuItemSchema = z.object({

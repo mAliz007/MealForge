@@ -41,8 +41,8 @@ function RestaurantFields() {
           }`}
           {...register("status")}
         >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
         </select>
         {errors.status && (
           <p className="text-xs font-medium text-red-600 mt-0.5">{errors.status.message}</p>

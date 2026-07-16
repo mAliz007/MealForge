@@ -117,20 +117,17 @@ export default function MenuItemsView() {
         setAvailable={setAvailable}
       />
 
-      {/* Accordion/Form Modal Entry Wrapper */}
-      {isFormOpen && (
-        <Card className="max-w-xl border-blue-200 bg-blue-50/10">
-          <h2 className="text-base font-bold text-gray-900 mb-4">
-            {editingItem ? `Modify: ${editingItem.name}` : "Create New Menu Selection"}
-          </h2>
-          <MenuItemFormPanel
-            editingItem={editingItem}
-            onSubmit={handleFormSubmit}
-            onCancel={handleCancelForm}
-            isPending={createMutation.isPending || updateMutation.isPending}
-          />
-        </Card>
-      )}
+      {/* 
+        MUI Dialog (Modal Form) Wrapper 
+        Rendered inline without conditional brackets to allow the modal's entry and exit animations to work cleanly.
+      */}
+      <MenuItemFormPanel
+        open={isFormOpen}
+        editingItem={editingItem}
+        onSubmit={handleFormSubmit}
+        onCancel={handleCancelForm}
+        isPending={createMutation.isPending || updateMutation.isPending}
+      />
 
       {/* Base Response Content Rendering Flow */}
       {isLoading ? (

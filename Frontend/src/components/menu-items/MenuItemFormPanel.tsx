@@ -1,43 +1,67 @@
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/Button";
+import { useForm, Controller } from "react-hook-form";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem as MuiMenuItem,
+  FormControlLabel,
+  Checkbox,
+  Grid,
+  Box
+} from "@mui/material";
+
 import { useRestaurants } from "../../hooks/useRestaurants";
 import type { MenuItemFormData } from "../../utils/schemas";
 import type { MenuItem } from "../../types";
 
-interface MenuItemFormPanelProps {
+interface MenuItemFormModalProps {
+  open: boolean;
   editingItem?: MenuItem;
-  // This accepts the form schema data along with our supplementary availability parameter
   onSubmit: (data: MenuItemFormData & { available: boolean }) => void;
   onCancel: () => void;
   isPending: boolean;
 }
 
-export function MenuItemFormPanel({ editingItem, onSubmit, onCancel, isPending }: MenuItemFormPanelProps) {
+export function MenuItemFormPanel({
+  open,
+  editingItem,
+  onSubmit,
+  onCancel,
+  isPending,
+}: MenuItemFormModalProps) {
   const { data: restaurants } = useRestaurants();
-  
-  // Track availability explicitly via local state so it stays isolated from MenuItemFormData
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
 
-  const { register, handleSubmit, reset } = useForm<MenuItemFormData>({
-    defaultValues: editingItem 
+  const { register, handleSubmit, reset, control } = useForm<MenuItemFormData>({
+    defaultValues: editingItem
       ? { name: editingItem.name, price: editingItem.price, restaurantId: editingItem.restaurantId }
-      : { name: "", price: 0, restaurantId: undefined },
+      : { name: "", price: 0, restaurantId: "" as any },
   });
 
   useEffect(() => {
-    if (editingItem) {
-      reset({
-        name: editingItem.name,
-        price: editingItem.price,
-        restaurantId: editingItem.restaurantId,
-      });
-      setIsAvailable(editingItem.available);
+    if (open) {
+      if (editingItem) {
+        reset({
+          name: editingItem.name,
+          price: editingItem.price,
+          restaurantId: editingItem.restaurantId,
+        });
+        setIsAvailable(editingItem.available);
+      } else {
+        reset({ name: "", price: 0, restaurantId: "" as any });
+        setIsAvailable(true);
+      }
     }
-  }, [editingItem, reset]);
+  }, [editingItem, reset, open]);
 
   const onFormSubmit = (formData: MenuItemFormData) => {
-    // Merge the exact schema payload with our custom state key cleanly
     onSubmit({
       ...formData,
       available: isAvailable,
@@ -45,62 +69,109 @@ export function MenuItemFormPanel({ editingItem, onSubmit, onCancel, isPending }
   };
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-700 uppercase">Item Name</label>
-          <input
-            {...register("name", { required: true })}
-            type="text"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          />
-        </div>
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-700 uppercase">Price ($)</label>
-          <input
-            {...register("price", { required: true, valueAsNumber: true })}
-            type="number"
-            step="0.01"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          />
-        </div>
-      </div>
+    <Dialog 
+      open={open} 
+      onClose={onCancel} 
+      fullWidth 
+      maxWidth="sm"
+    >
+      <DialogTitle sx={{ fontWeight: "bold" }}>
+        {editingItem ? "Edit Menu Item" : "Create Menu Item"}
+      </DialogTitle>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-1">
-          <label className="text-xs font-bold text-gray-700 uppercase">Restaurant Owner</label>
-          <select
-            {...register("restaurantId", { required: true, valueAsNumber: true })}
-            disabled={!!editingItem}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-gray-50 disabled:opacity-60 focus:outline-none"
+      <form onSubmit={handleSubmit(onFormSubmit)}>
+        <DialogContent dividers>
+          <Grid container spacing={3}>
+            
+            {/* Item Name */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                {...register("name", { required: "Item name is required" })}
+                label="Item Name"
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            {/* Price */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <TextField
+                {...register("price", { 
+                  required: "Price is required", 
+                  valueAsNumber: true 
+                })}
+                label="Price ($)"
+                type="number"
+                slotProps={{ htmlInput: { step: "0.01" } }}
+                fullWidth
+                variant="outlined"
+                size="small"
+              />
+            </Grid>
+
+            {/* Restaurant Owner */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <FormControl fullWidth size="small" disabled={!!editingItem}>
+                <InputLabel id="restaurant-owner-label">Restaurant Owner</InputLabel>
+                <Controller
+                  name="restaurantId"
+                  control={control}
+                  rules={{ required: "Selecting a partner is required" }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      labelId="restaurant-owner-label"
+                      label="Restaurant Owner"
+                      value={field.value ?? ""}
+                    >
+                      <MuiMenuItem value="">
+                        <em>Select corporate partner...</em>
+                      </MuiMenuItem>
+                      {restaurants?.map((r) => (
+                        <MuiMenuItem key={r.id} value={r.id}>
+                          {r.name}
+                        </MuiMenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+            </Grid>
+
+            {/* Availability Option */}
+            <Grid size={{ xs: 12, sm: 6 }}>
+              <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isAvailable}
+                      onChange={(e) => setIsAvailable(e.target.checked)}
+                      color="primary"
+                    />
+                  }
+                  label="Available Immediately"
+                />
+              </Box>
+            </Grid>
+
+          </Grid>
+        </DialogContent>
+
+        <DialogActions sx={{ px: 3, py: 2 }}>
+          <Button onClick={onCancel} color="inherit">
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="primary" 
+            disabled={isPending}
           >
-            <option value="">Select corporate partner...</option>
-            {restaurants?.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex items-center pt-6">
-          <label className="inline-flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700">
-            <input
-              type="checkbox"
-              checked={isAvailable}
-              onChange={(e) => setIsAvailable(e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500/20 h-4 w-4"
-            />
-            List Item as Available Immediately
-          </label>
-        </div>
-      </div>
-
-      <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-        <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
-        <Button type="submit" variant="primary" disabled={isPending}>
-          {isPending ? "Saving..." : editingItem ? "Apply Changes" : "Create Selection"}
-        </Button>
-      </div>
-    </form>
+            {isPending ? "Saving..." : editingItem ? "Apply Changes" : "Create Selection"}
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 }

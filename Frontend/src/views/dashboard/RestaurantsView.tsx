@@ -13,6 +13,7 @@ import {
   RestaurantEmpty,
 } from "../../components/restaurants/RestaurantStates";
 import { RestaurantTable } from "../../components/restaurants/RestaurantTable";
+// Update this import to match the new Modal component
 import { RestaurantFormCard } from "../../components/restaurants/RestaurantFormCard";
 import type { Restaurant } from "../../types";
 import type { RestaurantFormData } from "../../utils/schemas";
@@ -94,14 +95,16 @@ export default function RestaurantsView() {
         )}
       </div>
 
-      {/* Conditionally Render Form Card */}
-      {isFormOpen && (
-        <RestaurantFormCard
-          editingRestaurant={editingRestaurant}
-          onSubmit={handleFormSubmit}
-          onCancel={handleCancelForm}
-        />
-      )}
+      {/* 
+        MUI Dialog (Modal Form) 
+        Rendered inline directly so entry/exit transition animations execute smoothly.
+      */}
+      <RestaurantFormCard
+        open={isFormOpen}
+        editingRestaurant={editingRestaurant}
+        onSubmit={handleFormSubmit}
+        onCancel={handleCancelForm}
+      />
 
       {/* Main Content States */}
       {isLoading ? (

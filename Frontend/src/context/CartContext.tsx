@@ -42,33 +42,38 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cartItems, restaurantId]);
 
   const addToCart = (item: MenuItem, quantity = 1) => {
-    // Cross-restaurant check
-    if (restaurantId !== null && restaurantId !== item.restaurantId) {
-      const confirmClear = window.confirm(
-        "You have items from a different restaurant in your cart. Clear cart to add this item?"
+  // Cross-restaurant check
+  if (restaurantId !== null && restaurantId !== item.restaurantId) {
+    const confirmClear = window.confirm(
+      "You have items from a different restaurant in your cart. Clear cart to add this item?"
+    );
+    if (!confirmClear) return;
+    
+    // Clear cart and initialize with new restaurant's item
+    setRestaurantId(item.restaurantId);
+    setCartItems([{ menuItem: item, quantity }]);
+    return;
+  }
+
+  if (restaurantId === null) {
+    setRestaurantId(item.restaurantId);
+  }
+
+  setCartItems((prev) => {
+    const existingIndex = prev.findIndex((i) => i.menuItem.id === item.id);
+    
+    if (existingIndex > -1) {
+      // Map over the array to return a new array with a safely copied item object
+      return prev.map((cartItem, index) =>
+        index === existingIndex
+          ? { ...cartItem, quantity: cartItem.quantity + quantity }
+          : cartItem
       );
-      if (!confirmClear) return;
-      
-      // Clear cart and initialize with new restaurant's item
-      setRestaurantId(item.restaurantId);
-      setCartItems([{ menuItem: item, quantity }]);
-      return;
     }
-
-    if (restaurantId === null) {
-      setRestaurantId(item.restaurantId);
-    }
-
-    setCartItems((prev) => {
-      const existingIndex = prev.findIndex((i) => i.menuItem.id === item.id);
-      if (existingIndex > -1) {
-        const updated = [...prev];
-        updated[existingIndex].quantity += quantity;
-        return updated;
-      }
-      return [...prev, { menuItem: item, quantity }];
-    });
-  };
+    
+    return [...prev, { menuItem: item, quantity }];
+  });
+};
 
   const removeFromCart = (menuItemId: number) => {
     setCartItems((prev) => prev.filter((item) => item.menuItem.id !== menuItemId));

@@ -1,5 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
-import { LogOut,type LucideIcon } from "lucide-react";
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  Button
+} from "@mui/material";
+import { LogOut, type LucideIcon } from "lucide-react";
+import { useAuthUser } from "../../hooks/useAuthUser"; // Adjust to match your hook path
+import { ROUTES } from "../../app/router";
 
 interface NavigationItem {
   name: string;
@@ -15,52 +28,151 @@ interface DesktopSidebarProps {
 
 export function DesktopSidebar({ navigationItems, onLogout, isLogoutPending }: DesktopSidebarProps) {
   const location = useLocation();
+  const { isAdmin } = useAuthUser();
+
+  // Filter out any cart links for admin users in the desktop sidebar
+  const filteredNavigationItems = navigationItems.filter((item) => {
+    if (isAdmin) {
+      const isCartPath = item.path.toLowerCase().includes("cart");
+      const isCartName = item.name.toLowerCase() === "cart";
+      return !(isCartPath || isCartName);
+    }
+    return true;
+  });
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col justify-between fixed inset-y-0 left-0 z-20">
-      <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
-        {/* Branding Header */}
-        <div className="flex items-center flex-shrink-0 px-6 gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+    <Box
+      sx={{
+        width: 280,
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        borderRight: "1px solid #e5e7eb",
+        bgcolor: "#ffffff",
+        display: { xs: "none", md: "flex" },
+        flexDirection: "column",
+        justifyContent: "space-between",
+        p: 3,
+        zIndex: 1200,
+      }}
+    >
+      <div>
+        {/* Desktop Branding (Clickable Logo Link) */}
+        <Box
+          component={Link}
+          to={ROUTES.HOME}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            px: 1,
+            py: 1,
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              bgcolor: "#2563eb",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "1.1rem",
+            }}
+          >
             F
-          </div>
-          <span className="text-lg font-bold text-gray-900 tracking-tight">FoodSplits</span>
-        </div>
-        
-        {/* Navigation Link Stack */}
-        <nav className="mt-8 flex-1 px-4 space-y-1">
-          {navigationItems.map((item) => {
+          </Box>
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: "bold",
+              color: "text.primary",
+              letterSpacing: "-0.025em",
+            }}
+          >
+            FoodSplits
+          </Typography>
+        </Box>
+
+        <Divider sx={{ my: 2.5 }} />
+
+        {/* Dynamic Sidebar Items */}
+        <List sx={{ px: 0 }}>
+          {filteredNavigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             return (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors group ${
-                  isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
-                <Icon className={`mr-3 h-5 w-5 ${isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-500"}`} />
-                {item.name}
-              </Link>
+              <ListItem key={item.name} disablePadding sx={{ mb: 0.5 }}>
+                <ListItemButton
+                  component={Link}
+                  to={item.path}
+                  selected={isActive}
+                  sx={{
+                    borderRadius: 2,
+                    py: 1.25,
+                    px: 2,
+                    "&.Mui-selected": {
+                      backgroundColor: "rgba(37, 99, 235, 0.08)",
+                      color: "#1d4ed8",
+                      "&:hover": {
+                        backgroundColor: "rgba(37, 99, 235, 0.12)",
+                      },
+                      "& .MuiListItemIcon-root": { color: "#2563eb" },
+                    },
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 36,
+                      color: isActive ? "#2563eb" : "text.secondary",
+                    }}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.name}
+                    slotProps={{
+                      primary: {
+                        style: {
+                          fontSize: "14px",
+                          fontWeight: isActive ? 600 : 500,
+                        },
+                      },
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
             );
           })}
-        </nav>
+        </List>
       </div>
 
-      {/* Logout Control Action Button */}
-      <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-        <button 
+      {/* Logout Action */}
+      <Box>
+        <Divider sx={{ mb: 2 }} />
+        <Button
+          variant="outlined"
+          color="error"
+          fullWidth
+          startIcon={<LogOut className="h-4 w-4" />}
           onClick={onLogout}
           disabled={isLogoutPending}
-          className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+          sx={{
+            borderRadius: 2,
+            textTransform: "none",
+            fontWeight: 600,
+            py: 1,
+          }}
         >
-          <LogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600" />
           {isLogoutPending ? "Signing out..." : "Sign Out"}
-        </button>
-      </div>
-    </aside>
+        </Button>
+      </Box>
+    </Box>
   );
 }

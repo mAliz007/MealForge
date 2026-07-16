@@ -18,6 +18,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import { LogOut, type LucideIcon } from "lucide-react";
 import { CartBadgeButton } from "./CartBadgeButton";
+import { useAuthUser } from "../../hooks/useAuthUser"; // Adjust import path
 import { ROUTES } from "../../app/router";
 
 interface NavigationItem {
@@ -35,10 +36,21 @@ interface MobileNavigationProps {
 export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }: MobileNavigationProps) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { isAdmin } = useAuthUser();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  // Filter navigation items dynamically for mobile sidebar
+  const filteredNavigationItems = navigationItems.filter((item) => {
+    if (isAdmin) {
+      const isCartPath = item.path.toLowerCase().includes("cart");
+      const isCartName = item.name.toLowerCase() === "cart";
+      return !(isCartPath || isCartName);
+    }
+    return true;
+  });
 
   const drawerContent = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 2 }}>
@@ -66,9 +78,9 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         </Box>
         <Divider sx={{ my: 1 }} />
 
-        {/* Navigation List inside Drawer */}
+        {/* Dynamic Navigation List inside Drawer */}
         <List>
-          {navigationItems.map((item) => {
+          {filteredNavigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
             return (
@@ -142,7 +154,7 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
-          {/* Hamburger Menu (Pinned Left) */}
+          {/* Hamburger Menu (Left) */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -153,7 +165,7 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             <MenuIcon />
           </IconButton>
 
-          {/* Centered Brand Logo (Absolutely Positioned to prevent layout shifts) */}
+          {/* Centered Brand Logo */}
           <Box 
             component={Link}
             to={ROUTES.HOME}
@@ -177,8 +189,8 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             </Typography>
           </Box>
 
-          {/* Cart Icon (Pinned Right) */}
-          <Box sx={{ zIndex: 2 }}>
+          {/* Cart Icon Box (Self-hides internally if Admin) */}
+          <Box sx={{ zIndex: 2, minWidth: 40, display: 'flex', justifyContent: 'flex-end' }}>
             <CartBadgeButton />
           </Box>
         </Toolbar>

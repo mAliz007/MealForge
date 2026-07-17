@@ -90,6 +90,37 @@
     "actions": {
       "cancel": "Cancelar"
     }
+  },
+  "orders": {
+    "title": "Historial de transacciones",
+    "adminDescription": "Monitoree los libros de transacciones de restaurantes globales y registros de cumplimiento.",
+    "userDescription": "Revise y realice el seguimiento en tiempo real del estado de cumplimiento de sus selecciones culinarias.",
+    "table": {
+      "orderId": "ID del pedido",
+      "node": "Nodo de cumplimiento",
+      "total": "Total bruto",
+      "state": "Estado de cumplimiento",
+      "invoice": "Detalles de factura",
+      "restaurantNode": "Restaurante #{{id}}",
+      "inspectBtn": "Inspeccionar artículos"
+    },
+    "modal": {
+      "title": "Especificaciones de factura",
+      "manifestRef": "ID de referencia del manifiesto: #{{id}}",
+      "stateLabel": "Estado: {{status}}",
+      "processingNode": "Nodo de procesamiento",
+      "restaurantHub": "Centro de restaurantes #{{id}}",
+      "financialAccounting": "Contabilidad financiera",
+      "grossValue": "Valor bruto transaccionado",
+      "dismissBtn": "Descartar entrada de libro"
+    },
+    "states": {
+      "loading": "Sincronizando recibos abiertos...",
+      "errorTitle": "Fallo en el pipeline de transacciones",
+      "errorFallback": "Ocurrió un error inesperado al comunicarse con el motor de enrutamiento de pedidos.",
+      "emptyTitle": "No hay operaciones de pedido registradas.",
+      "emptySubtitle": "Los nuevos tickets de transacción se mostrarán aquí cuando los pedidos se realicen en vivo."
+    }
   }
 
 }

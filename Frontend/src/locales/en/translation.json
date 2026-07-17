@@ -90,5 +90,36 @@
     "actions": {
       "cancel": "Cancel"
     }
+  },
+  "orders": {
+    "title": "Transaction History",
+    "adminDescription": "Monitor the global restaurant transaction ledgers and fulfillment records.",
+    "userDescription": "Review and track the real-time fulfillment state of your culinary selections.",
+    "table": {
+      "orderId": "Order ID",
+      "node": "Fulfillment Node",
+      "total": "Gross Total",
+      "state": "Fulfillment State",
+      "invoice": "Invoice Details",
+      "restaurantNode": "Restaurant #{{id}}",
+      "inspectBtn": "Inspect Items"
+    },
+    "modal": {
+      "title": "Invoice Specs",
+      "manifestRef": "Manifest Reference ID: #{{id}}",
+      "stateLabel": "State: {{status}}",
+      "processingNode": "Processing Node",
+      "restaurantHub": "Restaurant Hub #{{id}}",
+      "financialAccounting": "Financial Accounting",
+      "grossValue": "Gross Transacted Value",
+      "dismissBtn": "Dismiss Ledger Entry"
+    },
+    "states": {
+      "loading": "Syncing open receipts...",
+      "errorTitle": "Transactional Pipeline Failure",
+      "errorFallback": "An unexpected error occurred while communicating with the order routing engine.",
+      "emptyTitle": "No order operations on record.",
+      "emptySubtitle": "New transaction tickets will populate here when orders go down live."
+    }
   }
 }

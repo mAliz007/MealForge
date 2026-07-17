@@ -1,5 +1,6 @@
 import { Button } from "../ui/Button";
 import type { Order } from "../../types";
+import { useTranslation } from "react-i18next";
 
 interface OrderDetailModalProps {
   order: Order | null;
@@ -7,6 +8,8 @@ interface OrderDetailModalProps {
 }
 
 export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
+  const { t } = useTranslation();
+
   if (!order) return null;
 
   // Safe fallback checking both naming configurations
@@ -15,36 +18,47 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
   const displayStatus = order.status || "pending";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="w-full max-w-lg rounded-xl bg-structure p-6 shadow-xl border border-structure animate-in fade-in zoom-in-95 duration-150">
+        
+        {/* Header Section */}
+        <div className="flex items-center justify-between border-b border-structure pb-3 mb-4">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Invoice Specs</h2>
-            <p className="text-xs text-gray-400 font-mono mt-0.5">Manifest Reference ID: #{order.id}</p>
+            <h2 className="text-lg font-bold text-main">{t("orders.modal.title")}</h2>
+            <p className="text-xs text-muted font-mono mt-0.5">
+              {t("orders.modal.manifestRef", { id: order.id })}
+            </p>
           </div>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-blue-50 text-blue-700">
-            State: {displayStatus}
+          {/* Status Badge */}
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase bg-accent/10 text-accent">
+            {t("orders.modal.stateLabel", { status: displayStatus })}
           </span>
         </div>
 
-        <div className="space-y-4 text-sm text-gray-700">
-          <div className="flex justify-between bg-gray-50 p-3 rounded-lg font-mono">
-            <span className="text-gray-500">Processing Node</span>
-            <span className="font-semibold text-gray-900">Restaurant Hub #{displayRestaurantId}</span>
+        {/* Content Body */}
+        <div className="space-y-4 text-sm text-main">
+          <div className="flex justify-between bg-canvas/50 p-3 rounded-lg font-mono border border-structure">
+            <span className="text-muted">{t("orders.modal.processingNode")}</span>
+            <span className="font-semibold text-main">
+              {t("orders.modal.restaurantHub", { id: displayRestaurantId })}
+            </span>
           </div>
 
-          <div className="border border-gray-100 rounded-lg p-4 bg-gray-50/30">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Financial Accounting</h3>
-            <div className="flex justify-between items-center text-base font-bold text-gray-900">
-              <span>Gross Transacted Value</span>
-              <span className="text-emerald-600">${displayTotal.toFixed(2)}</span>
+          <div className="border border-structure rounded-lg p-4 bg-canvas/20">
+            <h3 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">
+              {t("orders.modal.financialAccounting")}
+            </h3>
+            <div className="flex justify-between items-center text-base font-bold text-main">
+              <span>{t("orders.modal.grossValue")}</span>
+              <span className="text-emerald-500">${displayTotal.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
+        {/* Action Button */}
         <div className="mt-6 flex justify-end">
           <Button variant="primary" className="px-4 py-2 text-sm" onClick={onClose}>
-            Dismiss Ledger Entry
+            {t("orders.modal.dismissBtn")}
           </Button>
         </div>
       </div>

@@ -121,5 +121,33 @@
       "emptyTitle": "No order operations on record.",
       "emptySubtitle": "New transaction tickets will populate here when orders go down live."
     }
+  },
+  "cart": {
+    "title": "Active Checkout Cart",
+    "description": "Review pending checkout batches and transaction pipelines.",
+    "transmitting": "Transmitting secure payment and manifest payload...",
+    "empty": {
+      "title": "Your selection tray is empty.",
+      "subtitle": "Navigate to the menu catalog tab to select dishes."
+    },
+    "actions": {
+      "reviewItems": "Reviewing {{count}} Item (Source Hub #{{hub}})",
+      "reviewItems_plural": "Reviewing {{count}} Items (Source Hub #{{hub}})",
+      "clearTray": "Clear Tray",
+      "each": "${{price}} each",
+      "remove": "Remove",
+      "checkout": "Proceed to Payment Gateway"
+    },
+    "sidebar": {
+      "title": "Order Estimation",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery Fee",
+      "totalDue": "Total Due"
+    },
+    "alerts": {
+      "invalidHub": "Checkout pipeline rejected: Unable to identify a valid Restaurant ID for this transaction.",
+      "success": "Transaction complete! Your order has been placed successfully.",
+      "error": "Checkout pipeline rejected: {{message}}"
+    }
   }
 }

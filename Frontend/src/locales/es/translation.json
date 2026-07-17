@@ -121,6 +121,33 @@
       "emptyTitle": "No hay operaciones de pedido registradas.",
       "emptySubtitle": "Los nuevos tickets de transacción se mostrarán aquí cuando los pedidos se realicen en vivo."
     }
+  },
+  "cart": {
+    "title": "Carrito de pago activo",
+    "description": "Revise los lotes de pago pendientes y los pipelines de transacciones.",
+    "transmitting": "Transmitiendo el pago seguro y la carga del manifiesto...",
+    "empty": {
+      "title": "Su bandeja de selección está vacía.",
+      "subtitle": "Navegue a la pestaña del catálogo de menús para seleccionar platos."
+    },
+    "actions": {
+      "reviewItems": "Revisando {{count}} artículo (Centro de origen #{{hub}})",
+      "reviewItems_plural": "Revisando {{count}} artículos (Centro de origen #{{hub}})",
+      "clearTray": "Limpiar bandeja",
+      "each": "${{price}} c/u",
+      "remove": "Eliminar",
+      "checkout": "Proceder a la pasarela de pago"
+    },
+    "sidebar": {
+      "title": "Estimación del pedido",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Tarifa de envío",
+      "totalDue": "Total a pagar"
+    },
+    "alerts": {
+      "invalidHub": "Flujo de pago rechazado: No se pudo identificar un ID de restaurante válido para esta transacción.",
+      "success": "¡Transacción completa! Su pedido ha sido realizado con éxito.",
+      "error": "Flujo de pago rechazado: {{message}}"
+    }
   }
-
 }

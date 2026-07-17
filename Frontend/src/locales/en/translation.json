@@ -40,5 +40,55 @@
     "activeCart": "Active Cart",
     "logout": "Log Out",
     "loggingOut": "Logging Out..."
+  },
+  "restaurants": {
+    "title": "Restaurants",
+    "adminDescription": "Manage registered dining partners and operating statuses.",
+    "userDescription": "View active registered dining partners.",
+    "addBtn": "+ Add Restaurant",
+    "states": {
+      "syncing": "Syncing records...",
+      "failedSync": "Failed to sync records",
+      "defaultError": "Please check your authentication or server connectivity.",
+      "noneFound": "No restaurants found.",
+      "addFirst": "Get started by adding your first dining partner."
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "location": "Location",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "removing": "Removing...",
+      "confirmDelete": "Are you sure you want to remove {{name}}?"
+    },
+    "formCard": {
+      "registerTitle": "Register New Dining Partner",
+      "modifyTitle": "Modify: {{name}}"
+    },
+    "form": {
+      "labels": {
+        "name": "Restaurant Name",
+        "location": "Location",
+        "status": "Operating Status",
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "placeholders": {
+        "name": "e.g. The Gourmet Burger Hub",
+        "location": "e.g. Downtown Sector A"
+      },
+      "actions": {
+        "save": "Save Changes",
+        "create": "Create Restaurant"
+      }
+    }
+  },
+  "common": {
+    "actions": {
+      "cancel": "Cancel"
+    }
   }
 }

@@ -40,5 +40,56 @@
     "activeCart": "Carrito Activo",
     "logout": "Cerrar Sesión",
     "loggingOut": "Cerrando Sesión..."
+  },
+  "restaurants": {
+    "title": "Restaurantes",
+    "adminDescription": "Administre los socios gastronómicos registrados y los estados operativos.",
+    "userDescription": "Ver los socios gastronómicos registrados activos.",
+    "addBtn": "+ Añadir Restaurante",
+    "states": {
+      "syncing": "Sincronizando registros...",
+      "failedSync": "Error al sincronizar registros",
+      "defaultError": "Por favor, verifique su autenticación o conectividad con el servidor.",
+      "noneFound": "No se encontraron restaurantes.",
+      "addFirst": "Comience agregando su primer socio gastronómico."
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "location": "Ubicación",
+      "status": "Estado",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "removing": "Eliminando...",
+      "confirmDelete": "¿Está seguro de que desea eliminar a {{name}}?"
+    },
+    "formCard": {
+      "registerTitle": "Registrar nuevo socio gastronómico",
+      "modifyTitle": "Modificar: {{name}}"
+    },
+    "form": {
+      "labels": {
+        "name": "Nombre del restaurante",
+        "location": "Ubicación",
+        "status": "Estado operativo",
+        "open": "Abierto",
+        "closed": "Cerrado"
+      },
+      "placeholders": {
+        "name": "p. ej. El Gourmet Burger Hub",
+        "location": "p. ej. Sector Centro A"
+      },
+      "actions": {
+        "save": "Guardar cambios",
+        "create": "Crear restaurante"
+      }
+    }
+  },
+  "common": {
+    "actions": {
+      "cancel": "Cancelar"
+    }
   }
+
 }

@@ -4,41 +4,36 @@ import type { RestaurantFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
 import type { RestaurantFormProps } from "../../types";
+import { useTranslation } from "react-i18next";
 
 function RestaurantFields() {
+  const { t } = useTranslation();
   const { register, formState: { errors } } = useFormContext<RestaurantFormData>();
 
   return (
     <>
       <Input
-        label="Restaurant Name"
+        label={t("restaurants.form.labels.name")}
         id="name"
         type="text"
-        placeholder="e.g. The Gourmet Burger Hub"
+        placeholder={t("restaurants.form.placeholders.name")}
         error={errors.name?.message}
         {...register("name")}
       />
       <Input
-        label="Location"
+        label={t("restaurants.form.labels.location")}
         id="location"
         type="text"
-        placeholder="e.g. Downtown Sector A"
+        placeholder={t("restaurants.form.placeholders.location")}
         error={errors.location?.message}
         {...register("location")}
       />
       
       <div className="w-full flex flex-col gap-1.5">
-        {/* Swapped text-gray-700 for text-muted */}
         <label htmlFor="status" className="text-xs font-semibold text-muted uppercase tracking-wider">
-          Operating Status
+          {t("restaurants.form.labels.status")}
         </label>
         
-        {/* 
-          Swapped bg-white -> bg-canvas
-          Swapped border-gray-300 -> border-structure
-          Swapped text-gray-900 -> text-main
-          Swapped focus rings to leverage theme tokens safely
-        */}
         <select
           id="status"
           className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 ${
@@ -48,13 +43,14 @@ function RestaurantFields() {
           }`}
           {...register("status")}
         >
-          {/* Option elements inherit native dark styles via browser standard, 
-              but explicit class names ensure clean rendering across targets */}
-          <option value="open" className="bg-structure text-main">Open</option>
-          <option value="closed" className="bg-structure text-main">Closed</option>
+          <option value="open" className="bg-structure text-main">
+            {t("restaurants.form.labels.open")}
+          </option>
+          <option value="closed" className="bg-structure text-main">
+            {t("restaurants.form.labels.closed")}
+          </option>
         </select>
         
-        {/* Validation Error Message */}
         {errors.status && (
           <p className="text-xs font-medium text-red-500 mt-0.5">{errors.status.message}</p>
         )}
@@ -64,13 +60,19 @@ function RestaurantFields() {
 }
 
 export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: RestaurantFormProps) {
+  const { t } = useTranslation();
+
   return (
     <EntityFormLayout<RestaurantFormData>
       schema={restaurantSchema}
       defaultValues={defaultValues}
       onSubmitSuccess={onSubmitSuccess}
       onCancel={onCancel}
-      submitButtonText={defaultValues ? "Save Changes" : "Create Restaurant"}
+      submitButtonText={
+        defaultValues 
+          ? t("restaurants.form.actions.save") 
+          : t("restaurants.form.actions.create")
+      }
     >
       <RestaurantFields />
     </EntityFormLayout>

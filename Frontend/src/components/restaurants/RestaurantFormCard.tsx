@@ -2,6 +2,7 @@ import { Dialog, DialogTitle, DialogContent } from "@mui/material";
 import { RestaurantForm } from "../forms/RestaurantForm";
 import type { Restaurant } from "../../types";
 import type { RestaurantFormData } from "../../utils/schemas";
+import { useTranslation } from "react-i18next";
 
 interface RestaurantFormModalProps {
   open: boolean; // Controls whether the modal is visible
@@ -16,6 +17,7 @@ export function RestaurantFormCard({
   onSubmit,
   onCancel,
 }: RestaurantFormModalProps) {
+  const { t } = useTranslation();
   
   const formDefaults: RestaurantFormData | undefined = editingRestaurant
     ? {
@@ -46,8 +48,8 @@ export function RestaurantFormCard({
     >
       <DialogTitle sx={{ fontWeight: "bold", color: "var(--color-text-main)" }}>
         {editingRestaurant
-          ? `Modify: ${editingRestaurant.name}`
-          : "Register New Dining Partner"}
+          ? t("restaurants.formCard.modifyTitle", { name: editingRestaurant.name })
+          : t("restaurants.formCard.registerTitle")}
       </DialogTitle>
       
       <DialogContent 

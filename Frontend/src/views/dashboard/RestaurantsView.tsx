@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../components/ui/Button";
 import { useAuthUser } from "../../hooks/useAuthUser";
+import { useTranslation } from "react-i18next"; // Added i18n
 import {
   useRestaurants,
   useCreateRestaurant,
@@ -18,6 +19,8 @@ import type { Restaurant } from "../../types";
 import type { RestaurantFormData } from "../../utils/schemas";
 
 export default function RestaurantsView() {
+  const { t } = useTranslation();
+
   // 1. Role Authentication
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
 
@@ -70,13 +73,11 @@ export default function RestaurantsView() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          {/* Swapped text-gray-900 for text-main */}
-          <h1 className="text-2xl font-bold text-main">Restaurants</h1>
-          {/* Swapped text-gray-500 for text-muted */}
+          <h1 className="text-2xl font-bold text-main">{t("restaurants.title")}</h1>
           <p className="text-sm text-muted">
             {isAdmin 
-              ? "Manage registered dining partners and operating statuses." 
-              : "View active registered dining partners."}
+              ? t("restaurants.adminDescription") 
+              : t("restaurants.userDescription")}
           </p>
         </div>
         
@@ -90,16 +91,13 @@ export default function RestaurantsView() {
                 setIsFormOpen(true);
               }}
             >
-              + Add Restaurant
+              {t("restaurants.addBtn")}
             </Button>
           </div>
         )}
       </div>
 
-      {/* 
-        MUI Dialog (Modal Form) 
-        Rendered inline directly so entry/exit transition animations execute smoothly.
-      */}
+      {/* MUI Dialog (Modal Form) */}
       <RestaurantFormCard
         open={isFormOpen}
         editingRestaurant={editingRestaurant}

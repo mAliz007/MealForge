@@ -1,5 +1,6 @@
 import type { Restaurant } from "../../types";
 import { Button } from "../ui/Button";
+import { useTranslation } from "react-i18next";
 
 interface RestaurantTableRowProps {
   restaurant: Restaurant;
@@ -16,17 +17,17 @@ export function RestaurantTableRow({
   onEdit,
   onDelete,
 }: RestaurantTableRowProps) {
+  const { t } = useTranslation();
+
   const handleDeleteClick = () => {
-    if (window.confirm(`Are you sure you want to remove ${restaurant.name}?`)) {
+    if (window.confirm(t("restaurants.table.confirmDelete", { name: restaurant.name }))) {
       onDelete(restaurant.id);
     }
   };
 
   return (
-    /* Swapped hover highlight color to use structural token */
     <tr className="hover:bg-structure/30 transition-colors">
       <td className="px-6 py-4 font-mono font-medium">#{restaurant.id}</td>
-      {/* Swapped text-gray-900 for text-main */}
       <td className="px-6 py-4 font-semibold text-main">{restaurant.name}</td>
       <td className="px-6 py-4">{restaurant.location}</td>
       <td className="px-6 py-4">
@@ -41,7 +42,6 @@ export function RestaurantTableRow({
         </span>
       </td>
       
-      {/* Only render this whole column if user is an authorized Admin */}
       {isAdmin && (
         <td className="px-6 py-4 text-right">
           <div className="flex justify-end gap-2">
@@ -50,7 +50,7 @@ export function RestaurantTableRow({
               className="px-2.5 py-1 text-xs"
               onClick={() => onEdit(restaurant)}
             >
-              Edit
+              {t("restaurants.table.edit")}
             </Button>
             <Button
               variant="danger"
@@ -58,7 +58,7 @@ export function RestaurantTableRow({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              {isDeleting ? "Removing..." : "Delete"}
+              {isDeleting ? t("restaurants.table.removing") : t("restaurants.table.delete")}
             </Button>
           </div>
         </td>

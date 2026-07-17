@@ -1,3 +1,4 @@
+// frontend/src/components/dashboard/CartBadgeButton.tsx
 import { Link } from "react-router-dom";
 import { Badge, IconButton } from "@mui/material";
 import { ShoppingCart } from "lucide-react";
@@ -21,8 +22,13 @@ export function CartBadgeButton() {
       color="inherit"
       aria-label={`cart with ${cartCount} items`}
       sx={{ 
-        color: "text.secondary",
-        "&:hover": { color: "primary.main" } 
+        // Use our semantic muted text variable for default state
+        color: "var(--color-text-muted)",
+        transition: "color 0.2s ease",
+        "&:hover": { 
+          // Switch to active brand accent color on hover
+          color: "var(--color-accent)" 
+        } 
       }}
     >
       <Badge 
@@ -31,8 +37,10 @@ export function CartBadgeButton() {
           "& .MuiBadge-badge": {
             fontWeight: "bold",
             fontSize: "0.75rem",
-            backgroundColor: "#2563eb", 
-            color: "#ffffff"
+            // Dynamically uses our accent color for the bubble highlight
+            backgroundColor: "var(--color-accent)", 
+            color: "#ffffff",
+            transition: "background-color 0.2s ease"
           }
         }}
       >

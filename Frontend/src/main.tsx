@@ -4,9 +4,12 @@ import { createRoot } from 'react-dom/client';
 import App from './app/App';
 import './index.css';
 import "./app/i18n";
+import { ThemeProvider } from './context/ThemeContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </StrictMode>,
 );

@@ -1,3 +1,4 @@
+// frontend/src/components/dashboard/MobileNavigation.tsx
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -16,10 +17,11 @@ import {
   Button
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { LogOut, type LucideIcon } from "lucide-react";
+import { LogOut, Sun, Moon, type LucideIcon } from "lucide-react";
 import { CartBadgeButton } from "./CartBadgeButton";
-import { useAuthUser } from "../../hooks/useAuthUser"; // Adjust import path
+import { useAuthUser } from "../../hooks/useAuthUser"; 
 import { ROUTES } from "../../app/router";
+import { useTheme } from "../../context/ThemeContext"; 
 
 interface NavigationItem {
   name: string;
@@ -37,12 +39,12 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAdmin } = useAuthUser();
+  const { theme, toggleTheme } = useTheme();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  // Filter navigation items dynamically for mobile sidebar
   const filteredNavigationItems = navigationItems.filter((item) => {
     if (isAdmin) {
       const isCartPath = item.path.toLowerCase().includes("cart");
@@ -53,9 +55,19 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
   });
 
   const drawerContent = (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', p: 2 }}>
+    <Box 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'space-between', 
+        p: 2,
+        bgcolor: 'var(--color-structure)',
+        color: 'var(--color-text-main)',
+        transition: 'background-color 0.2s ease, color 0.2s ease'
+      }}
+    >
       <div>
-        {/* Mobile Sidebar Branding (Clickable Logo Link) */}
         <Box 
           component={Link}
           to={ROUTES.HOME}
@@ -69,16 +81,15 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             textDecoration: 'none'
           }}
         >
-          <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+          <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
             F
           </Box>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.primary', letterSpacing: '-0.025em' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'var(--color-text-main)', letterSpacing: '-0.025em' }}>
             FoodSplits
           </Typography>
         </Box>
-        <Divider sx={{ my: 1 }} />
+        <Divider sx={{ my: 1, borderColor: 'rgba(148, 163, 184, 0.15)' }} />
 
-        {/* Dynamic Navigation List inside Drawer */}
         <List>
           {filteredNavigationItems.map((item) => {
             const Icon = item.icon;
@@ -92,24 +103,28 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
                   selected={isActive}
                   sx={{
                     borderRadius: 2,
+                    color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)',
                     '&.Mui-selected': {
-                      backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                      color: '#1d4ed8',
+                      backgroundColor: 'rgba(30, 64, 175, 0.08)',
+                      color: 'var(--color-accent)',
                       '&:hover': {
-                        backgroundColor: 'rgba(37, 99, 235, 0.12)',
+                        backgroundColor: 'rgba(30, 64, 175, 0.12)',
                       },
-                      '& .MuiListItemIcon-root': { color: '#2563eb' }
+                      '& .MuiListItemIcon-root': { color: 'var(--color-accent)' }
+                    },
+                    "&:hover": {
+                      backgroundColor: "rgba(148, 163, 184, 0.08)",
                     }
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 40, color: isActive ? '#2563eb' : 'text.secondary' }}>
+                  <ListItemIcon sx={{ minWidth: 40, color: isActive ? 'var(--color-accent)' : 'var(--color-text-muted)' }}>
                     <Icon className="h-5 w-5" />
                   </ListItemIcon>
                   <ListItemText
                     primary={item.name}
                     slotProps={{
                       primary: {
-                        style: { fontSize: '14px', fontWeight: isActive ? 600 : 500 }
+                        style: { fontSize: '14px', fontWeight: isActive ? 600 : 500, color: 'inherit' }
                       }
                     }}
                   />
@@ -120,9 +135,29 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         </List>
       </div>
 
-      {/* Action Area */}
       <Box sx={{ pb: 2 }}>
-        <Divider sx={{ mb: 2 }} />
+        <Button
+          variant="text"
+          fullWidth
+          onClick={toggleTheme}
+          startIcon={theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+          sx={{
+            mb: 1.5,
+            borderRadius: 2,
+            textTransform: 'none',
+            color: 'var(--color-text-muted)',
+            fontWeight: 500,
+            justifyContent: 'flex-start',
+            px: 2,
+            py: 1,
+            "&:hover": {
+              backgroundColor: "rgba(148, 163, 184, 0.08)",
+            }
+          }}
+        >
+          {theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+        </Button>
+        <Divider sx={{ mb: 2, borderColor: 'rgba(148, 163, 184, 0.15)' }} />
         <Button
           variant="outlined"
           color="error"
@@ -133,7 +168,16 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             onLogout();
           }}
           disabled={isLogoutPending}
-          sx={{ borderRadius: 2, textTransform: 'none', fontWeight: 600 }}
+          sx={{ 
+            borderRadius: 2, 
+            textTransform: 'none', 
+            fontWeight: 600,
+            borderColor: "rgba(239, 68, 68, 0.5)",
+            "&:hover": {
+              borderColor: "rgb(239, 68, 68)",
+              backgroundColor: "rgba(239, 68, 68, 0.05)",
+            }
+          }}
         >
           {isLogoutPending ? "Signing out..." : "Sign Out"}
         </Button>
@@ -147,14 +191,20 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         position="sticky"
         elevation={0}
         sx={{
-          display: { md: 'none' },
-          backgroundColor: '#ffffff',
-          color: '#111827',
-          borderBottom: '1px solid #e5e7eb'
+          // FORCE: Explicitly hide using Tailwind's exact 768px breakpoint
+          display: {
+            xs: 'block',
+            '@media (min-width: 768px)': {
+              display: 'none'
+            }
+          },
+          backgroundColor: 'var(--color-structure)',
+          color: 'var(--color-text-main)',
+          borderBottom: '1px solid rgba(148, 163, 184, 0.15)',
+          transition: 'background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease'
         }}
       >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
-          {/* Hamburger Menu (Left) */}
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -165,7 +215,6 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             <MenuIcon />
           </IconButton>
 
-          {/* Centered Brand Logo */}
           <Box 
             component={Link}
             to={ROUTES.HOME}
@@ -181,7 +230,7 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
               zIndex: 1
             }}
           >
-            <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: '#2563eb', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+            <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
               F
             </Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', letterSpacing: '-0.025em' }}>
@@ -189,8 +238,20 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             </Typography>
           </Box>
 
-          {/* Cart Icon Box (Self-hides internally if Admin) */}
-          <Box sx={{ zIndex: 2, minWidth: 40, display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ zIndex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <IconButton 
+              onClick={toggleTheme} 
+              color="inherit" 
+              size="small"
+              sx={{ 
+                color: 'var(--color-text-muted)',
+                p: 0.75,
+                borderRadius: '8px',
+                border: '1px solid rgba(148, 163, 184, 0.15)'
+              }}
+            >
+              {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+            </IconButton>
             <CartBadgeButton />
           </Box>
         </Toolbar>
@@ -202,8 +263,18 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
+          // FORCE: Drawer matches the 768px hide rule as well
+          display: {
+            xs: 'block',
+            '@media (min-width: 768px)': {
+              display: 'none'
+            }
+          },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: 280,
+            backgroundColor: 'transparent'
+          },
         }}
       >
         {drawerContent}

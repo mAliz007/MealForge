@@ -4,14 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "../services/authService";
 import { ROUTES } from "../app/router";
-import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon } from "lucide-react";
+import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages } from "lucide-react";
 import { IconButton } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 // Modular Imports
 import { DesktopSidebar } from "../components/dashboard/DesktopSidebar";
 import { MobileNavigation } from "../components/dashboard/MobileNavigation";
 import { CartBadgeButton } from "../components/dashboard/CartBadgeButton";
-import { useTheme } from "../context/ThemeContext"; // Grab our custom hook
+import { useTheme } from "../context/ThemeContext";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -20,13 +21,15 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { theme, toggleTheme } = useTheme(); // Consume our theme state
+  const { theme, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
 
+  // Dynamically generated navigation text labels based on locale state
   const navigationItems = [
-    { name: "Restaurants", path: "/dashboard/restaurants", icon: Utensils },
-    { name: "Menu Catalog", path: "/dashboard/menu-items", icon: BookOpen },
-    { name: "Orders Ledger", path: "/dashboard/orders", icon: ShoppingBag },
-    { name: "Active Cart", path: "/dashboard/cart", icon: ShoppingCart },
+    { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
+    { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
+    { name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag },
+    { name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart },
   ];
 
   const logoutMutation = useMutation({
@@ -46,11 +49,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     logoutMutation.mutate();
   };
 
+  const toggleLanguage = () => {
+    const nextLang = i18n.language.startsWith("en") ? "es" : "en";
+    i18n.changeLanguage(nextLang);
+  };
+
   return (
-    // Base layout: sets 60% canvas color globally and hides horizontal scrollbars during transitions
     <div className="min-h-screen bg-canvas text-text-main flex flex-col md:flex-row overflow-x-hidden">
       
-      {/* Desktop Left-Hand Side Panel (Stays hidden below md) */}
+      {/* Desktop Left-Hand Side Panel */}
       <DesktopSidebar 
         navigationItems={navigationItems}
         onLogout={handleLogoutClick}
@@ -58,26 +65,44 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       />
 
       {/* Main Structural Wrapper Panel */}
-      {/* 
-        FIX 1: Set md:pl-[280px] to match the exact width of DesktopSidebar.
-        This prevents the content from smashing against the sidebar or breaking on transition.
-      */}
       <div className="flex-1 flex flex-col min-w-0 md:pl-[280px] w-full transition-all duration-200">
         
-        {/* Mobile Header (Handoffs layout seamlessly at the 'md' screen size) */}
+        {/* Mobile Navigation */}
         <MobileNavigation 
           navigationItems={navigationItems}
           onLogout={handleLogoutClick}
           isLogoutPending={logoutMutation.isPending}
         />
 
-        {/* 
-          Desktop-Only Top Header
-          FIX 2: Ensure this header uses 'hidden md:flex' so it only becomes visible 
-          at the exact pixel boundary where MobileNavigation hides itself.
-        */}
+        {/* Desktop Top Header Bar */}
         <header className="hidden md:flex h-16 bg-structure border-b border-text-muted/10 items-center justify-end px-8 sticky top-0 z-10 gap-4 transition-colors duration-200">
           
+          {/* Desktop Language Switcher (Paired with theme switcher) */}
+          <IconButton 
+            onClick={toggleLanguage} 
+            color="inherit" 
+            size="small"
+            aria-label="Toggle language"
+            sx={{ 
+              color: 'var(--color-text-muted)',
+              p: 0.75,
+              borderRadius: '8px',
+              border: '1px solid rgba(148, 163, 184, 0.15)',
+              transition: 'all 0.2s ease',
+              "&:hover": {
+                borderColor: "var(--color-text-muted)",
+                backgroundColor: "rgba(148, 163, 184, 0.05)"
+              }
+            }}
+          >
+            <div className="flex items-center gap-1.5 px-1">
+              <Languages className="h-4 w-4" />
+              <span className="text-xs font-semibold uppercase">
+                {i18n.language.startsWith("en") ? "es" : "en"}
+              </span>
+            </div>
+          </IconButton>
+
           {/* Theme Quick Switcher */}
           <IconButton 
             onClick={toggleTheme} 

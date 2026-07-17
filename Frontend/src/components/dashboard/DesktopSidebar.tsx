@@ -1,9 +1,10 @@
 // frontend/src/components/dashboard/DesktopSidebar.tsx
 import { Link, useLocation } from "react-router-dom";
-import { Typography, Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider, Button } from "@mui/material";
+import { Typography, List, ListItem, ListItemButton,  ListItemIcon, ListItemText, Divider, Button } from "@mui/material";
 import { LogOut, type LucideIcon } from "lucide-react";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { ROUTES } from "../../app/router";
+import { useTranslation } from "react-i18next";
 
 interface NavigationItem {
   name: string;
@@ -20,6 +21,7 @@ interface DesktopSidebarProps {
 export function DesktopSidebar({ navigationItems, onLogout, isLogoutPending }: DesktopSidebarProps) {
   const location = useLocation();
   const { isAdmin } = useAuthUser();
+  const { t } = useTranslation();
 
   const filteredNavigationItems = navigationItems.filter((item) => {
     if (isAdmin) {
@@ -112,7 +114,7 @@ export function DesktopSidebar({ navigationItems, onLogout, isLogoutPending }: D
               }
             }}
           >
-            {isLogoutPending ? "Signing out..." : "Sign Out"}
+            {isLogoutPending ? t("navbar.loggingOut") : t("navbar.logout")}
           </Button>
         </div>
       </div>

@@ -32,5 +32,13 @@
     "footer": {
       "copyright": "PRÁCTICAS EN EL ESPACIO DE TRABAJO DE FOODSPLITS © 2026"
     }
+  },
+  "navbar": {
+    "restaurants": "Restaurantes",
+    "menuCatalog": "Catálogo de Menú",
+    "ordersLedger": "Registro de Pedidos",
+    "activeCart": "Carrito Activo",
+    "logout": "Cerrar Sesión",
+    "loggingOut": "Cerrando Sesión..."
   }
 }

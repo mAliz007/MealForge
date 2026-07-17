@@ -17,11 +17,12 @@ import {
   Button
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { LogOut, Sun, Moon, type LucideIcon } from "lucide-react";
+import { LogOut, Sun, Moon, Languages, type LucideIcon } from "lucide-react";
 import { CartBadgeButton } from "./CartBadgeButton";
 import { useAuthUser } from "../../hooks/useAuthUser"; 
 import { ROUTES } from "../../app/router";
 import { useTheme } from "../../context/ThemeContext"; 
+import { useTranslation } from "react-i18next";
 
 interface NavigationItem {
   name: string;
@@ -40,9 +41,15 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
   const [mobileOpen, setMobileOpen] = useState(false);
   const { isAdmin } = useAuthUser();
   const { theme, toggleTheme } = useTheme();
+  const { t, i18n } = useTranslation();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const toggleLanguage = () => {
+    const nextLang = i18n.language.startsWith("en") ? "es" : "en";
+    i18n.changeLanguage(nextLang);
   };
 
   const filteredNavigationItems = navigationItems.filter((item) => {
@@ -81,7 +88,7 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             textDecoration: 'none'
           }}
         >
-          <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+          <Box sx={{ width: 32, height: 32, borderRadius: 2, bgcolor: 'var(--color-accent)', display: 'flex', alignItems: 'center', justify_content: 'center', color: 'white', fontWeight: 'bold' }}>
             F
           </Box>
           <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'var(--color-text-main)', letterSpacing: '-0.025em' }}>
@@ -136,6 +143,30 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
       </div>
 
       <Box sx={{ pb: 2 }}>
+        {/* Mobile Drawer Language Button */}
+        <Button
+          variant="text"
+          fullWidth
+          onClick={toggleLanguage}
+          startIcon={<Languages className="h-4 w-4" />}
+          sx={{
+            mb: 0.5,
+            borderRadius: 2,
+            textTransform: 'none',
+            color: 'var(--color-text-muted)',
+            fontWeight: 500,
+            justifyContent: 'flex-start',
+            px: 2,
+            py: 1,
+            "&:hover": {
+              backgroundColor: "rgba(148, 163, 184, 0.08)",
+            }
+          }}
+        >
+          {i18n.language.startsWith("en") ? "Cambiar a Español" : "Switch to English"}
+        </Button>
+
+        {/* Mobile Drawer Theme Button */}
         <Button
           variant="text"
           fullWidth
@@ -157,7 +188,9 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         >
           {theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
         </Button>
+
         <Divider sx={{ mb: 2, borderColor: 'rgba(148, 163, 184, 0.15)' }} />
+        
         <Button
           variant="outlined"
           color="error"
@@ -179,7 +212,7 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             }
           }}
         >
-          {isLogoutPending ? "Signing out..." : "Sign Out"}
+          {isLogoutPending ? t("navbar.loggingOut") : t("navbar.logout")}
         </Button>
       </Box>
     </Box>
@@ -191,7 +224,6 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         position="sticky"
         elevation={0}
         sx={{
-          // FORCE: Explicitly hide using Tailwind's exact 768px breakpoint
           display: {
             xs: 'block',
             '@media (min-width: 768px)': {
@@ -238,7 +270,31 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
             </Typography>
           </Box>
 
+          {/* Action Row on Mobile Header Bar */}
           <Box sx={{ zIndex: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            
+            {/* Mobile Language Button */}
+            <IconButton 
+              onClick={toggleLanguage} 
+              color="inherit" 
+              size="small"
+              aria-label="Toggle language"
+              sx={{ 
+                color: 'var(--color-text-muted)',
+                p: 0.75,
+                borderRadius: '8px',
+                border: '1px solid rgba(148, 163, 184, 0.15)'
+              }}
+            >
+              <div className="flex items-center gap-1 px-0.5">
+                <Languages className="h-4 w-4" />
+                <span className="text-[10px] font-bold uppercase">
+                  {i18n.language.startsWith("en") ? "es" : "en"}
+                </span>
+              </div>
+            </IconButton>
+
+            {/* Mobile Theme Button */}
             <IconButton 
               onClick={toggleTheme} 
               color="inherit" 
@@ -263,7 +319,6 @@ export function MobileNavigation({ navigationItems, onLogout, isLogoutPending }:
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
         sx={{
-          // FORCE: Drawer matches the 768px hide rule as well
           display: {
             xs: 'block',
             '@media (min-width: 768px)': {

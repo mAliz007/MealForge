@@ -32,5 +32,13 @@
     "footer": {
       "copyright": "FOODSPLITS WORKSPACE INTERNSHIP © 2026"
     }
+  },
+  "navbar": {
+    "restaurants": "Restaurants",
+    "menuCatalog": "Menu Catalog",
+    "ordersLedger": "Orders Ledger",
+    "activeCart": "Active Cart",
+    "logout": "Log Out",
+    "loggingOut": "Logging Out..."
   }
 }

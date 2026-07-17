@@ -149,5 +149,19 @@
       "success": "Transaction complete! Your order has been placed successfully.",
       "error": "Checkout pipeline rejected: {{message}}"
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to manage your dining platform",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Get started as a platform administrator",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign In"
+    }
   }
 }

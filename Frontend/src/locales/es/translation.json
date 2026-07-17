@@ -149,5 +149,19 @@
       "success": "¡Transacción completa! Su pedido ha sido realizado con éxito.",
       "error": "Flujo de pago rechazado: {{message}}"
     }
+  },
+  "auth": {
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicie sesión para administrar su plataforma de comedor",
+      "noAccount": "¿No tiene una cuenta?",
+      "registerLink": "Regístrese aquí"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Comience como administrador de la plataforma",
+      "hasAccount": "¿Ya tiene una cuenta?",
+      "loginLink": "Iniciar sesión"
+    }
   }
 }

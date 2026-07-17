@@ -24,7 +24,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
 
-  // Dynamically generated navigation text labels based on locale state
   const navigationItems = [
     { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
     { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
@@ -55,17 +54,17 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-canvas text-text-main flex flex-col md:flex-row overflow-x-hidden">
+    <div className="min-h-screen bg-canvas text-text-main flex flex-col md:flex-row overflow-x-hidden transition-colors duration-200">
       
-      {/* Desktop Left-Hand Side Panel */}
+      {/* 1. Desktop Left Sidebar */}
       <DesktopSidebar 
         navigationItems={navigationItems}
         onLogout={handleLogoutClick}
         isLogoutPending={logoutMutation.isPending}
       />
 
-      {/* Main Structural Wrapper Panel */}
-      <div className="flex-1 flex flex-col min-w-0 md:pl-[280px] w-full transition-all duration-200">
+      {/* 2. Main Workspace Column */}
+      <div className="flex-1 flex flex-col min-w-0 md:pl-[280px] w-full min-h-screen transition-all duration-200">
         
         {/* Mobile Navigation */}
         <MobileNavigation 
@@ -74,10 +73,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           isLogoutPending={logoutMutation.isPending}
         />
 
-        {/* Desktop Top Header Bar */}
+        {/* Desktop Header */}
         <header className="hidden md:flex h-16 bg-structure border-b border-text-muted/10 items-center justify-end px-8 sticky top-0 z-10 gap-4 transition-colors duration-200">
-          
-          {/* Desktop Language Switcher (Paired with theme switcher) */}
           <IconButton 
             onClick={toggleLanguage} 
             color="inherit" 
@@ -103,7 +100,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
           </IconButton>
 
-          {/* Theme Quick Switcher */}
           <IconButton 
             onClick={toggleTheme} 
             color="inherit" 
@@ -127,7 +123,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <CartBadgeButton />
         </header>
 
-        {/* Dynamic Viewport Panel Route Injector */}
+        {/* Core Screen View */}
         <main className="flex-1 relative focus:outline-none py-6 px-4 sm:px-6 md:px-8">
           {children}
         </main>

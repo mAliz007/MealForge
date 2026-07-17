@@ -3,7 +3,6 @@ import { restaurantSchema } from "../../utils/schemas";
 import type { RestaurantFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
-// Import the interface from your centralized types hub
 import type { RestaurantFormProps } from "../../types";
 
 function RestaurantFields() {
@@ -29,23 +28,35 @@ function RestaurantFields() {
       />
       
       <div className="w-full flex flex-col gap-1.5">
-        <label htmlFor="status" className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+        {/* Swapped text-gray-700 for text-muted */}
+        <label htmlFor="status" className="text-xs font-semibold text-muted uppercase tracking-wider">
           Operating Status
         </label>
+        
+        {/* 
+          Swapped bg-white -> bg-canvas
+          Swapped border-gray-300 -> border-structure
+          Swapped text-gray-900 -> text-main
+          Swapped focus rings to leverage theme tokens safely
+        */}
         <select
           id="status"
-          className={`w-full px-3 py-2 bg-white border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
+          className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 ${
             errors.status
-              ? "border-red-500 focus:ring-red-200 text-red-900"
-              : "border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900"
+              ? "border-red-500 focus:ring-red-500/20 text-red-500 bg-red-500/5"
+              : "border-structure focus:border-accent focus:ring-accent/20 text-main"
           }`}
           {...register("status")}
         >
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
+          {/* Option elements inherit native dark styles via browser standard, 
+              but explicit class names ensure clean rendering across targets */}
+          <option value="open" className="bg-structure text-main">Open</option>
+          <option value="closed" className="bg-structure text-main">Closed</option>
         </select>
+        
+        {/* Validation Error Message */}
         {errors.status && (
-          <p className="text-xs font-medium text-red-600 mt-0.5">{errors.status.message}</p>
+          <p className="text-xs font-medium text-red-500 mt-0.5">{errors.status.message}</p>
         )}
       </div>
     </>

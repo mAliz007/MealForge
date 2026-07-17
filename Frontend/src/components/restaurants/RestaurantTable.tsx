@@ -21,15 +21,16 @@ export function RestaurantTable({
     <Card className="overflow-x-auto p-0">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-gray-50 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
+          <tr className="bg-structure/40 border-b border-structure text-xs font-semibold uppercase tracking-wider text-muted">
             <th className="px-6 py-3">ID</th>
             <th className="px-6 py-3">Name</th>
             <th className="px-6 py-3">Location</th>
             <th className="px-6 py-3">Status</th>
-            <th className="px-6 py-3 text-right">Actions</th>
+            {/* Conditionally render the Actions header to match the rows */}
+            {isAdmin && <th className="px-6 py-3 text-right">Actions</th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
+        <tbody className="divide-y divide-structure/50 text-sm text-main">
           {restaurants.map((res) => (
             <RestaurantTableRow
               key={res.id}

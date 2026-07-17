@@ -21,25 +21,43 @@ export function RestaurantFormCard({
     ? {
         name: editingRestaurant.name,
         location: editingRestaurant.location,
-        status: editingRestaurant.status, // Direct mapping! No conversion needed.
+        status: editingRestaurant.status,
       }
     : undefined;
 
   return (
     <Dialog 
       open={open} 
-      onClose={onCancel} 
+      onClose={onCancel} // Correctly using onCancel from props here
       fullWidth 
       maxWidth="sm"
+      // Fixed: Migrated PaperProps configuration into slotProps.paper for MUI v6/v7
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: "var(--color-structure)",
+            backgroundImage: "none", // Prevent MUI dark-mode gradient overlays
+            color: "var(--color-text-main)",
+            borderRadius: "12px",
+            border: "1px solid var(--color-structure)",
+          }
+        }
+      }}
     >
-      <DialogTitle sx={{ fontWeight: "bold" }}>
+      <DialogTitle sx={{ fontWeight: "bold", color: "var(--color-text-main)" }}>
         {editingRestaurant
           ? `Modify: ${editingRestaurant.name}`
           : "Register New Dining Partner"}
       </DialogTitle>
       
-      <DialogContent dividers sx={{ p: 3 }}>
-        {/* We let your nested form handle inputs, validation, and actions */}
+      <DialogContent 
+        dividers 
+        sx={{ 
+          p: 3,
+          borderColor: "rgba(255, 255, 255, 0.08)",
+          color: "var(--color-text-main)"
+        }}
+      >
         <RestaurantForm
           defaultValues={formDefaults}
           onSubmitSuccess={onSubmit}

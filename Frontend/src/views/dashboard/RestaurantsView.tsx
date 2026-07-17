@@ -13,7 +13,6 @@ import {
   RestaurantEmpty,
 } from "../../components/restaurants/RestaurantStates";
 import { RestaurantTable } from "../../components/restaurants/RestaurantTable";
-// Update this import to match the new Modal component
 import { RestaurantFormCard } from "../../components/restaurants/RestaurantFormCard";
 import type { Restaurant } from "../../types";
 import type { RestaurantFormData } from "../../utils/schemas";
@@ -71,8 +70,10 @@ export default function RestaurantsView() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Restaurants</h1>
-          <p className="text-sm text-gray-500">
+          {/* Swapped text-gray-900 for text-main */}
+          <h1 className="text-2xl font-bold text-main">Restaurants</h1>
+          {/* Swapped text-gray-500 for text-muted */}
+          <p className="text-sm text-muted">
             {isAdmin 
               ? "Manage registered dining partners and operating statuses." 
               : "View active registered dining partners."}

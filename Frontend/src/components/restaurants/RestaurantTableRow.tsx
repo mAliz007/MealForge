@@ -23,23 +23,27 @@ export function RestaurantTableRow({
   };
 
   return (
-    <tr className="hover:bg-gray-50/50">
+    /* Swapped hover highlight color to use structural token */
+    <tr className="hover:bg-structure/30 transition-colors">
       <td className="px-6 py-4 font-mono font-medium">#{restaurant.id}</td>
-      <td className="px-6 py-4 font-semibold text-gray-900">{restaurant.name}</td>
+      {/* Swapped text-gray-900 for text-main */}
+      <td className="px-6 py-4 font-semibold text-main">{restaurant.name}</td>
       <td className="px-6 py-4">{restaurant.location}</td>
       <td className="px-6 py-4">
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase ${
             restaurant.status === "open"
-              ? "bg-green-100 text-green-800"
-              : "bg-gray-100 text-gray-800"
+              ? "bg-green-500/10 text-green-500 dark:text-green-400"
+              : "bg-structure text-muted"
           }`}
         >
           {restaurant.status}
         </span>
       </td>
-      <td className="px-6 py-4 text-right">
-        {isAdmin ? (
+      
+      {/* Only render this whole column if user is an authorized Admin */}
+      {isAdmin && (
+        <td className="px-6 py-4 text-right">
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
@@ -57,10 +61,8 @@ export function RestaurantTableRow({
               {isDeleting ? "Removing..." : "Delete"}
             </Button>
           </div>
-        ) : (
-          <span className="text-xs text-gray-400 italic">Read-Only</span>
-        )}
-      </td>
+        </td>
+      )}
     </tr>
   );
 }

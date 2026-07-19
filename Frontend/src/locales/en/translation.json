@@ -163,5 +163,76 @@
       "hasAccount": "Already have an account?",
       "loginLink": "Sign In"
     }
+  },
+  "menu": {
+    "title": "Menu Catalog",
+    "adminDescription": "Configure catalog availability and administrative listing matrices.",
+    "userDescription": "Browse culinary lists and build custom food delivery orders.",
+    "addItem": "+ Add Menu Item",
+    "table": {
+      "id": "ID",
+      "details": "Item Details",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions",
+      "buildOrder": "Build Order"
+    },
+    "filter": {
+      "restaurantLabel": "Partner Restaurant",
+      "allRestaurants": "All Registered Partners",
+      "stockLabel": "Stock State",
+      "allListings": "Show All Listings",
+      "inStock": "In Stock Only",
+      "unavailable": "Unavailable Only"
+    },
+    "form": {
+      "titleEdit": "Edit Menu Item",
+      "titleCreate": "Create Menu Item",
+      "fieldName": "Item Name",
+      "fieldPrice": "Price ($)",
+      "fieldRestaurant": "Restaurant Owner",
+      "selectPlaceholder": "Select corporate partner...",
+      "fieldAvailable": "Available Immediately",
+      "btnCancel": "Cancel",
+      "btnSaving": "Saving...",
+      "btnSaveEdit": "Apply Changes",
+      "btnSaveCreate": "Create Selection",
+      "validation": {
+        "nameRequired": "Item name is required",
+        "priceRequired": "Price is required",
+        "restaurantRequired": "Selecting a partner is required"
+      },
+      "title": "Menu Item Details",
+      "subtitle": "Configure options and properties for this selection.",
+      "labels": {
+        "name": "Menu Item Name",
+        "price": "Price ($)",
+        "restaurant": "Assign to Restaurant",
+        "placeholderSelect": "Select a restaurant..."
+      },
+      "placeholders": {
+        "name": "e.g. Garlic Parmesan Fries"
+      },
+      "actions": {
+        "save": "Save Item",
+        "create": "Add Menu Item"
+      }
+    },
+    "row": {
+      "metaRestaurantId": "Associated Restaurant ID: {{id}}",
+      "statusInStock": "In Stock",
+      "statusUnavailable": "Unavailable",
+      "btnEdit": "Edit",
+      "btnDelete": "Delete",
+      "btnRemoving": "Removing...",
+      "btnAddToTray": "Add to Tray"
+    },
+    "states": {
+      "loading": "Mapping catalog references...",
+      "errorTitle": "Failed to Sync Catalog References",
+      "errorFallback": "An unexpected error occurred while communicating with the catalog service.",
+      "emptyTitle": "No menu selections found.",
+      "emptySubtitle": "Try broadening your active filter parameters or check back later."
+    }
   }
 }

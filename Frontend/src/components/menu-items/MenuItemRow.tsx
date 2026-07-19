@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
 import { useCart } from "../../context/CartContext";
 import type { MenuItem } from "../../types";
@@ -12,6 +13,7 @@ interface MenuItemRowProps {
 }
 
 export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: MenuItemRowProps) {
+  const { t } = useTranslation();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
 
@@ -19,28 +21,40 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
   const safePrice = Number(item.price) || 0;
 
   return (
-    <tr className="hover:bg-gray-50/50 transition-colors">
-      <td className="px-6 py-4 font-mono text-xs text-gray-400">#{item.id}</td>
+    <tr className="border-b border-structure hover:bg-structure/30 transition-colors">
+      {/* ID Column */}
+      <td className="px-6 py-4 font-mono text-xs text-text-muted">#{item.id}</td>
+      
+      {/* Name and Meta */}
       <td className="px-6 py-4">
-        <div className="font-semibold text-gray-900">{item.name}</div>
-        <div className="text-xs text-gray-400">Associated Restaurant ID: {item.restaurantId}</div>
+        <div className="font-semibold text-text-main">{item.name}</div>
+        <div className="text-xs text-text-muted">
+          {t("menu.row.metaRestaurantId", { id: item.restaurantId })}
+        </div>
       </td>
-      {/* Updated line to use safePrice */}
-      <td className="px-6 py-4 font-semibold text-gray-900">${safePrice.toFixed(2)}</td>
+      
+      {/* Price */}
+      <td className="px-6 py-4 font-semibold text-text-main">${safePrice.toFixed(2)}</td>
+      
+      {/* Availability Status Badge */}
       <td className="px-6 py-4">
         <span
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            item.available ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-800"
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
+            item.available 
+              ? "bg-accent/10 text-accent dark:bg-accent/20" 
+              : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-500/20"
           }`}
         >
-          {item.available ? "In Stock" : "Unavailable"}
+          {item.available ? t("menu.row.statusInStock") : t("menu.row.statusUnavailable")}
         </span>
       </td>
+      
+      {/* Actions */}
       <td className="px-6 py-4 text-right">
         {isAdmin ? (
           <div className="flex justify-end gap-2">
             <Button variant="secondary" className="px-2.5 py-1 text-xs" onClick={() => onEdit(item)}>
-              Edit
+              {t("menu.row.btnEdit")}
             </Button>
             <Button
               variant="danger"
@@ -48,7 +62,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               onClick={() => onDelete(item.id)}
               disabled={isDeleting}
             >
-              {isDeleting ? "Removing..." : "Delete"}
+              {isDeleting ? t("menu.row.btnRemoving") : t("menu.row.btnDelete")}
             </Button>
           </div>
         ) : (
@@ -59,7 +73,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
               disabled={!item.available}
-              className="w-14 rounded-lg border border-gray-300 px-2 py-1 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50"
+              className="w-14 rounded-lg border border-structure bg-canvas text-text-main px-2 py-1 text-center text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-50"
             />
             <Button
               variant="primary"
@@ -70,7 +84,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               }}
               disabled={!item.available}
             >
-              Add to Tray
+              {t("menu.row.btnAddToTray")}
             </Button>
           </div>
         )}

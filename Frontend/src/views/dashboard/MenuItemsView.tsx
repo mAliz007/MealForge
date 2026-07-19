@@ -1,5 +1,7 @@
+// frontend/src/views/menu-items/MenuItemsView.tsx
 import { useState } from "react";
 import { useAuthUser } from "../../hooks/useAuthUser";
+import { useTranslation } from "react-i18next";
 import {
   useMenuItems,
   useCreateMenuItem,
@@ -23,6 +25,8 @@ import type { MenuItem } from "../../types";
 import type { MenuItemFormData } from "../../utils/schemas";
 
 export default function MenuItemsView() {
+  const { t } = useTranslation();
+
   // 1. Role Authentication Scopes
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
 
@@ -81,15 +85,15 @@ export default function MenuItemsView() {
   const isLoading = isAuthLoading || isDataLoading;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-text-main transition-colors duration-200">
       {/* Page Header Layout */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Menu Catalog</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold">{t("menu.title")}</h1>
+          <p className="text-sm text-text-muted mt-0.5">
             {isAdmin 
-              ? "Configure catalog availability and administrative listing matrices." 
-              : "Browse culinary lists and build custom food delivery orders."}
+              ? t("menu.adminDescription") 
+              : t("menu.userDescription")}
           </p>
         </div>
 
@@ -103,7 +107,7 @@ export default function MenuItemsView() {
                 setIsFormOpen(true);
               }}
             >
-              + Add Menu Item
+              {t("menu.addItem")}
             </Button>
           </div>
         )}
@@ -137,20 +141,20 @@ export default function MenuItemsView() {
       ) : !menuItems || menuItems.length === 0 ? (
         <MenuItemEmpty />
       ) : (
-        <Card className="overflow-x-auto p-0">
+        <Card className="overflow-x-auto p-0 bg-structure border border-text-muted/10 rounded-2xl shadow-sm">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
-                <th className="px-6 py-3">ID</th>
-                <th className="px-6 py-3">Item Details</th>
-                <th className="px-6 py-3">Price</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3 text-right">
-                  {isAdmin ? "Actions" : "Build Order"}
+              <tr className="bg-canvas/50 border-b border-text-muted/10 text-xs font-bold uppercase tracking-wider text-text-muted">
+                <th className="px-6 py-4">{t("menu.table.id")}</th>
+                <th className="px-6 py-4">{t("menu.table.details")}</th>
+                <th className="px-6 py-4">{t("menu.table.price")}</th>
+                <th className="px-6 py-4">{t("menu.table.status")}</th>
+                <th className="px-6 py-4 text-right">
+                  {isAdmin ? t("menu.table.actions") : t("menu.table.buildOrder")}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
+            <tbody className="divide-y divide-text-muted/10 text-sm">
               {menuItems.map((item) => (
                 <MenuItemRow
                   key={item.id}

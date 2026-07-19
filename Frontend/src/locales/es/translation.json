@@ -163,5 +163,76 @@
       "hasAccount": "¿Ya tiene una cuenta?",
       "loginLink": "Iniciar sesión"
     }
+  },
+  "menu": {
+    "title": "Catálogo de Menú",
+    "adminDescription": "Configure la disponibilidad del catálogo y las matrices de listado administrativo.",
+    "userDescription": "Explore listas culinarias y cree pedidos personalizados de entrega de comida.",
+    "addItem": "+ Añadir artículo",
+    "table": {
+      "id": "ID",
+      "details": "Detalles del artículo",
+      "price": "Precio",
+      "status": "Estado",
+      "actions": "Acciones",
+      "buildOrder": "Crear pedido"
+    },
+    "filter": {
+      "restaurantLabel": "Restaurante asociado",
+      "allRestaurants": "Todos los socios registrados",
+      "stockLabel": "Estado de inventario",
+      "allListings": "Mostrar todas las publicaciones",
+      "inStock": "Solo disponibles",
+      "unavailable": "Solo no disponibles"
+    },
+    "form": {
+      "titleEdit": "Editar artículo del menú",
+      "titleCreate": "Crear artículo del menú",
+      "fieldName": "Nombre del artículo",
+      "fieldPrice": "Precio ($)",
+      "fieldRestaurant": "Restaurante propietario",
+      "selectPlaceholder": "Seleccionar socio corporativo...",
+      "fieldAvailable": "Disponible de inmediato",
+      "btnCancel": "Cancelar",
+      "btnSaving": "Guardando...",
+      "btnSaveEdit": "Aplicar cambios",
+      "btnSaveCreate": "Crear selección",
+      "validation": {
+        "nameRequired": "El nombre del artículo es obligatorio",
+        "priceRequired": "El precio es obligatorio",
+        "restaurantRequired": "Es obligatorio seleccionar un socio"
+      },
+      "title": "Detalles del artículo",
+      "subtitle": "Configure las opciones y propiedades para esta selección.",
+      "labels": {
+        "name": "Nombre del artículo",
+        "price": "Precio ($)",
+        "restaurant": "Asignar al restaurante",
+        "placeholderSelect": "Seleccionar un restaurante..."
+      },
+      "placeholders": {
+        "name": "ej. Papas fritas con ajo y parmesano"
+      },
+      "actions": {
+        "save": "Guardar artículo",
+        "create": "Agregar al menú"
+      }
+    },
+    "row": {
+      "metaRestaurantId": "ID de restaurante asociado: {{id}}",
+      "statusInStock": "Disponible",
+      "statusUnavailable": "No disponible",
+      "btnEdit": "Editar",
+      "btnDelete": "Eliminar",
+      "btnRemoving": "Eliminando...",
+      "btnAddToTray": "Agregar a la bandeja"
+    },
+    "states": {
+      "loading": "Asignando referencias del catálogo...",
+      "errorTitle": "Error al sincronizar las referencias del catálogo",
+      "errorFallback": "Ocurrió un error inesperado al comunicarse con el servicio del catálogo.",
+      "emptyTitle": "No se encontraron selecciones de menú.",
+      "emptySubtitle": "Intente ampliar sus parámetros de filtrado activos o vuelva a consultar más tarde."
+    }
   }
 }

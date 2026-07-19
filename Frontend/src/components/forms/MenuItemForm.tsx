@@ -1,28 +1,39 @@
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { menuItemSchema } from "../../utils/schemas";
 import type { MenuItemFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { mockRestaurants } from "../../utils/mockData";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
-// Import the types from your centralized types hub
 import type { MenuItemFormInput, MenuItemFormProps } from "../../types";
 
 function MenuItemFields() {
+  const { t } = useTranslation();
   const { register, formState: { errors } } = useFormContext<MenuItemFormInput>();
 
   return (
     <>
+      {/* Form Section Header */}
+      <div className="col-span-full border-b border-structure pb-2 mb-2">
+        <h3 className="text-sm font-semibold text-text-main">
+          {t("menu.form.title")}
+        </h3>
+        <p className="text-xs text-text-muted mt-0.5">
+          {t("menu.form.subtitle")}
+        </p>
+      </div>
+
       <Input
-        label="Menu Item Name"
+        label={t("menu.form.labels.name")}
         id="name"
         type="text"
-        placeholder="e.g. Garlic Parmesan Fries"
+        placeholder={t("menu.form.placeholders.name")}
         error={errors.name?.message}
         {...register("name")}
       />
       
       <Input
-        label="Price ($)"
+        label={t("menu.form.labels.price")}
         id="price"
         type="number"
         step="0.01"
@@ -32,57 +43,33 @@ function MenuItemFields() {
       />
 
       <div className="w-full flex flex-col gap-1.5">
-        <label htmlFor="restaurantId" className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
-          Assign to Restaurant
+        <label htmlFor="restaurantId" className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+          {t("menu.form.labels.restaurant")}
         </label>
         <select
           id="restaurantId"
-          className={`w-full px-3 py-2 bg-white border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
+          className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 text-text-main ${
             errors.restaurantId
-              ? "border-red-500 focus:ring-red-200 text-red-900"
-              : "border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900"
+              ? "border-red-500/50 focus:ring-red-500/20 text-red-600 bg-red-500/5 dark:text-red-400"
+              : "border-structure focus:border-accent focus:ring-accent/20"
           }`}
           {...register("restaurantId")}
         >
-          <option value="">Select a restaurant...</option>
+          <option value="" className="bg-canvas text-text-muted">
+            {t("menu.form.labels.placeholderSelect")}
+          </option>
           {mockRestaurants.map((res) => (
-            <option key={res.id} value={res.id}>
+            <option key={res.id} value={res.id} className="bg-canvas text-text-main">
               {res.name}
             </option>
           ))}
         </select>
         {errors.restaurantId && (
-          <p className="text-xs font-medium text-red-600 mt-0.5">
+          <p className="text-xs font-medium text-red-600 dark:text-red-400 mt-0.5">
             {errors.restaurantId.message}
           </p>
         )}
       </div>
     </>
-  );
-}
-
-export function MenuItemForm({ defaultValues, onSubmitSuccess, onCancel }: MenuItemFormProps) {
-  const transformedDefaults = defaultValues
-    ? {
-        name: defaultValues.name,
-        price: defaultValues.price.toString(),
-        restaurantId: defaultValues.restaurantId.toString(),
-      }
-    : undefined;
-
-  const handleFormSubmit = (data: any) => {
-    onSubmitSuccess(data as MenuItemFormData);
-  };
-
-  return (
-    <EntityFormLayout<MenuItemFormInput>
-      schema={menuItemSchema}
-      defaultValues={transformedDefaults}
-      onSubmitSuccess={handleFormSubmit}
-      onCancel={onCancel}
-      submitButtonText={defaultValues ? "Save Item" : "Add Menu Item"}
-    >
-      <MenuItemFields />
-    </EntityFormLayout>
   );
 }

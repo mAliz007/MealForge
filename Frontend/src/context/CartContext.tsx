@@ -1,18 +1,10 @@
-import React, { createContext, useContext, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import type { MenuItem } from "../types";
-import {
-  addItem,
-  removeItem,
-  updateQuantityState,
-  clearCartState,
-  replaceCartWithItem,
-  selectCartItems,
-  selectCartRestaurantId,
-  selectCartTotal,
-  selectCartCount,
-  type CartItem
-} from "../features/cart/cartSlice";
+
+export interface CartItem {
+  menuItem: MenuItem;
+  quantity: number;
+}
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -28,18 +20,21 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const dispatch = useDispatch();
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const saved = localStorage.getItem("food_delivery_cart");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  // Read data from Redux store via selectors
-  const cartItems = useSelector(selectCartItems);
-  const restaurantId = useSelector(selectCartRestaurantId);
-  const cartTotal = useSelector(selectCartTotal);
-  const cartCount = useSelector(selectCartCount);
+  // Track the active restaurant ID based on the first item added
+  const [restaurantId, setRestaurantId] = useState<number | null>(() => {
+    const saved = localStorage.getItem("food_delivery_cart_restaurant_id");
+    return saved ? Number(saved) : null;
+  });
 
-  // Keep localStorage sync operational whenever Redux state changes
   useEffect(() => {
     localStorage.setItem("food_delivery_cart", JSON.stringify(cartItems));
     if (cartItems.length === 0) {
+      setRestaurantId(null);
       localStorage.removeItem("food_delivery_cart_restaurant_id");
     } else {
       localStorage.setItem("food_delivery_cart_restaurant_id", String(restaurantId));
@@ -47,36 +42,61 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cartItems, restaurantId]);
 
   const addToCart = (item: MenuItem, quantity = 1) => {
-    // Cross-restaurant check rule
-    if (restaurantId !== null && restaurantId !== item.restaurant_id) {
+    // Cross-restaurant check
+    if (restaurantId !== null && restaurantId !== item.restaurantId) {
       const confirmClear = window.confirm(
         "You have items from a different restaurant in your cart. Clear cart to add this item?"
       );
       if (!confirmClear) return;
-
-      dispatch(replaceCartWithItem({ item, quantity }));
+      
+      // Clear cart and initialize with new restaurant's item
+      setRestaurantId(item.restaurantId);
+      setCartItems([{ menuItem: item, quantity }]);
       return;
     }
 
-    dispatch(addItem({ item, quantity }));
+    if (restaurantId === null) {
+      setRestaurantId(item.restaurantId);
+    }
+
+    setCartItems((prev) => {
+      const existingIndex = prev.findIndex((i) => i.menuItem.id === item.id);
+      if (existingIndex > -1) {
+        const updated = [...prev];
+        updated[existingIndex].quantity += quantity;
+        return updated;
+      }
+      return [...prev, { menuItem: item, quantity }];
+    });
   };
 
   const removeFromCart = (menuItemId: number) => {
-    dispatch(removeItem(menuItemId));
+    setCartItems((prev) => prev.filter((item) => item.menuItem.id !== menuItemId));
   };
 
   const updateQuantity = (menuItemId: number, quantity: number) => {
-    // Rule: Quantity cannot go below 1
     if (quantity <= 0) {
-      dispatch(removeItem(menuItemId));
+      removeFromCart(menuItemId);
       return;
     }
-    dispatch(updateQuantityState({ menuItemId, quantity }));
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.menuItem.id === menuItemId ? { ...item, quantity } : item
+      )
+    );
   };
 
   const clearCart = () => {
-    dispatch(clearCartState());
+    setCartItems([]);
+    setRestaurantId(null);
   };
+
+  const cartTotal = cartItems.reduce(
+    (total, item) => total + item.menuItem.price * item.quantity,
+    0
+  );
+
+  const cartCount = cartItems.reduce((count, item) => count + item.quantity, 0);
 
   return (
     <CartContext.Provider

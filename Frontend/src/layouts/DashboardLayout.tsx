@@ -1,44 +1,39 @@
-// frontend/src/app/DashboardLayout.tsx
+// frontend/src/layouts/DashboardLayout.tsx
 import { type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { authService } from "../services/authService";
+import { authService } from "../services/authService"; // Verify this matches your exact directory nesting
 import { ROUTES } from "../app/router";
-import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages } from "lucide-react";
-import { IconButton } from "@mui/material";
-import { useTranslation } from "react-i18next";
-
-// Modular Imports
-import { DesktopSidebar } from "../components/dashboard/DesktopSidebar";
-import { MobileNavigation } from "../components/dashboard/MobileNavigation";
-import { CartBadgeButton } from "../components/dashboard/CartBadgeButton";
-import { useTheme } from "../context/ThemeContext";
+import { Utensils, BookOpen, ShoppingBag, ShoppingCart, LogOut, Menu } from "lucide-react";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { theme, toggleTheme } = useTheme();
-  const { t, i18n } = useTranslation();
 
   const navigationItems = [
-    { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
-    { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
-    { name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag },
-    { name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart },
+    { name: "Restaurants", path: "/dashboard/restaurants", icon: Utensils },
+    { name: "Menu Catalog", path: "/dashboard/menu-items", icon: BookOpen },
+    { name: "Orders Ledger", path: "/dashboard/orders", icon: ShoppingBag },
+    { name: "Active Cart", path: "/dashboard/cart", icon: ShoppingCart },
   ];
 
+  // Configure sign-out network mutation
   const logoutMutation = useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
+      // Wipes out the background user profiles tracking cache instantly
       queryClient.removeQueries({ queryKey: ["auth", "me"] });
+      // Redirects safely back to login root path 
       navigate(ROUTES.LOGIN, { replace: true });
     },
     onError: (error) => {
       console.error("Sign out transaction failed:", error);
+      // Fallback: Clear cache and redirect anyway to prevent deadlocked local states
       queryClient.removeQueries({ queryKey: ["auth", "me"] });
       navigate(ROUTES.LOGIN, { replace: true });
     },
@@ -48,83 +43,72 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     logoutMutation.mutate();
   };
 
-  const toggleLanguage = () => {
-    const nextLang = i18n.language.startsWith("en") ? "es" : "en";
-    i18n.changeLanguage(nextLang);
-  };
-
   return (
-    <div className="min-h-screen bg-canvas text-text-main flex flex-col md:flex-row overflow-x-hidden transition-colors duration-200">
-      
-      {/* 1. Desktop Left Sidebar */}
-      <DesktopSidebar 
-        navigationItems={navigationItems}
-        onLogout={handleLogoutClick}
-        isLogoutPending={logoutMutation.isPending}
-      />
-
-      {/* 2. Main Workspace Column */}
-      <div className="flex-1 flex flex-col min-w-0 md:pl-[280px] w-full min-h-screen transition-all duration-200">
-        
-        {/* Mobile Navigation */}
-        <MobileNavigation 
-          navigationItems={navigationItems}
-          onLogout={handleLogoutClick}
-          isLogoutPending={logoutMutation.isPending}
-        />
-
-        {/* Desktop Header */}
-        <header className="hidden md:flex h-16 bg-structure border-b border-text-muted/10 items-center justify-end px-8 sticky top-0 z-10 gap-4 transition-colors duration-200">
-          <IconButton 
-            onClick={toggleLanguage} 
-            color="inherit" 
-            size="small"
-            aria-label="Toggle language"
-            sx={{ 
-              color: 'var(--color-text-muted)',
-              p: 0.75,
-              borderRadius: '8px',
-              border: '1px solid rgba(148, 163, 184, 0.15)',
-              transition: 'all 0.2s ease',
-              "&:hover": {
-                borderColor: "var(--color-text-muted)",
-                backgroundColor: "rgba(148, 163, 184, 0.05)"
-              }
-            }}
-          >
-            <div className="flex items-center gap-1.5 px-1">
-              <Languages className="h-4 w-4" />
-              <span className="text-xs font-semibold uppercase">
-                {i18n.language.startsWith("en") ? "es" : "en"}
-              </span>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Structural Sidebar Navigation */}
+      <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col justify-between fixed inset-y-0 left-0 z-20">
+        <div className="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto">
+          {/* Platform Identity Branding Header */}
+          <div className="flex items-center flex-shrink-0 px-6 gap-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+              F
             </div>
-          </IconButton>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">FoodSplits</span>
+          </div>
+          
+          {/* Navigation Link Stack */}
+          <nav className="mt-8 flex-1 px-4 space-y-1">
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-colors group ${
+                    isActive
+                      ? "bg-blue-50 text-blue-700"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  }`}
+                >
+                  <Icon className={`mr-3 h-5 w-5 ${isActive ? "text-blue-600" : "text-gray-400 group-hover:text-gray-500"}`} />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
-          <IconButton 
-            onClick={toggleTheme} 
-            color="inherit" 
-            size="small"
-            aria-label="Toggle theme mode"
-            sx={{ 
-              color: 'var(--color-text-muted)',
-              p: 0.75,
-              borderRadius: '8px',
-              border: '1px solid rgba(148, 163, 184, 0.15)',
-              transition: 'all 0.2s ease',
-              "&:hover": {
-                borderColor: "var(--color-text-muted)",
-                backgroundColor: "rgba(148, 163, 184, 0.05)"
-              }
-            }}
+        {/* Logout Control Action Button */}
+        <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+          <button 
+            onClick={handleLogoutClick}
+            disabled={logoutMutation.isPending}
+            className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
-          </IconButton>
+            <LogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600" />
+            {logoutMutation.isPending ? "Signing out..." : "Sign Out"}
+          </button>
+        </div>
+      </aside>
 
-          <CartBadgeButton />
-        </header>
+      {/* Main Viewport Container Context Panel */}
+      <div className="md:pl-64 flex flex-col flex-1 w-0">
+        {/* Responsive Mobile Top Header Layout */}
+        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 md:hidden items-center px-4 justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
+              F
+            </div>
+            <span className="text-lg font-bold text-gray-900 tracking-tight">FoodSplits</span>
+          </div>
+          <button className="p-2 rounded-md text-gray-500 hover:text-gray-600 hover:bg-gray-100">
+            <Menu className="h-6 w-6" />
+          </button>
+        </div>
 
-        {/* Core Screen View */}
-        <main className="flex-1 relative focus:outline-none py-6 px-4 sm:px-6 md:px-8">
+        {/* Content Render Target Area */}
+        <main className="flex-1 relative overflow-y-auto focus:outline-none py-6 px-4 sm:px-6 md:px-8">
           {children}
         </main>
       </div>

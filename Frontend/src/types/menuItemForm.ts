@@ -3,7 +3,7 @@ import type { MenuItemFormData } from "../utils/schemas";
 export type MenuItemFormInput = {
   name: string;
   price: string;
-  restaurant_id: string;
+  restaurantId: string;
 };
 
 export interface MenuItemFormProps {

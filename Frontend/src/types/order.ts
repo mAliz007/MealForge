@@ -1,6 +1,6 @@
 export type Order = {
   id: number;
-  restaurant_id: number;
+  restaurantId: number;
   status: "pending" | "confirmed" | "cancelled";
-  total_amount: number;
+  totalAmount: number;
 };

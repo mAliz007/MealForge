@@ -3,56 +3,49 @@ import { restaurantSchema } from "../../utils/schemas";
 import type { RestaurantFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
+// Import the interface from your centralized types hub
 import type { RestaurantFormProps } from "../../types";
-import { useTranslation } from "react-i18next";
 
 function RestaurantFields() {
-  const { t } = useTranslation();
   const { register, formState: { errors } } = useFormContext<RestaurantFormData>();
 
   return (
     <>
       <Input
-        label={t("restaurants.form.labels.name")}
+        label="Restaurant Name"
         id="name"
         type="text"
-        placeholder={t("restaurants.form.placeholders.name")}
+        placeholder="e.g. The Gourmet Burger Hub"
         error={errors.name?.message}
         {...register("name")}
       />
       <Input
-        label={t("restaurants.form.labels.location")}
+        label="Location"
         id="location"
         type="text"
-        placeholder={t("restaurants.form.placeholders.location")}
+        placeholder="e.g. Downtown Sector A"
         error={errors.location?.message}
         {...register("location")}
       />
       
       <div className="w-full flex flex-col gap-1.5">
-        <label htmlFor="status" className="text-xs font-semibold text-muted uppercase tracking-wider">
-          {t("restaurants.form.labels.status")}
+        <label htmlFor="status" className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
+          Operating Status
         </label>
-        
         <select
           id="status"
-          className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 ${
+          className={`w-full px-3 py-2 bg-white border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
             errors.status
-              ? "border-red-500 focus:ring-red-500/20 text-red-500 bg-red-500/5"
-              : "border-structure focus:border-accent focus:ring-accent/20 text-main"
+              ? "border-red-500 focus:ring-red-200 text-red-900"
+              : "border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900"
           }`}
           {...register("status")}
         >
-          <option value="open" className="bg-structure text-main">
-            {t("restaurants.form.labels.open")}
-          </option>
-          <option value="closed" className="bg-structure text-main">
-            {t("restaurants.form.labels.closed")}
-          </option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
         </select>
-        
         {errors.status && (
-          <p className="text-xs font-medium text-red-500 mt-0.5">{errors.status.message}</p>
+          <p className="text-xs font-medium text-red-600 mt-0.5">{errors.status.message}</p>
         )}
       </div>
     </>
@@ -60,19 +53,13 @@ function RestaurantFields() {
 }
 
 export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: RestaurantFormProps) {
-  const { t } = useTranslation();
-
   return (
     <EntityFormLayout<RestaurantFormData>
       schema={restaurantSchema}
       defaultValues={defaultValues}
       onSubmitSuccess={onSubmitSuccess}
       onCancel={onCancel}
-      submitButtonText={
-        defaultValues 
-          ? t("restaurants.form.actions.save") 
-          : t("restaurants.form.actions.create")
-      }
+      submitButtonText={defaultValues ? "Save Changes" : "Create Restaurant"}
     >
       <RestaurantFields />
     </EntityFormLayout>

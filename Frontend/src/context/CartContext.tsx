@@ -48,7 +48,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (item: MenuItem, quantity = 1) => {
     // Cross-restaurant check rule
-    if (restaurantId !== null && restaurantId !== item.restaurantId) {
+    if (restaurantId !== null && restaurantId !== item.restaurant_id) {
       const confirmClear = window.confirm(
         "You have items from a different restaurant in your cart. Clear cart to add this item?"
       );

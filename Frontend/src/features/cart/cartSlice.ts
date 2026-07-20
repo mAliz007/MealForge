@@ -33,7 +33,7 @@ const cartSlice = createSlice({
       const { item, quantity } = action.payload;
       
       if (state.restaurantId === null) {
-        state.restaurantId = item.restaurantId;
+        state.restaurantId = item.restaurant_id;
       }
 
       const existingItem = state.cartItems.find((i) => i.menuItem.id === item.id);
@@ -70,7 +70,7 @@ const cartSlice = createSlice({
     // Used specifically when overriding the cart for a new restaurant selection
     replaceCartWithItem: (state, action: PayloadAction<{ item: MenuItem; quantity: number }>) => {
       const { item, quantity } = action.payload;
-      state.restaurantId = item.restaurantId;
+      state.restaurantId = item.restaurant_id;
       state.cartItems = [{ menuItem: item, quantity }];
     }
   },

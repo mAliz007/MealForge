@@ -1,6 +1,6 @@
 export type MenuItem = {
   id: number;
-  restaurantId: number;
+  restaurant_id: number;
   name: string;
   description?: string;
   price: number;

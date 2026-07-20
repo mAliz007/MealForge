@@ -1,62 +1,23 @@
-import { useCart } from "../../context/CartContext";
-import { useCreateOrder } from "../../hooks/useOrders";
+
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { useTranslation } from "react-i18next";
+import { useCartView } from "../../hooks/useCartView";
 
 export default function CartView() {
-  const { t } = useTranslation();
   const {
+    t,
     cartItems,
-    restaurantId,
+    cartCount,
+    cartTotal,
+    deliveryFee,
+    finalTotal,
+    cleanRestaurantId,
+    isPending,
     updateQuantity,
     removeFromCart,
     clearCart,
-    cartTotal,
-    cartCount
-  } = useCart();
-
-  const createOrderMutation = useCreateOrder();
-
-  // 1. Resolve the Restaurant ID safely (checks context value, then falls back to item data)
-  const rawId = Number(restaurantId);
-
-  // Cast menuItem as any to safely check snake_case keys if they are delivered by raw JSON APIs
-  const fallbackId = cartItems[0]?.menuItem?.restaurantId ?? (cartItems[0]?.menuItem as any)?.restaurant_id;
-  const cleanRestaurantId = !isNaN(rawId) && rawId > 0 ? rawId : Number(fallbackId || 0);
-
-  // Static delivery parameters
-  const deliveryFee = cartItems.length > 0 ? 2.50 : 0.00;
-
-  // Cast cartTotal safely to guarantee a number calculation
-  const finalTotal = Number(cartTotal || 0) + deliveryFee;
-
-  const handleCheckout = () => {
-    // If we still can't find a valid Restaurant ID, block and warn the user
-    if (!cleanRestaurantId || cleanRestaurantId === 0 || cartItems.length === 0) {
-      alert(t("cart.alerts.invalidHub"));
-      return;
-    }
-
-    // Structure the precise structural schema your Rails backend expects
-    const payload = {
-      restaurant_id: cleanRestaurantId,
-      order_items: cartItems.map(item => ({
-        menu_item_id: item.menuItem.id,
-        quantity: item.quantity
-      }))
-    };
-
-    createOrderMutation.mutate(payload, {
-      onSuccess: () => {
-        alert(t("cart.alerts.success"));
-        clearCart(); // Flush local cache tray completely
-      },
-      onError: (err) => {
-        alert(t("cart.alerts.error", { message: err.message }));
-      }
-    });
-  };
+    handleCheckout,
+  } = useCartView();
 
   return (
     <div className="space-y-6">
@@ -65,7 +26,7 @@ export default function CartView() {
         <p className="text-sm text-muted">{t("cart.description")}</p>
       </div>
 
-      {createOrderMutation.isPending ? (
+      {isPending ? (
         <div className="flex justify-center items-center h-64 text-muted">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mr-2"></div>
           {t("cart.transmitting")}
@@ -92,7 +53,6 @@ export default function CartView() {
             </div>
 
             {cartItems.map(({ menuItem, quantity }) => {
-              // Explicitly convert string numeric prices coming from active databases
               const parsedPrice = Number(menuItem.price || 0);
               const rowValuation = parsedPrice * quantity;
 
@@ -131,7 +91,6 @@ export default function CartView() {
                       onClick={() => removeFromCart(menuItem.id)}
                       className="inline-flex items-center gap-1 text-xs text-muted hover:text-red-500 transition-colors group"
                     >
-                      {/* Clean inline dustbin/trash icon */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
@@ -179,7 +138,7 @@ export default function CartView() {
                 variant="primary"
                 className="w-full mt-2 py-2.5 text-sm font-semibold tracking-wide"
                 onClick={handleCheckout}
-                disabled={createOrderMutation.isPending}
+                disabled={isPending}
               >
                 {t("cart.actions.checkout")}
               </Button>

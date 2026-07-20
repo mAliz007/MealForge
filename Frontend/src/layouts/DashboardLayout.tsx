@@ -1,6 +1,9 @@
 // frontend/src/layouts/DashboardLayout.tsx
 import { type ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authService } from "../services/authService"; // Verify this matches your exact directory nesting
+import { ROUTES } from "../app/router";
 import { Utensils, BookOpen, ShoppingBag, ShoppingCart, LogOut, Menu } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -9,6 +12,8 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const navigationItems = [
     { name: "Restaurants", path: "/dashboard/restaurants", icon: Utensils },
@@ -16,6 +21,27 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "Orders Ledger", path: "/dashboard/orders", icon: ShoppingBag },
     { name: "Active Cart", path: "/dashboard/cart", icon: ShoppingCart },
   ];
+
+  // Configure sign-out network mutation
+  const logoutMutation = useMutation({
+    mutationFn: authService.logout,
+    onSuccess: () => {
+      // Wipes out the background user profiles tracking cache instantly
+      queryClient.removeQueries({ queryKey: ["auth", "me"] });
+      // Redirects safely back to login root path 
+      navigate(ROUTES.LOGIN, { replace: true });
+    },
+    onError: (error) => {
+      console.error("Sign out transaction failed:", error);
+      // Fallback: Clear cache and redirect anyway to prevent deadlocked local states
+      queryClient.removeQueries({ queryKey: ["auth", "me"] });
+      navigate(ROUTES.LOGIN, { replace: true });
+    },
+  });
+
+  const handleLogoutClick = () => {
+    logoutMutation.mutate();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -53,12 +79,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </nav>
         </div>
 
-        {/* Logout Control Action */}
+        {/* Logout Control Action Button */}
         <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-          <Link to="/login" className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors group">
+          <button 
+            onClick={handleLogoutClick}
+            disabled={logoutMutation.isPending}
+            className="w-full flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <LogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-600" />
-            Sign Out
-          </Link>
+            {logoutMutation.isPending ? "Signing out..." : "Sign Out"}
+          </button>
         </div>
       </aside>
 

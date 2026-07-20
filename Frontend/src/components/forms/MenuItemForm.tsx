@@ -1,58 +1,17 @@
-// frontend/src/components/forms/MenuItemForm.tsx
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { menuItemSchema, type MenuItemFormData } from "../../utils/schemas";
+import { useFormContext } from "react-hook-form";
+import { menuItemSchema } from "../../utils/schemas";
+import type { MenuItemFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
-import { Button } from "../ui/Button";
 import { mockRestaurants } from "../../utils/mockData";
+import { EntityFormLayout } from "./layouts/EntityFormLayout";
+// Import the types from your centralized types hub
+import type { MenuItemFormInput, MenuItemFormProps } from "../../types";
 
-// Define the shape matching exactly what HTML input elements yield
-type MenuItemFormInput = {
-  name: string;
-  price: string;
-  restaurantId: string;
-};
-
-interface MenuItemFormProps {
-  defaultValues?: MenuItemFormData;
-  onSubmitSuccess: (data: MenuItemFormData) => void;
-  onCancel?: () => void;
-}
-
-export function MenuItemForm({ defaultValues, onSubmitSuccess, onCancel }: MenuItemFormProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<MenuItemFormInput>({
-    // We explicitly cast the zodResolver to match our HTML input format expectations
-    resolver: zodResolver(menuItemSchema) as any,
-    defaultValues: defaultValues ? {
-      name: defaultValues.name,
-      price: defaultValues.price.toString(),
-      restaurantId: defaultValues.restaurantId.toString(),
-    } : undefined,
-  });
-
-  useEffect(() => {
-    if (defaultValues) {
-      reset({
-        name: defaultValues.name,
-        price: defaultValues.price.toString(),
-        restaurantId: defaultValues.restaurantId.toString(),
-      });
-    }
-  }, [defaultValues, reset]);
-
-  // The onSubmit wrapper parses out the perfectly coerced data contract safely
-  const handleFormSubmit = (data: any) => {
-    onSubmitSuccess(data as MenuItemFormData);
-  };
+function MenuItemFields() {
+  const { register, formState: { errors } } = useFormContext<MenuItemFormInput>();
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 w-full">
+    <>
       <Input
         label="Menu Item Name"
         id="name"
@@ -98,17 +57,32 @@ export function MenuItemForm({ defaultValues, onSubmitSuccess, onCancel }: MenuI
           </p>
         )}
       </div>
+    </>
+  );
+}
 
-      <div className="flex justify-end gap-3 pt-2">
-        {onCancel && (
-          <Button type="button" variant="secondary" onClick={onCancel}>
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" variant="primary" isLoading={isSubmitting}>
-          {defaultValues ? "Save Item" : "Add Menu Item"}
-        </Button>
-      </div>
-    </form>
+export function MenuItemForm({ defaultValues, onSubmitSuccess, onCancel }: MenuItemFormProps) {
+  const transformedDefaults = defaultValues
+    ? {
+        name: defaultValues.name,
+        price: defaultValues.price.toString(),
+        restaurantId: defaultValues.restaurantId.toString(),
+      }
+    : undefined;
+
+  const handleFormSubmit = (data: any) => {
+    onSubmitSuccess(data as MenuItemFormData);
+  };
+
+  return (
+    <EntityFormLayout<MenuItemFormInput>
+      schema={menuItemSchema}
+      defaultValues={transformedDefaults}
+      onSubmitSuccess={handleFormSubmit}
+      onCancel={onCancel}
+      submitButtonText={defaultValues ? "Save Item" : "Add Menu Item"}
+    >
+      <MenuItemFields />
+    </EntityFormLayout>
   );
 }

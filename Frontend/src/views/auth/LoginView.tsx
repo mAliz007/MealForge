@@ -1,16 +1,11 @@
-// frontend/src/views/auth/LoginView.tsx
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LoginForm } from "../../components/forms/LoginForm";
 import { Card } from "../../components/ui/Card";
+import { useLogin } from "../../hooks/useLogin"; // Adjust this path to your hooks folder
 
 export default function LoginView() {
-  const navigate = useNavigate();
-
-  const handleLoginSuccess = (data: any) => {
-    console.log("Logged in successfully:", data);
-    // Professional fake authentication state trigger: route them directly to dashboard
-    navigate("/dashboard");
-  };
+  // Pull the completely clean and typed logic straight from your hook
+  const { onSubmit, isLoading, errorMessage } = useLogin();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -20,7 +15,18 @@ export default function LoginView() {
           <p className="text-sm text-gray-500 mt-1">Sign in to manage your dining platform</p>
         </div>
 
-        <LoginForm onSubmitSuccess={handleLoginSuccess} />
+        {/* Display dynamic feedback */}
+        {errorMessage && (
+          <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+            {errorMessage}
+          </div>
+        )}
+
+        {/* Form component now receives perfectly typed logic signatures */}
+        <LoginForm 
+          onSubmit={onSubmit} 
+          isLoading={isLoading} 
+        />
 
         <div className="text-center mt-6 text-sm text-gray-500">
           Don't have an account?{" "}

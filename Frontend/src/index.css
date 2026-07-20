@@ -1,2 +1,38 @@
 /* frontend/src/index.css */
 @import "tailwindcss";
+
+/* 1. Register the dark mode variant based on a data attribute */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* 2. Define our 60-30-10 design system tokens */
+@theme {
+  /* LIGHT MODE (Default Variables) */
+  --color-canvas: #f8fafc;        /* 60% - Main clean off-white background (slate-50) */
+  --color-structure: #e2e8f0;     /* 30% - Cards, sidebar, container borders (slate-200) */
+  --color-accent: #1e40af;        /* 10% - Action buttons, active navigation (blue-800) */
+  
+  /* Text and contrast colors */
+  --color-text-main: #0f172a;     /* Deep slate-900 for absolute readability */
+  --color-text-muted: #475569;    /* Muted slate-600 for subtext, secondary tables */
+}
+
+/* 3. Swap variables when the data-theme="dark" attribute is active */
+@layer base {
+  [data-theme="dark"] {
+    /* DARK MODE (Overridden Variables) */
+    --color-canvas: #0b0f19;      /* 60% - Midnight navy background */
+    --color-structure: #1e293b;   /* 30% - Elevated slate/steel dark grey cards */
+    --color-accent: #3b82f6;      /* 10% - Vibrant electric blue (blue-500) for contrast */
+    
+    /* Dark text contrast overrides */
+    --color-text-main: #f8fafc;   /* Soft slate-50 to eliminate white eye-strain */
+    --color-text-muted: #94a3b8;  /* Soft slate-400 for subtext */
+  }
+
+  /* Set default app-wide styles using our variables */
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-text-main);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}

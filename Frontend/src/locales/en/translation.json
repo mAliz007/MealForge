@@ -32,5 +32,207 @@
     "footer": {
       "copyright": "FOODSPLITS WORKSPACE INTERNSHIP © 2026"
     }
+  },
+  "navbar": {
+    "restaurants": "Restaurants",
+    "menuCatalog": "Menu Catalog",
+    "ordersLedger": "Orders Ledger",
+    "activeCart": "Active Cart",
+    "logout": "Log Out",
+    "loggingOut": "Logging Out..."
+  },
+  "restaurants": {
+    "title": "Restaurants",
+    "adminDescription": "Manage registered dining partners and operating statuses.",
+    "userDescription": "View active registered dining partners.",
+    "addBtn": "+ Add Restaurant",
+    "states": {
+      "syncing": "Syncing records...",
+      "failedSync": "Failed to sync records",
+      "defaultError": "Please check your authentication or server connectivity.",
+      "noneFound": "No restaurants found.",
+      "addFirst": "Get started by adding your first dining partner."
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "location": "Location",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "removing": "Removing...",
+      "confirmDelete": "Are you sure you want to remove {{name}}?"
+    },
+    "formCard": {
+      "registerTitle": "Register New Dining Partner",
+      "modifyTitle": "Modify: {{name}}"
+    },
+    "form": {
+      "labels": {
+        "name": "Restaurant Name",
+        "location": "Location",
+        "status": "Operating Status",
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "placeholders": {
+        "name": "e.g. The Gourmet Burger Hub",
+        "location": "e.g. Downtown Sector A"
+      },
+      "actions": {
+        "save": "Save Changes",
+        "create": "Create Restaurant"
+      }
+    }
+  },
+  "common": {
+    "actions": {
+      "cancel": "Cancel"
+    }
+  },
+  "orders": {
+    "title": "Transaction History",
+    "adminDescription": "Monitor the global restaurant transaction ledgers and fulfillment records.",
+    "userDescription": "Review and track the real-time fulfillment state of your culinary selections.",
+    "table": {
+      "orderId": "Order ID",
+      "node": "Fulfillment Node",
+      "total": "Gross Total",
+      "state": "Fulfillment State",
+      "invoice": "Invoice Details",
+      "restaurantNode": "Restaurant #{{id}}",
+      "inspectBtn": "Inspect Items"
+    },
+    "modal": {
+      "title": "Invoice Specs",
+      "manifestRef": "Manifest Reference ID: #{{id}}",
+      "stateLabel": "State: {{status}}",
+      "processingNode": "Processing Node",
+      "restaurantHub": "Restaurant Hub #{{id}}",
+      "financialAccounting": "Financial Accounting",
+      "grossValue": "Gross Transacted Value",
+      "dismissBtn": "Dismiss Ledger Entry"
+    },
+    "states": {
+      "loading": "Syncing open receipts...",
+      "errorTitle": "Transactional Pipeline Failure",
+      "errorFallback": "An unexpected error occurred while communicating with the order routing engine.",
+      "emptyTitle": "No order operations on record.",
+      "emptySubtitle": "New transaction tickets will populate here when orders go down live."
+    }
+  },
+  "cart": {
+    "title": "Active Checkout Cart",
+    "description": "Review pending checkout batches and transaction pipelines.",
+    "transmitting": "Transmitting secure payment and manifest payload...",
+    "empty": {
+      "title": "Your selection tray is empty.",
+      "subtitle": "Navigate to the menu catalog tab to select dishes."
+    },
+    "actions": {
+      "reviewItems": "Reviewing {{count}} Item (Source Hub #{{hub}})",
+      "reviewItems_plural": "Reviewing {{count}} Items (Source Hub #{{hub}})",
+      "clearTray": "Clear Tray",
+      "each": "${{price}} each",
+      "remove": "Remove",
+      "checkout": "Proceed to Payment Gateway"
+    },
+    "sidebar": {
+      "title": "Order Estimation",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery Fee",
+      "totalDue": "Total Due"
+    },
+    "alerts": {
+      "invalidHub": "Checkout pipeline rejected: Unable to identify a valid Restaurant ID for this transaction.",
+      "success": "Transaction complete! Your order has been placed successfully.",
+      "error": "Checkout pipeline rejected: {{message}}"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to manage your dining platform",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Get started as a platform administrator",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign In"
+    }
+  },
+  "menu": {
+    "title": "Menu Catalog",
+    "adminDescription": "Configure catalog availability and administrative listing matrices.",
+    "userDescription": "Browse culinary lists and build custom food delivery orders.",
+    "addItem": "+ Add Menu Item",
+    "table": {
+      "id": "ID",
+      "details": "Item Details",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions",
+      "buildOrder": "Build Order"
+    },
+    "filter": {
+      "restaurantLabel": "Partner Restaurant",
+      "allRestaurants": "All Registered Partners",
+      "stockLabel": "Stock State",
+      "allListings": "Show All Listings",
+      "inStock": "In Stock Only",
+      "unavailable": "Unavailable Only"
+    },
+    "form": {
+      "titleEdit": "Edit Menu Item",
+      "titleCreate": "Create Menu Item",
+      "fieldName": "Item Name",
+      "fieldPrice": "Price ($)",
+      "fieldRestaurant": "Restaurant Owner",
+      "selectPlaceholder": "Select corporate partner...",
+      "fieldAvailable": "Available Immediately",
+      "btnCancel": "Cancel",
+      "btnSaving": "Saving...",
+      "btnSaveEdit": "Apply Changes",
+      "btnSaveCreate": "Create Selection",
+      "validation": {
+        "nameRequired": "Item name is required",
+        "priceRequired": "Price is required",
+        "restaurantRequired": "Selecting a partner is required"
+      },
+      "title": "Menu Item Details",
+      "subtitle": "Configure options and properties for this selection.",
+      "labels": {
+        "name": "Menu Item Name",
+        "price": "Price ($)",
+        "restaurant": "Assign to Restaurant",
+        "placeholderSelect": "Select a restaurant..."
+      },
+      "placeholders": {
+        "name": "e.g. Garlic Parmesan Fries"
+      },
+      "actions": {
+        "save": "Save Item",
+        "create": "Add Menu Item"
+      }
+    },
+    "row": {
+      "metaRestaurantId": "Associated Restaurant ID: {{id}}",
+      "statusInStock": "In Stock",
+      "statusUnavailable": "Unavailable",
+      "btnEdit": "Edit",
+      "btnDelete": "Delete",
+      "btnRemoving": "Removing...",
+      "btnAddToTray": "Add to Tray"
+    },
+    "states": {
+      "loading": "Mapping catalog references...",
+      "errorTitle": "Failed to Sync Catalog References",
+      "errorFallback": "An unexpected error occurred while communicating with the catalog service.",
+      "emptyTitle": "No menu selections found.",
+      "emptySubtitle": "Try broadening your active filter parameters or check back later."
+    }
   }
 }

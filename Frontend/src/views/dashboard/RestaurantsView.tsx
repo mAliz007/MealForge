@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "../../components/ui/Button";
 import { useAuthUser } from "../../hooks/useAuthUser";
+import { useTranslation } from "react-i18next"; // Added i18n
 import {
   useRestaurants,
   useCreateRestaurant,
@@ -18,6 +19,8 @@ import type { Restaurant } from "../../types";
 import type { RestaurantFormData } from "../../utils/schemas";
 
 export default function RestaurantsView() {
+  const { t } = useTranslation();
+
   // 1. Role Authentication
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
 
@@ -70,11 +73,11 @@ export default function RestaurantsView() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Restaurants</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-main">{t("restaurants.title")}</h1>
+          <p className="text-sm text-muted">
             {isAdmin 
-              ? "Manage registered dining partners and operating statuses." 
-              : "View active registered dining partners."}
+              ? t("restaurants.adminDescription") 
+              : t("restaurants.userDescription")}
           </p>
         </div>
         
@@ -88,20 +91,19 @@ export default function RestaurantsView() {
                 setIsFormOpen(true);
               }}
             >
-              + Add Restaurant
+              {t("restaurants.addBtn")}
             </Button>
           </div>
         )}
       </div>
 
-      {/* Conditionally Render Form Card */}
-      {isFormOpen && (
-        <RestaurantFormCard
-          editingRestaurant={editingRestaurant}
-          onSubmit={handleFormSubmit}
-          onCancel={handleCancelForm}
-        />
-      )}
+      {/* MUI Dialog (Modal Form) */}
+      <RestaurantFormCard
+        open={isFormOpen}
+        editingRestaurant={editingRestaurant}
+        onSubmit={handleFormSubmit}
+        onCancel={handleCancelForm}
+      />
 
       {/* Main Content States */}
       {isLoading ? (

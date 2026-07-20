@@ -1,73 +1,144 @@
-// frontend/src/views/dashboard/MenuItemsView.tsx
 import { useState } from "react";
-import { mockMenuItems } from "../../utils/mockData";
+import { useAuthUser } from "../../hooks/useAuthUser";
+import {
+  useMenuItems,
+  useCreateMenuItem,
+  useUpdateMenuItem,
+  useDeleteMenuItem,
+} from "../../hooks/useMenuItems";
+
+// Isolated Modular Presentation Components
+import { MenuFilterBar } from "../../components/menu-items/MenuFilterBar";
+import { MenuItemRow } from "../../components/menu-items/MenuItemRow";
+import { MenuItemFormPanel } from "../../components/menu-items/MenuItemFormPanel";
+import {
+  MenuItemLoading,
+  MenuItemError,
+  MenuItemEmpty,
+} from "../../components/menu-items/MenuItemStates";
+
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { MenuItemForm } from "../../components/forms/MenuItemForm";
-import { type MenuItemFormData } from "../../utils/schemas";
-import { type MenuItem } from "../../types";
+import type { MenuItem } from "../../types";
+import type { MenuItemFormData } from "../../utils/schemas";
 
 export default function MenuItemsView() {
-  const [data, setData] = useState<MenuItem[]>(mockMenuItems);
-  const [loading, setLoading] = useState(false);
+  // 1. Role Authentication Scopes
+  const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
+
+  // 2. Query Filtering State Strings
+  const [restaurantId, setRestaurantId] = useState<string>("");
+  const [available, setAvailable] = useState<string>("");
+
+  // Construct operational filters object
+  const activeFilters = {
+    ...(restaurantId && { restaurant_id: Number(restaurantId) }),
+    ...(available && { available: available === "true" }),
+  };
+
+  // 3. TanStack Query Foundations
+  const { data: menuItems, isLoading: isDataLoading, error, isError } = useMenuItems(activeFilters);
+  const createMutation = useCreateMenuItem();
+  const updateMutation = useUpdateMenuItem();
+  const deleteMutation = useDeleteMenuItem();
+
+  // 4. Panel Interface UI States
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>(undefined);
 
-  const handleFormSubmit = (formData: MenuItemFormData) => {
+  // Form Submission Router (Creates a new entry or updates an existing entity)
+  const handleFormSubmit = (payload: MenuItemFormData & { available: boolean }) => {
     if (editingItem) {
-      // Local edit mutation
-      setData(prev => prev.map(item => item.id === editingItem.id ? { ...item, ...formData } : item));
+      updateMutation.mutate(
+        { id: editingItem.id, data: payload },
+        {
+          onSuccess: () => {
+            setIsFormOpen(false);
+            setEditingItem(undefined);
+          },
+        }
+      );
     } else {
-      // Local create mutation
-      const newItem: MenuItem = {
-        id: data.length > 0 ? Math.max(...data.map(m => m.id)) + 1 : 101,
-        available: true,
-        ...formData
-      };
-      setData(prev => [...prev, newItem]);
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          setIsFormOpen(false);
+        },
+      });
     }
+  };
+
+  const startEdit = (item: MenuItem) => {
+    setEditingItem(item);
+    setIsFormOpen(true);
+  };
+
+  const handleCancelForm = () => {
     setIsFormOpen(false);
     setEditingItem(undefined);
   };
 
+  // Compute unified structural loading states
+  const isLoading = isAuthLoading || isDataLoading;
+
   return (
     <div className="space-y-6">
+      {/* Page Header Layout */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Menu Catalog</h1>
-          <p className="text-sm text-gray-500">Configure catalog availability and listing matrices.</p>
+          <p className="text-sm text-gray-500">
+            {isAdmin 
+              ? "Configure catalog availability and administrative listing matrices." 
+              : "Browse culinary lists and build custom food delivery orders."}
+          </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="primary" onClick={() => { setEditingItem(undefined); setIsFormOpen(true); }}>
-            + Add Menu Item
-          </Button>
-          <Button variant="secondary" onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 600); }}>Simulate Loading</Button>
-          <Button variant="danger" onClick={() => setData([])}>Clear All</Button>
-        </div>
+
+        {/* Render addition capability solely for privileged Admins */}
+        {isAdmin && (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="primary"
+              onClick={() => {
+                setEditingItem(undefined);
+                setIsFormOpen(true);
+              }}
+            >
+              + Add Menu Item
+            </Button>
+          </div>
+        )}
       </div>
 
+      {/* Filter Management Bar */}
+      <MenuFilterBar
+        restaurantId={restaurantId}
+        setRestaurantId={setRestaurantId}
+        available={available}
+        setAvailable={setAvailable}
+      />
+
+      {/* Accordion/Form Modal Entry Wrapper */}
       {isFormOpen && (
         <Card className="max-w-xl border-blue-200 bg-blue-50/10">
           <h2 className="text-base font-bold text-gray-900 mb-4">
             {editingItem ? `Modify: ${editingItem.name}` : "Create New Menu Selection"}
           </h2>
-          <MenuItemForm
-            defaultValues={editingItem}
-            onSubmitSuccess={handleFormSubmit}
-            onCancel={() => { setIsFormOpen(false); setEditingItem(undefined); }}
+          <MenuItemFormPanel
+            editingItem={editingItem}
+            onSubmit={handleFormSubmit}
+            onCancel={handleCancelForm}
+            isPending={createMutation.isPending || updateMutation.isPending}
           />
         </Card>
       )}
 
-      {loading ? (
-        <div className="flex justify-center items-center h-48 text-gray-500">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-2"></div>
-          Mapping catalog references...
-        </div>
-      ) : data.length === 0 ? (
-        <Card className="text-center py-12 text-gray-500">
-          <p className="text-lg font-medium">No menu selections found.</p>
-        </Card>
+      {/* Base Response Content Rendering Flow */}
+      {isLoading ? (
+        <MenuItemLoading />
+      ) : isError ? (
+        <MenuItemError message={error?.message} />
+      ) : !menuItems || menuItems.length === 0 ? (
+        <MenuItemEmpty />
       ) : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full text-left border-collapse">
@@ -77,31 +148,21 @@ export default function MenuItemsView() {
                 <th className="px-6 py-3">Item Details</th>
                 <th className="px-6 py-3">Price</th>
                 <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3 text-right">Actions</th>
+                <th className="px-6 py-3 text-right">
+                  {isAdmin ? "Actions" : "Build Order"}
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
-              {data.map((item) => (
-                <tr key={item.id} className="hover:bg-gray-50/50">
-                  <td className="px-6 py-4 font-mono">#{item.id}</td>
-                  <td className="px-6 py-4">
-                    <div className="font-semibold text-gray-900">{item.name}</div>
-                    <div className="text-xs text-gray-400">Associated Restaurant ID: {item.restaurantId}</div>
-                  </td>
-                  <td className="px-6 py-4 font-medium text-gray-900">${item.price.toFixed(2)}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      item.available ? "bg-blue-100 text-blue-800" : "bg-red-100 text-red-800"
-                    }`}>
-                      {item.available ? "In Stock" : "Unavailable"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Button variant="secondary" className="px-2.5 py-1 text-xs" onClick={() => { setEditingItem(item); setIsFormOpen(true); }}>
-                      Edit
-                    </Button>
-                  </td>
-                </tr>
+              {menuItems.map((item) => (
+                <MenuItemRow
+                  key={item.id}
+                  item={item}
+                  isAdmin={isAdmin}
+                  isDeleting={deleteMutation.isPending && deleteMutation.variables === item.id}
+                  onEdit={startEdit}
+                  onDelete={(id) => deleteMutation.mutate(id)}
+                />
               ))}
             </tbody>
           </table>

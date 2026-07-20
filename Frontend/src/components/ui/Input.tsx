@@ -1,4 +1,3 @@
-// frontend/src/components/ui/Input.tsx
 import { forwardRef, type InputHTMLAttributes } from "react";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -13,7 +12,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={id}
-            className="text-xs font-semibold text-gray-700 uppercase tracking-wider"
+            /* Swapped text-gray-700 to text-muted */
+            className="text-xs font-semibold text-muted uppercase tracking-wider"
           >
             {label}
           </label>
@@ -21,15 +21,20 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           id={id}
           ref={ref}
-          className={`w-full px-3 py-2 bg-white border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 focus:border-transparent ${
+          /* 
+            Swapped bg-white -> bg-canvas
+            Swapped text colors and validation focus states to track theme variables 
+          */
+          className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 ${
             error
-              ? "border-red-500 focus:ring-red-200 text-red-900 placeholder-red-300"
-              : "border-gray-300 focus:border-blue-500 focus:ring-blue-100 text-gray-900 placeholder-gray-400"
+              ? "border-red-500 focus:ring-red-500/20 text-red-500 placeholder-red-400/50"
+              : "border-structure focus:border-accent focus:ring-accent/20 text-main placeholder-text-muted/50"
           } ${className}`}
           {...props}
         />
         {error && (
-          <p className="text-xs font-medium text-red-600 mt-0.5">
+          /* Made error text pop cleanly against dark and light backdrops */
+          <p className="text-xs font-medium text-red-500 mt-0.5">
             {error}
           </p>
         )}

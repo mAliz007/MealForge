@@ -8,12 +8,18 @@ export interface MenuItemsFilters {
 }
 
 export const menuItemService = {
-  getAll: async (filters?: MenuItemsFilters): Promise<MenuItem[]> => {
-    const response = await apiClient.get<MenuItem[]>("/v1/menu_items", {
-      params: filters,
-    });
-    return response.data;
-  },
+  // Inside menuItemService.ts - Place inside getAll:
+getAll: async (filters?: MenuItemsFilters): Promise<MenuItem[]> => {
+  console.log("📡 SERVICE API OUTBOUND:", {
+    filtersPassed: filters,
+    paramsPayload: filters?.restaurant_id
+  });
+
+  const response = await apiClient.get<MenuItem[]>("/v1/menu_items", {
+    params: filters,
+  });
+  return response.data;
+},
 
   getById: async (id: number): Promise<MenuItem> => {
     const response = await apiClient.get<MenuItem>(`/v1/menu_items/${id}`);

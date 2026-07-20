@@ -4,6 +4,7 @@ import type { FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../../ui/Button";
 import type { EntityFormLayoutProps } from "../../../types";
+import { useTranslation } from "react-i18next";
 
 export function EntityFormLayout<T extends FieldValues>({
   schema,
@@ -13,6 +14,8 @@ export function EntityFormLayout<T extends FieldValues>({
   submitButtonText,
   children,
 }: EntityFormLayoutProps<T>) {
+  const { t } = useTranslation();
+  
   const methods = useForm<T>({
     resolver: zodResolver(schema) as any,
     defaultValues,
@@ -39,7 +42,7 @@ export function EntityFormLayout<T extends FieldValues>({
         <div className="flex justify-end gap-3 pt-2">
           {onCancel && (
             <Button type="button" variant="secondary" onClick={onCancel}>
-              Cancel
+              {t("common.actions.cancel")}
             </Button>
           )}
           <Button type="submit" variant="primary" isLoading={isSubmitting}>

@@ -10,7 +10,7 @@ export const restaurantSchema = z.object({
 export const menuItemSchema = z.object({
   name: z.string().min(1, "Menu item name is required"),
   price: z.coerce.number().gt(0, "Price must be greater than 0"),
-  restaurantId: z.coerce.number().min(1, "Restaurant assignment is required"),
+  restaurant_id: z.coerce.number().min(1, "Restaurant assignment is required"),
 });
 
 export const loginSchema = z.object({

@@ -7,7 +7,7 @@ import { mockRestaurants } from "../../utils/mockData";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
 import type { MenuItemFormInput, MenuItemFormProps } from "../../types";
 
-function MenuItemFields() {
+export default function MenuItemFields() {
   const { t } = useTranslation();
   const { register, formState: { errors } } = useFormContext<MenuItemFormInput>();
 
@@ -43,17 +43,17 @@ function MenuItemFields() {
       />
 
       <div className="w-full flex flex-col gap-1.5">
-        <label htmlFor="restaurantId" className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+        <label htmlFor="restaurant_id" className="text-xs font-semibold text-text-muted uppercase tracking-wider">
           {t("menu.form.labels.restaurant")}
         </label>
         <select
-          id="restaurantId"
+          id="restaurant_id"
           className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 text-text-main ${
-            errors.restaurantId
+            errors.restaurant_id
               ? "border-red-500/50 focus:ring-red-500/20 text-red-600 bg-red-500/5 dark:text-red-400"
               : "border-structure focus:border-accent focus:ring-accent/20"
           }`}
-          {...register("restaurantId")}
+          {...register("restaurant_id")}
         >
           <option value="" className="bg-canvas text-text-muted">
             {t("menu.form.labels.placeholderSelect")}
@@ -64,9 +64,9 @@ function MenuItemFields() {
             </option>
           ))}
         </select>
-        {errors.restaurantId && (
+        {errors.restaurant_id && (
           <p className="text-xs font-medium text-red-600 dark:text-red-400 mt-0.5">
-            {errors.restaurantId.message}
+            {errors.restaurant_id.message}
           </p>
         )}
       </div>

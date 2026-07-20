@@ -12,9 +12,9 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
 
   if (!order) return null;
 
-  // Safe fallback checking both naming configurations
-  const displayTotal = Number(order.totalAmount ?? (order as any).total_amount ?? (order as any).total ?? 0);
-  const displayRestaurantId = order.restaurantId ?? (order as any).restaurant_id;
+  // Enforce explicit snake_case keys mapped directly from our unified interface schema
+  const displayTotal = Number(order.total_amount ?? 0);
+  const displayRestaurantId = order.restaurant_id;
   const displayStatus = order.status || "pending";
 
   return (

@@ -16,14 +16,14 @@ export function OrderRow({ order, onInspect }: OrderRowProps) {
     cancelled: "bg-red-500/10 text-red-500",
   };
 
-  const displayTotal = Number(order.totalAmount ?? (order as any).total_amount ?? (order as any).total ?? 0);
+  const displayTotal = Number(order.total_amount ?? (order as any).total_amount ?? (order as any).total ?? 0);
   const displayStatus = order.status || "pending";
 
   return (
     <tr className="hover:bg-structure/30 transition-colors">
       <td className="px-6 py-4 font-mono font-medium text-main">#{order.id}</td>
       <td className="px-6 py-4 font-mono text-sm text-muted">
-        {t("orders.table.restaurantNode", { id: order.restaurantId ?? (order as any).restaurant_id })}
+        {t("orders.table.restaurantNode", { id: order.restaurant_id ?? (order as any).restaurant_id })}
       </td>
       <td className="px-6 py-4 font-semibold text-main">${displayTotal.toFixed(2)}</td>
       <td className="px-6 py-4">

@@ -1,6 +1,8 @@
-import { useState } from "react";
+// frontend/src/hooks/useMenuItemsView.ts
+import { useState, useEffect } from "react";
 import { useAuthUser } from "./useAuthUser";
 import { useTranslation } from "react-i18next";
+import { useCart } from "../context/CartContext"; 
 import {
   useMenuItems,
   useCreateMenuItem,
@@ -13,30 +15,69 @@ import type { MenuItemFormData } from "../utils/schemas";
 export function useMenuItemsView() {
   const { t } = useTranslation();
 
-  // 1. Role Authentication Scopes
+  // 1. Role Authentication & Cart Scopes
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
+  const { restaurantId: cartRestaurantId, clearCart } = useCart();
 
   // 2. Query Filtering State Strings
-  const [restaurantId, setRestaurantId] = useState<string>("");
+  const [localRestaurantId, setLocalRestaurantId] = useState<string>("");
   const [available, setAvailable] = useState<string>("");
 
-  // Construct operational filters object
+  // 3. Unify Restaurant State Identity to prevent loop racing
+  const effectiveRestaurantId = isAdmin 
+    ? localRestaurantId 
+    : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
+
+  // Sync effect: Reset local dropdown selection back to empty if the cart is fully emptied out
+  useEffect(() => {
+    if (!isAdmin && cartRestaurantId === null) {
+      setLocalRestaurantId("");
+    }
+  }, [cartRestaurantId, isAdmin]);
+
+  const handleRestaurantFilterChange = (newId: string) => {
+    if (isAdmin) {
+      setLocalRestaurantId(newId);
+      return;
+    }
+
+    // Customer Interceptor Workflow: Switching restaurants while holding current active items
+    if (cartRestaurantId !== null && newId !== String(cartRestaurantId) && newId !== "") {
+      const confirmClear = window.confirm(
+        "Changing restaurants will clear your current cart items. Proceed?"
+      );
+      
+      if (confirmClear) {
+        clearCart(); 
+        setLocalRestaurantId(newId);
+      }
+    } else {
+      setLocalRestaurantId(newId);
+    }
+  };
+
+  // 4. Operational Gatekeepers
+  const shouldSkipFetch = !isAdmin && !effectiveRestaurantId;
+
   const activeFilters = {
-    ...(restaurantId && { restaurant_id: Number(restaurantId) }),
+    ...(effectiveRestaurantId && { restaurant_id: Number(effectiveRestaurantId) }),
     ...(available && { available: available === "true" }),
   };
 
-  // 3. TanStack Query Foundations
-  const { data: menuItems, isLoading: isDataLoading, error, isError } = useMenuItems(activeFilters);
+  // 5. Query Executions passing configuration object downstream
+  const { data: menuItems, isLoading: isDataLoading, error, isError } = useMenuItems(
+    activeFilters,
+    { enabled: !shouldSkipFetch }
+  );
+  
   const createMutation = useCreateMenuItem();
   const updateMutation = useUpdateMenuItem();
   const deleteMutation = useDeleteMenuItem();
 
-  // 4. Panel Interface UI States
+  // 6. Form Management UI States
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>(undefined);
 
-  // Form Submission Router
   const handleFormSubmit = (payload: MenuItemFormData & { available: boolean }) => {
     if (editingItem) {
       updateMutation.mutate(
@@ -72,18 +113,18 @@ export function useMenuItemsView() {
     setIsFormOpen(true);
   };
 
-  // Compute unified structural loading states
-  const isLoading = isAuthLoading || isDataLoading;
+  const isLoading = isAuthLoading || (!shouldSkipFetch && isDataLoading);
 
   return {
     t,
     isAdmin,
     isLoading,
-    isError,
-    error,
-    menuItems,
-    restaurantId,
-    setRestaurantId,
+    isError: shouldSkipFetch ? false : isError,
+    error: shouldSkipFetch ? null : error,
+    menuItems: menuItems || [],
+    restaurantId: effectiveRestaurantId,
+    setRestaurantId: handleRestaurantFilterChange,
+    shouldSkipFetch,
     available,
     setAvailable,
     isFormOpen,

@@ -35,8 +35,8 @@ export function MenuItemFormPanel({
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<MenuItemFormData>({
     defaultValues: editingItem
-      ? { name: editingItem.name, price: editingItem.price, restaurantId: editingItem.restaurantId }
-      : { name: "", price: 0, restaurantId: "" as any },
+      ? { name: editingItem.name, price: editingItem.price, restaurant_id: editingItem.restaurant_id }
+      : { name: "", price: 0, restaurant_id: "" as any },
   });
 
   useEffect(() => {
@@ -45,11 +45,11 @@ export function MenuItemFormPanel({
         reset({
           name: editingItem.name,
           price: editingItem.price,
-          restaurantId: editingItem.restaurantId,
+          restaurant_id: editingItem.restaurant_id,
         });
         setIsAvailable(editingItem.available);
       } else {
-        reset({ name: "", price: 0, restaurantId: "" as any });
+        reset({ name: "", price: 0, restaurant_id: "" as any });
         setIsAvailable(true);
       }
     }
@@ -93,7 +93,6 @@ export function MenuItemFormPanel({
             color: "var(--color-text-main)"
           }}
         >
-          {/* Changed from 'grid sm:grid-cols-2' to a strict single-column layout stack */}
           <div className="flex flex-col gap-4">
             
             {/* Item Name */}
@@ -121,23 +120,23 @@ export function MenuItemFormPanel({
             {/* Restaurant Owner Select Field */}
             <div className="w-full flex flex-col gap-1.5">
               <label 
-                htmlFor="restaurantId" 
+                htmlFor="restaurant_id" 
                 className="text-xs font-semibold text-text-muted uppercase tracking-wider"
               >
                 {t("menu.form.fieldRestaurant")}
               </label>
               <Controller
-                name="restaurantId"
+                name="restaurant_id"
                 control={control}
                 rules={{ required: t("menu.form.validation.restaurantRequired") }}
                 render={({ field }) => (
                   <select
                     {...field}
-                    id="restaurantId"
+                    id="restaurant_id"
                     disabled={!!editingItem}
                     value={field.value ?? ""}
                     className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 disabled:opacity-50 appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%209l3%203%203-3%22%20stroke%3D%22%236b7280%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.5rem_center] bg-[length:1.25em_1.25em] bg-no-repeat pr-10 ${
-                      errors.restaurantId
+                      errors.restaurant_id
                         ? "border-red-500 focus:ring-red-500/20 text-red-500"
                         : "border-structure focus:border-accent focus:ring-accent/20 text-text-main"
                     }`}
@@ -151,9 +150,9 @@ export function MenuItemFormPanel({
                   </select>
                 )}
               />
-              {errors.restaurantId && (
+              {errors.restaurant_id && (
                 <p className="text-xs font-medium text-red-500 mt-0.5">
-                  {errors.restaurantId.message}
+                  {errors.restaurant_id.message}
                 </p>
               )}
             </div>

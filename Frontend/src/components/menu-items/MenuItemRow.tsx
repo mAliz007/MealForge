@@ -29,7 +29,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
       <td className="px-6 py-4">
         <div className="font-semibold text-text-main">{item.name}</div>
         <div className="text-xs text-text-muted">
-          {t("menu.row.metaRestaurantId", { id: item.restaurantId })}
+          {t("menu.row.metaRestaurantId", { id: item.restaurant_id })}
         </div>
       </td>
       

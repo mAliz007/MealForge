@@ -1,6 +1,5 @@
 import type { Restaurant } from "../../types";
 import { Button } from "../ui/Button";
-import { useTranslation } from "react-i18next";
 
 interface RestaurantTableRowProps {
   restaurant: Restaurant;
@@ -17,40 +16,37 @@ export function RestaurantTableRow({
   onEdit,
   onDelete,
 }: RestaurantTableRowProps) {
-  const { t } = useTranslation();
-
   const handleDeleteClick = () => {
-    if (window.confirm(t("restaurants.table.confirmDelete", { name: restaurant.name }))) {
+    if (window.confirm(`Are you sure you want to remove ${restaurant.name}?`)) {
       onDelete(restaurant.id);
     }
   };
 
   return (
-    <tr className="hover:bg-structure/30 transition-colors">
+    <tr className="hover:bg-gray-50/50">
       <td className="px-6 py-4 font-mono font-medium">#{restaurant.id}</td>
-      <td className="px-6 py-4 font-semibold text-main">{restaurant.name}</td>
+      <td className="px-6 py-4 font-semibold text-gray-900">{restaurant.name}</td>
       <td className="px-6 py-4">{restaurant.location}</td>
       <td className="px-6 py-4">
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase ${
             restaurant.status === "open"
-              ? "bg-green-500/10 text-green-500 dark:text-green-400"
-              : "bg-structure text-muted"
+              ? "bg-green-100 text-green-800"
+              : "bg-gray-100 text-gray-800"
           }`}
         >
           {restaurant.status}
         </span>
       </td>
-      
-      {isAdmin && (
-        <td className="px-6 py-4 text-right">
+      <td className="px-6 py-4 text-right">
+        {isAdmin ? (
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
               className="px-2.5 py-1 text-xs"
               onClick={() => onEdit(restaurant)}
             >
-              {t("restaurants.table.edit")}
+              Edit
             </Button>
             <Button
               variant="danger"
@@ -58,11 +54,13 @@ export function RestaurantTableRow({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              {isDeleting ? t("restaurants.table.removing") : t("restaurants.table.delete")}
+              {isDeleting ? "Removing..." : "Delete"}
             </Button>
           </div>
-        </td>
-      )}
+        ) : (
+          <span className="text-xs text-gray-400 italic">Read-Only</span>
+        )}
+      </td>
     </tr>
   );
 }

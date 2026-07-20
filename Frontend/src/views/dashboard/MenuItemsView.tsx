@@ -1,6 +1,11 @@
-// frontend/src/views/menu-items/MenuItemsView.tsx
-import { useTranslation } from "react-i18next";
-import { useMenuItemsView } from "../../hooks/useMenuItemsView";
+import { useState } from "react";
+import { useAuthUser } from "../../hooks/useAuthUser";
+import {
+  useMenuItems,
+  useCreateMenuItem,
+  useUpdateMenuItem,
+  useDeleteMenuItem,
+} from "../../hooks/useMenuItems";
 
 // Isolated Modular Presentation Components
 import { MenuFilterBar } from "../../components/menu-items/MenuFilterBar";
@@ -14,56 +19,91 @@ import {
 
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import type { MenuItem } from "../../types";
+import type { MenuItemFormData } from "../../utils/schemas";
 
 export default function MenuItemsView() {
-  const { t } = useTranslation();
+  // 1. Role Authentication Scopes
+  const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
 
-  // Connect presentation layer entirely to the clean state machine hook
-  const {
-    isAdmin,
-    isLoading,
-    isError,
-    error,
-    menuItems,
-    restaurantId,
-    setRestaurantId,
-    available,
-    setAvailable,
-    isFormOpen,
-    editingItem,
-    isPending,
-    deleteMutation,
-    handleFormSubmit,
-    startEdit,
-    handleCancelForm,
-    openCreateForm,
-    shouldSkipFetch,
-  } = useMenuItemsView();
+  // 2. Query Filtering State Strings
+  const [restaurantId, setRestaurantId] = useState<string>("");
+  const [available, setAvailable] = useState<string>("");
 
-  console.log("🔍 VIEW TRACKER:", {
-    restaurantId,
-    typeOfId: typeof restaurantId,
-    shouldSkipFetch,
-    menuItemsCount: menuItems?.length
-  });
+  // Construct operational filters object
+  const activeFilters = {
+    ...(restaurantId && { restaurant_id: Number(restaurantId) }),
+    ...(available && { available: available === "true" }),
+  };
+
+  // 3. TanStack Query Foundations
+  const { data: menuItems, isLoading: isDataLoading, error, isError } = useMenuItems(activeFilters);
+  const createMutation = useCreateMenuItem();
+  const updateMutation = useUpdateMenuItem();
+  const deleteMutation = useDeleteMenuItem();
+
+  // 4. Panel Interface UI States
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<MenuItem | undefined>(undefined);
+
+  // Form Submission Router (Creates a new entry or updates an existing entity)
+  const handleFormSubmit = (payload: MenuItemFormData & { available: boolean }) => {
+    if (editingItem) {
+      updateMutation.mutate(
+        { id: editingItem.id, data: payload },
+        {
+          onSuccess: () => {
+            setIsFormOpen(false);
+            setEditingItem(undefined);
+          },
+        }
+      );
+    } else {
+      createMutation.mutate(payload, {
+        onSuccess: () => {
+          setIsFormOpen(false);
+        },
+      });
+    }
+  };
+
+  const startEdit = (item: MenuItem) => {
+    setEditingItem(item);
+    setIsFormOpen(true);
+  };
+
+  const handleCancelForm = () => {
+    setIsFormOpen(false);
+    setEditingItem(undefined);
+  };
+
+  // Compute unified structural loading states
+  const isLoading = isAuthLoading || isDataLoading;
 
   return (
-    <div className="space-y-6 text-text-main transition-colors duration-200">
+    <div className="space-y-6">
       {/* Page Header Layout */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{t("menu.title")}</h1>
-          <p className="text-sm text-text-muted mt-0.5">
+          <h1 className="text-2xl font-bold text-gray-900">Menu Catalog</h1>
+          <p className="text-sm text-gray-500">
             {isAdmin 
-              ? t("menu.adminDescription") 
-              : t("menu.userDescription")}
+              ? "Configure catalog availability and administrative listing matrices." 
+              : "Browse culinary lists and build custom food delivery orders."}
           </p>
         </div>
 
+        {/* Render addition capability solely for privileged Admins */}
         {isAdmin && (
           <div className="flex flex-wrap gap-2">
-            <Button variant="primary" onClick={openCreateForm}>
-              {t("menu.addItem")}
+            <Button
+              variant="primary"
+              onClick={() => {
+                setEditingItem(undefined);
+                setIsFormOpen(true);
+              }}
+            >
+              + Add Menu Item
             </Button>
           </div>
         )}
@@ -77,43 +117,43 @@ export default function MenuItemsView() {
         setAvailable={setAvailable}
       />
 
-      <MenuItemFormPanel
-        open={isFormOpen}
-        editingItem={editingItem}
-        onSubmit={handleFormSubmit}
-        onCancel={handleCancelForm}
-        isPending={isPending}
-      />
+      {/* Accordion/Form Modal Entry Wrapper */}
+      {isFormOpen && (
+        <Card className="max-w-xl border-blue-200 bg-blue-50/10">
+          <h2 className="text-base font-bold text-gray-900 mb-4">
+            {editingItem ? `Modify: ${editingItem.name}` : "Create New Menu Selection"}
+          </h2>
+          <MenuItemFormPanel
+            editingItem={editingItem}
+            onSubmit={handleFormSubmit}
+            onCancel={handleCancelForm}
+            isPending={createMutation.isPending || updateMutation.isPending}
+          />
+        </Card>
+      )}
 
-      {/* State Machine UI Router Implementation */}
+      {/* Base Response Content Rendering Flow */}
       {isLoading ? (
         <MenuItemLoading />
       ) : isError ? (
         <MenuItemError message={error?.message} />
-      ) : shouldSkipFetch ? (
-        <Card className="text-center py-16 px-4 border border-dashed border-text-muted/20">
-          <p className="text-lg font-medium text-text-main">Please Select a Restaurant</p>
-          <p className="text-sm text-text-muted mt-1">
-            Choose a location from the selection filter bar above to browse their menu items.
-          </p>
-        </Card>
       ) : !menuItems || menuItems.length === 0 ? (
         <MenuItemEmpty />
       ) : (
-        <Card className="overflow-x-auto p-0 bg-structure border border-text-muted/10 rounded-2xl shadow-sm">
+        <Card className="overflow-x-auto p-0">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-canvas/50 border-b border-text-muted/10 text-xs font-bold uppercase tracking-wider text-text-muted">
-                <th className="px-6 py-4">{t("menu.table.id")}</th>
-                <th className="px-6 py-4">{t("menu.table.details")}</th>
-                <th className="px-6 py-4">{t("menu.table.price")}</th>
-                <th className="px-6 py-4">{t("menu.table.status")}</th>
-                <th className="px-6 py-4 text-right">
-                  {isAdmin ? t("menu.table.actions") : t("menu.table.buildOrder")}
+              <tr className="bg-gray-50 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
+                <th className="px-6 py-3">ID</th>
+                <th className="px-6 py-3">Item Details</th>
+                <th className="px-6 py-3">Price</th>
+                <th className="px-6 py-3">Status</th>
+                <th className="px-6 py-3 text-right">
+                  {isAdmin ? "Actions" : "Build Order"}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-text-muted/10 text-sm">
+            <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
               {menuItems.map((item) => (
                 <MenuItemRow
                   key={item.id}

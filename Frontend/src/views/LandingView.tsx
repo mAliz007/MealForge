@@ -1,27 +1,78 @@
-// frontend/src/views/landing/LandingView.tsx
-
+// frontend/src/views/LandingView.tsx
+import { Link } from "react-router-dom";
+import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
+import { Utensils, ShieldCheck, Layers } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { FeatureGrid } from "~components/landing/FeatureGrid";
-import { HeroSection } from "~components/landing/HeroSection";
-import { HomeNavbar } from "~components/landing/HomeNavbar";
 
 export default function LandingView() {
   const { t } = useTranslation(); 
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-canvas to-structure/30 flex flex-col justify-between transition-colors duration-200">
-      
-      {/* Decoupled Navigation Header */}
-      <HomeNavbar />
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100 flex flex-col justify-between">
+      {/* Top Header Navbar Context */}
+      <header className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-extrabold text-xl shadow-xs">
+            F
+          </div>
+          <span className="text-xl font-black text-gray-900 tracking-tight">FoodSplits</span>
+        </div>
+        <Link to="/dashboard">
+          <Button variant="secondary" className="font-semibold shadow-xs">
+            {t("landing.header.dashboardBtn")}
+          </Button>
+        </Link>
+      </header>
 
-      {/* Main Structural Content Segment */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 md:py-20 flex-1 flex flex-col lg:flex-row items-center justify-between gap-12">
-        <HeroSection />
-        <FeatureGrid />
+      {/* Main Hero Screen Content Grid */}
+      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="max-w-xl space-y-6 text-center lg:text-left">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 uppercase tracking-wider">
+            {t("landing.hero.tag")}
+          </span>
+          <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+            {t("landing.hero.titleMain")} <br />
+            <span className="text-blue-600">{t("landing.hero.titleSub")}</span>
+          </h1>
+          <p className="text-base sm:text-lg text-gray-600 font-medium leading-relaxed">
+            {t("landing.hero.description")}
+          </p>
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+            <Link to="/dashboard">
+              <Button variant="primary" className="px-6 py-3 text-base font-bold shadow-md hover:translate-y-[-1px] transition-transform">
+                {t("landing.hero.launchBtn")}
+              </Button>
+            </Link>
+            <Link to="/login">
+              <Button variant="secondary" className="px-6 py-3 text-base font-bold border border-gray-200">
+                {t("landing.hero.signInBtn")}
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Feature Cards Matrix Context Showcase */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg w-full">
+          <Card hoverable className="space-y-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600"><Utensils size={20} /></div>
+            <h3 className="font-bold text-gray-900">{t("landing.features.router.title")}</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">{t("landing.features.router.desc")}</p>
+          </Card>
+          <Card hoverable className="space-y-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600"><Layers size={20} /></div>
+            <h3 className="font-bold text-gray-900">{t("landing.features.matrix.title")}</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">{t("landing.features.matrix.desc")}</p>
+          </Card>
+          <Card hoverable className="space-y-3 sm:col-span-2">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600"><ShieldCheck size={20} /></div>
+            <h3 className="font-bold text-gray-900">{t("landing.features.compliant.title")}</h3>
+            <p className="text-xs text-gray-500 leading-relaxed">{t("landing.features.compliant.desc")}</p>
+          </Card>
+        </div>
       </main>
 
-      {/* Static Footer */}
-      <footer className="border-t border-structure bg-structure py-6 text-center text-xs font-semibold text-muted tracking-wider">
+      <footer className="border-t border-gray-200 bg-white py-6 text-center text-xs font-semibold text-gray-400 tracking-wider">
         {t("landing.footer.copyright")}
       </footer>
     </div>

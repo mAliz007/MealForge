@@ -40,13 +40,6 @@ export default function MenuItemsView() {
     shouldSkipFetch,
   } = useMenuItemsView();
 
-  console.log("🔍 VIEW TRACKER:", {
-    restaurantId,
-    typeOfId: typeof restaurantId,
-    shouldSkipFetch,
-    menuItemsCount: menuItems?.length
-  });
-
   return (
     <div className="space-y-6 text-text-main transition-colors duration-200">
       {/* Page Header Layout */}

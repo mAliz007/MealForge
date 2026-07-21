@@ -1,4 +1,3 @@
-// frontend/src/components/menu-items/MenuFilterBar.tsx
 import { useRestaurants } from "../../hooks/useRestaurants";
 import { useTranslation } from "react-i18next";
 
@@ -9,9 +8,20 @@ interface MenuFilterBarProps {
   setAvailable: (state: string) => void;
 }
 
-export function MenuFilterBar({ restaurantId, setRestaurantId, available, setAvailable }: MenuFilterBarProps) {
+export function MenuFilterBar({
+  restaurantId,
+  setRestaurantId,
+  available,
+  setAvailable,
+}: MenuFilterBarProps) {
   const { t } = useTranslation();
-  const { data: restaurants, isLoading } = useRestaurants();
+  
+  // Request top 30 restaurants for the filter dropdown
+  const { data: response, isLoading } = useRestaurants(1, 30);
+  const restaurants = response?.data;
+  const meta = response?.meta;
+
+  const hasMore = meta && meta.count > 30;
 
   return (
     <div className="bg-structure p-4 rounded-2xl border border-text-muted/10 shadow-sm flex flex-col sm:flex-row gap-4 items-end transition-colors duration-200">
@@ -33,6 +43,12 @@ export function MenuFilterBar({ restaurantId, setRestaurantId, available, setAva
               {r.name}
             </option>
           ))}
+          {hasMore && (
+            <option value="" disabled className="bg-structure text-text-muted italic">
+              ──────────
+              (Showing 30 of {meta.count} - search in Restaurants view)
+            </option>
+          )}
         </select>
       </div>
 

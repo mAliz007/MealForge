@@ -1,17 +1,27 @@
 import { apiClient } from "./apiClient";
-import type { Restaurant } from "../types";
 import type { RestaurantFormData } from "../utils/schemas";
+import type { PaginatedResponse } from "../types/PagyType";
+import type { Restaurant } from "../types";
 
 export const restaurantService = {
-  // GET /api/v1/restaurants
-  getAll: async (): Promise<Restaurant[]> => {
-    const response = await apiClient.get<Restaurant[]>("/v1/restaurants");
+  // GET /api/v1/restaurants?page=1&limit=20&search=term
+  getAll: async (
+    page = 1,
+    limit = 20,
+    search = ""
+  ): Promise<PaginatedResponse<Restaurant>> => {
+    const response = await apiClient.get<PaginatedResponse<Restaurant>>("/v1/restaurants", {
+      params: {
+        page,
+        limit,
+        ...(search.trim() && { search: search.trim() }),
+      },
+    });
     return response.data;
   },
 
   // POST /api/v1/restaurants
   create: async (data: RestaurantFormData): Promise<Restaurant> => {
-    // Wrap payload in a 'restaurant' key for Rails strong params
     const response = await apiClient.post<Restaurant>("/v1/restaurants", {
       restaurant: data,
     });
@@ -20,7 +30,6 @@ export const restaurantService = {
 
   // PUT /api/v1/restaurants/:id
   update: async (id: number, data: RestaurantFormData): Promise<Restaurant> => {
-    // Wrap payload in a 'restaurant' key for Rails strong params
     const response = await apiClient.put<Restaurant>(`/v1/restaurants/${id}`, {
       restaurant: data,
     });

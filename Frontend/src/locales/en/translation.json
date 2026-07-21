@@ -46,6 +46,14 @@
     "adminDescription": "Manage registered dining partners and operating statuses.",
     "userDescription": "View active registered dining partners.",
     "addBtn": "+ Add Restaurant",
+    "searchPlaceholder": "Search restaurants...",
+    "clearSearch": "Clear search",
+    "pagination": {
+      "showingResults": "Showing {{from}} to {{to}} of {{total}} restaurants",
+      "pageInfo": "Page {{page}} of {{totalPages}}",
+      "prev": "Previous",
+      "next": "Next"
+    },
     "states": {
       "syncing": "Syncing records...",
       "failedSync": "Failed to sync records",

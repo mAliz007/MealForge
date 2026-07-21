@@ -92,7 +92,7 @@ export default function RestaurantsView() {
         {/* Action Controls Grouped Cleanly */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <div className="w-full sm:w-64 shrink-0">
-            <RestaurantSearch value={search} onChange={handleSearchChange} />
+            <RestaurantSearch value={search} onSearch={handleSearchChange} />
           </div>
 
           {isAdmin && (

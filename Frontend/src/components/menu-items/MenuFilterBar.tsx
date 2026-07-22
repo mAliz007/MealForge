@@ -67,12 +67,12 @@ export function MenuFilterBar({
   };
 
   return (
-    <div className="bg-structure p-4 rounded-2xl border border-text-muted/10 shadow-sm flex flex-col sm:flex-row flex-wrap gap-4 items-end transition-colors duration-200">
+    <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
       
       {/* 1. Restaurant Search & Select Overlay Filter */}
-      <div className="w-full sm:w-64 space-y-1.5 relative" ref={dropdownRef}>
-        <label className="text-xs font-bold text-text-muted tracking-wide uppercase">
-          {t("menu.filter.restaurantLabel")}
+      <div className="w-full sm:w-64 space-y-1 relative" ref={dropdownRef}>
+        <label className="text-xs font-semibold text-text-muted">
+          {t("menu.filter.restaurantLabel", "Restaurant")}
         </label>
         <div className="relative">
           <input
@@ -87,40 +87,40 @@ export function MenuFilterBar({
               if (!isDropdownOpen) setIsDropdownOpen(true);
             }}
             onFocus={() => setIsDropdownOpen(true)}
-            placeholder={t("menu.filter.searchRestaurantPlaceholder", {
-              defaultValue: "Search restaurant...",
-            })}
-            className="w-full rounded-xl border border-text-muted/20 px-3 py-2 pr-8 text-sm bg-canvas text-text-main focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+            placeholder={t("menu.filter.searchRestaurantPlaceholder", "Search restaurant...")}
+            className="w-full pl-3 pr-8 py-2 text-sm border border-text-muted/20 rounded-md shadow-sm bg-structure text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
           />
           {restaurantId && (
             <button
               type="button"
               onClick={handleClearRestaurant}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main text-xs font-bold"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main text-xs font-bold transition-colors"
             >
               ✕
             </button>
           )}
         </div>
 
-        {/* Floating Dropdown Results Overlay */}
+        {/* Floating Dropdown Results Overlay - Theme Aware */}
         {isDropdownOpen && (
-          <div className="absolute z-50 mt-1 w-full max-h-56 overflow-y-auto rounded-xl border border-text-muted/20 bg-structure shadow-lg divide-y divide-text-muted/10">
+          <div className="absolute z-50 mt-1 w-full max-h-56 overflow-y-auto rounded-md border border-text-muted/20 bg-structure shadow-lg divide-y divide-text-muted/10 transition-colors">
             <button
               type="button"
               onClick={handleClearRestaurant}
               className={`w-full text-left px-3 py-2 text-sm hover:bg-canvas transition-colors ${
-                !restaurantId ? "font-semibold text-blue-600" : "text-text-muted"
+                !restaurantId ? "font-semibold text-primary" : "text-text-muted"
               }`}
             >
-              {t("menu.filter.allRestaurants")}
+              {t("menu.filter.allRestaurants", "All Restaurants")}
             </button>
 
             {isRestLoading ? (
-              <div className="px-3 py-2 text-xs text-text-muted">Loading...</div>
+              <div className="px-3 py-2 text-xs text-text-muted">
+                {t("menu.filter.loading", "Loading...")}
+              </div>
             ) : matchedRestaurants.length === 0 ? (
               <div className="px-3 py-2 text-xs text-text-muted">
-                No restaurants found
+                {t("menu.filter.noRestaurants", "No restaurants found")}
               </div>
             ) : (
               matchedRestaurants.map((r) => (
@@ -130,7 +130,7 @@ export function MenuFilterBar({
                   onClick={() => handleSelectRestaurant(String(r.id), r.name)}
                   className={`w-full text-left px-3 py-2 text-sm hover:bg-canvas transition-colors flex justify-between items-center ${
                     restaurantId === String(r.id)
-                      ? "bg-blue-500/10 font-medium text-blue-600"
+                      ? "bg-primary/10 font-medium text-primary"
                       : "text-text-main"
                   }`}
                 >
@@ -143,31 +143,31 @@ export function MenuFilterBar({
       </div>
 
       {/* 2. Menu Item Search Input Component */}
-      <div className="w-full sm:w-64 space-y-1.5">
-        <label className="text-xs font-bold text-text-muted tracking-wide uppercase">
-          {t("menu.filter.searchLabel", { defaultValue: "Search Menu Items" })}
+      <div className="w-full sm:w-64 space-y-1">
+        <label className="text-xs font-semibold text-text-muted">
+          {t("menu.filter.searchLabel", "Search Menu Items")}
         </label>
         <MenuItemSearch value={search} onSearch={setSearch} />
       </div>
 
       {/* 3. Availability / Stock Status Filter Select */}
-      <div className="w-full sm:w-48 space-y-1.5">
-        <label className="text-xs font-bold text-text-muted tracking-wide uppercase">
-          {t("menu.filter.stockLabel")}
+      <div className="w-full sm:w-48 space-y-1">
+        <label className="text-xs font-semibold text-text-muted">
+          {t("menu.filter.stockLabel", "Availability")}
         </label>
         <select
           value={available}
           onChange={(e) => setAvailable(e.target.value)}
-          className="w-full rounded-xl border border-text-muted/20 px-3 py-2 text-sm bg-canvas text-text-main focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer"
+          className="w-full px-3 py-2 text-sm border border-text-muted/20 rounded-md shadow-sm bg-structure text-text-main focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors cursor-pointer dark:[color-scheme:dark]"
         >
-          <option value="" className="bg-structure">
-            {t("menu.filter.allListings")}
+          <option value="" className="bg-structure text-text-main">
+            {t("menu.filter.allListings", "All Listings")}
           </option>
-          <option value="true" className="bg-structure">
-            {t("menu.filter.inStock")}
+          <option value="true" className="bg-structure text-text-main">
+            {t("menu.filter.inStock", "In Stock")}
           </option>
-          <option value="false" className="bg-structure">
-            {t("menu.filter.unavailable")}
+          <option value="false" className="bg-structure text-text-main">
+            {t("menu.filter.unavailable", "Unavailable")}
           </option>
         </select>
       </div>

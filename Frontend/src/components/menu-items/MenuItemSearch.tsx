@@ -36,7 +36,7 @@ export function MenuItemSearch({
         type="text"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder={placeholder ?? t("menu.searchPlaceholder")}
+        placeholder={placeholder ?? t("menu.searchPlaceholder", "Search menu items...")}
         className="w-full pl-3 pr-16 py-2 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
       />
 
@@ -47,7 +47,7 @@ export function MenuItemSearch({
             type="button"
             onClick={handleClear}
             className="p-1 text-gray-400 hover:text-gray-600 rounded-full focus:outline-none"
-            aria-label={t("menu.clearSearch")}
+            aria-label={t("menu.clearSearch", "Clear search")}
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -59,7 +59,7 @@ export function MenuItemSearch({
         <button
           type="submit"
           className="p-1.5 text-gray-500 hover:text-primary rounded-md focus:outline-none transition-colors"
-          aria-label={t("menu.searchBtn")}
+          aria-label={t("menu.searchBtn", "Search")}
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 20 20">
             <path

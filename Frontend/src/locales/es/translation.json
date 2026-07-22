@@ -177,6 +177,9 @@
     "adminDescription": "Configure la disponibilidad del catálogo y las matrices de listado administrativo.",
     "userDescription": "Explore listas culinarias y cree pedidos personalizados de entrega de comida.",
     "addItem": "+ Añadir artículo",
+    "searchPlaceholder": "Buscar artículos del menú...",
+    "clearSearch": "Limpiar búsqueda",
+    "searchBtn": "Buscar",
     "table": {
       "id": "ID",
       "details": "Detalles del artículo",
@@ -193,12 +196,16 @@
       "pageInfo": "Página {{page}} de {{totalPages}}"
     },
     "filter": {
-      "restaurantLabel": "Restaurante asociado",
-      "allRestaurants": "Todos los socios registrados",
-      "stockLabel": "Estado de inventario",
-      "allListings": "Mostrar todas las publicaciones",
-      "inStock": "Solo disponibles",
-      "unavailable": "Solo no disponibles"
+      "restaurantLabel": "Restaurante",
+      "searchRestaurantPlaceholder": "Buscar restaurante...",
+      "allRestaurants": "Todos los restaurantes",
+      "loading": "Cargando...",
+      "noRestaurants": "No se encontraron restaurantes",
+      "searchLabel": "Buscar artículos del menú",
+      "stockLabel": "Disponibilidad",
+      "allListings": "Todos los listados",
+      "inStock": "En stock",
+      "unavailable": "No disponible"
     },
     "form": {
       "titleEdit": "Editar artículo del menú",

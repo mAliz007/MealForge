@@ -177,6 +177,9 @@
     "adminDescription": "Configure catalog availability and administrative listing matrices.",
     "userDescription": "Browse culinary lists and build custom food delivery orders.",
     "addItem": "+ Add Menu Item",
+    "searchPlaceholder": "Search menu items...",
+    "clearSearch": "Clear search",
+    "searchBtn": "Search",
     "table": {
       "id": "ID",
       "details": "Item Details",

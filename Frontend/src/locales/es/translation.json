@@ -185,6 +185,13 @@
       "actions": "Acciones",
       "buildOrder": "Crear pedido"
     },
+    "pagination": {
+      "showing_one": "Mostrando {{from}} a {{to}} de {{count}} artículo",
+      "showing_other": "Mostrando {{from}} a {{to}} de {{count}} artículos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "pageInfo": "Página {{page}} de {{totalPages}}"
+    },
     "filter": {
       "restaurantLabel": "Restaurante asociado",
       "allRestaurants": "Todos los socios registrados",

@@ -185,13 +185,24 @@
       "actions": "Actions",
       "buildOrder": "Build Order"
     },
+    "pagination": {
+      "showing_one": "Showing {{from}} to {{to}} of {{count}} item",
+      "showing_other": "Showing {{from}} to {{to}} of {{count}} items",
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{totalPages}}"
+    },
     "filter": {
       "restaurantLabel": "Partner Restaurant",
+      "restaurantPlaceholder": "Search & select restaurant...",
       "allRestaurants": "All Registered Partners",
       "stockLabel": "Stock State",
       "allListings": "Show All Listings",
       "inStock": "In Stock Only",
-      "unavailable": "Unavailable Only"
+      "unavailable": "Unavailable Only",
+      "noRestaurantsFound": "No restaurants found",
+      "searchLabel": "Search Menu Items",
+      "searchPlaceholder": "Search items by name..."
     },
     "form": {
       "titleEdit": "Edit Menu Item",

@@ -1,4 +1,3 @@
-// frontend/src/hooks/useMenuItemsView.ts
 import { useState, useEffect } from "react";
 import { useAuthUser } from "./useAuthUser";
 import { useTranslation } from "react-i18next";
@@ -19,14 +18,28 @@ export function useMenuItemsView() {
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
   const { restaurantId: cartRestaurantId, clearCart } = useCart();
 
-  // 2. Query Filtering State Strings
+  // 2. Filter & Pagination States
   const [localRestaurantId, setLocalRestaurantId] = useState<string>("");
   const [available, setAvailable] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(20);
 
   // 3. Unify Restaurant State Identity to prevent loop racing
   const effectiveRestaurantId = isAdmin 
     ? localRestaurantId 
     : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
+
+  // Reset page to 1 whenever search, restaurant, or available filters change
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    setPage(1);
+  };
+
+  const handleAvailableChange = (val: string) => {
+    setAvailable(val);
+    setPage(1);
+  };
 
   // Sync effect: Reset local dropdown selection back to empty if the cart is fully emptied out
   useEffect(() => {
@@ -36,6 +49,7 @@ export function useMenuItemsView() {
   }, [cartRestaurantId, isAdmin]);
 
   const handleRestaurantFilterChange = (newId: string) => {
+    setPage(1);
     if (isAdmin) {
       setLocalRestaurantId(newId);
       return;
@@ -62,13 +76,19 @@ export function useMenuItemsView() {
   const activeFilters = {
     ...(effectiveRestaurantId && { restaurant_id: Number(effectiveRestaurantId) }),
     ...(available && { available: available === "true" }),
+    ...(search && { search }),
+    page,
+    limit,
   };
 
   // 5. Query Executions passing configuration object downstream
-  const { data: menuItems, isLoading: isDataLoading, error, isError } = useMenuItems(
+  const { data: responseData, isLoading: isDataLoading, error, isError } = useMenuItems(
     activeFilters,
     { enabled: !shouldSkipFetch }
   );
+
+  const menuItems = responseData?.data || [];
+  const meta = responseData?.meta;
   
   const createMutation = useCreateMenuItem();
   const updateMutation = useUpdateMenuItem();
@@ -121,12 +141,19 @@ export function useMenuItemsView() {
     isLoading,
     isError: shouldSkipFetch ? false : isError,
     error: shouldSkipFetch ? null : error,
-    menuItems: menuItems || [],
+    menuItems,
+    meta,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    search,
+    setSearch: handleSearchChange,
     restaurantId: effectiveRestaurantId,
     setRestaurantId: handleRestaurantFilterChange,
     shouldSkipFetch,
     available,
-    setAvailable,
+    setAvailable: handleAvailableChange,
     isFormOpen,
     editingItem,
     isPending: createMutation.isPending || updateMutation.isPending,

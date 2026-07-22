@@ -1,8 +1,8 @@
-// frontend/src/hooks/useMenuItems.ts
 import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import { menuItemService, type MenuItemsFilters } from "../services/menuItemService";
 import type { MenuItem } from "../types";
 import type { MenuItemFormData } from "../utils/schemas";
+import type { PaginatedResponse } from "../types/PagyType";
 
 export const menuQueryKeys = {
   all: ["menu_items"] as const,
@@ -11,16 +11,16 @@ export const menuQueryKeys = {
   detail: (id: number) => [...menuQueryKeys.all, "detail", id] as const,
 };
 
-// Accept TanStack configuration parameters as an optional second argument
 export function useMenuItems(
   filters: MenuItemsFilters = {},
-  options?: Omit<UseQueryOptions<MenuItem[], Error>, "queryKey" | "queryFn">
+  options?: Omit<UseQueryOptions<PaginatedResponse<MenuItem>, Error>, "queryKey" | "queryFn">
 ) {
-  return useQuery<MenuItem[], Error>({
+  return useQuery<PaginatedResponse<MenuItem>, Error>({
     queryKey: menuQueryKeys.list(filters),
     queryFn: () => menuItemService.getAll(filters),
-    staleTime: 1000 * 30, 
-    ...options, // Safely merges the enabled flag configuration down
+    placeholderData: (previousData) => previousData,
+    staleTime: 1000 * 30,
+    ...options,
   });
 }
 

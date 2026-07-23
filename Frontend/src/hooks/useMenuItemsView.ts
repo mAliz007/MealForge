@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuthUser } from "./useAuthUser";
 import { useTranslation } from "react-i18next";
 import { useCart } from "../context/CartContext"; 
+import { useAlertStore } from "../store/useAlertStore";
 import {
   useMenuItems,
   useCreateMenuItem,
@@ -13,6 +14,7 @@ import type { MenuItemFormData } from "../utils/schemas";
 
 export function useMenuItemsView() {
   const { t } = useTranslation();
+  const showAlert = useAlertStore((state) => state.showAlert);
 
   // 1. Role Authentication & Cart Scopes
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
@@ -57,14 +59,17 @@ export function useMenuItemsView() {
 
     // Customer Interceptor Workflow: Switching restaurants while holding current active items
     if (cartRestaurantId !== null && newId !== String(cartRestaurantId) && newId !== "") {
-      const confirmClear = window.confirm(
-        "Changing restaurants will clear your current cart items. Proceed?"
-      );
-      
-      if (confirmClear) {
-        clearCart(); 
-        setLocalRestaurantId(newId);
-      }
+      showAlert({
+        title: t("menu.filter.clearCartTitle"),
+        message: t("menu.filter.clearCartMessage"),
+        confirmText: t("common.actions.confirm"),
+        cancelText: t("common.actions.cancel"),
+        variant: "warning",
+        onConfirm: () => {
+          clearCart(); 
+          setLocalRestaurantId(newId);
+        },
+      });
     } else {
       setLocalRestaurantId(newId);
     }

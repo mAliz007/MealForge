@@ -70,7 +70,9 @@
       "edit": "Edit",
       "delete": "Delete",
       "removing": "Removing...",
-      "confirmDelete": "Are you sure you want to remove {{name}}?"
+      "confirmDeleteTitle": "Delete Restaurant",
+      "confirmDelete": "Are you sure you want to delete {{name}}? This action cannot be undone."
+      
     },
     "formCard": {
       "registerTitle": "Register New Dining Partner",
@@ -95,8 +97,13 @@
     }
   },
   "common": {
+    "alert": {
+      "title": "Are you sure?"
+    },
     "actions": {
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "delete": "Delete"
     }
   },
   "orders": {
@@ -134,6 +141,8 @@
     "title": "Active Checkout Cart",
     "description": "Review pending checkout batches and transaction pipelines.",
     "transmitting": "Transmitting secure payment and manifest payload...",
+    "clearConflictTitle": "Different Restaurant",
+    "clearConflictMessage": "You have items from a different restaurant in your cart. Clear cart and add this item instead?",
     "accessibility": {
       "badgeLabel": "Shopping cart with {{count}} item",
       "badgeLabel_other": "Shopping cart with {{count}} items"
@@ -216,7 +225,9 @@
       "unavailable": "Unavailable Only",
       "noRestaurantsFound": "No restaurants found",
       "searchLabel": "Search Menu Items",
-      "searchPlaceholder": "Search items by name..."
+      "searchPlaceholder": "Search items by name...",
+      "clearCartTitle": "Switch Restaurant",
+      "clearCartMessage": "Changing restaurants will clear your current cart items. Do you want to proceed?"
     },
     "form": {
       "titleEdit": "Edit Menu Item",

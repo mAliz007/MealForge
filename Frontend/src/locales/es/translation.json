@@ -70,7 +70,8 @@
       "edit": "Editar",
       "delete": "Eliminar",
       "removing": "Eliminando...",
-      "confirmDelete": "¿Está seguro de que desea eliminar a {{name}}?"
+      "confirmDeleteTitle": "Eliminar Restaurante",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar {{name}}? Esta acción no se puede deshacer."
     },
     "formCard": {
       "registerTitle": "Registrar nuevo socio gastronómico",
@@ -95,8 +96,13 @@
     }
   },
   "common": {
+    "alert": {
+      "title": "¿Estás seguro?"
+    },
     "actions": {
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "delete": "Eliminar"
     }
   },
   "orders": {
@@ -134,6 +140,8 @@
     "title": "Carrito de pago activo",
     "description": "Revise los lotes de pago pendientes y los pipelines de transacciones.",
     "transmitting": "Transmitiendo el pago seguro y la carga del manifiesto...",
+    "clearConflictTitle": "Restaurante Diferente",
+    "clearConflictMessage": "Tienes productos de otro restaurante en tu carrito. ¿Deseas vaciar el carrito y agregar este producto?",
     "empty": {
       "title": "Su bandeja de selección está vacía.",
       "subtitle": "Navegue a la pestaña del catálogo de menús para seleccionar platos."
@@ -216,7 +224,9 @@
       "stockLabel": "Disponibilidad",
       "allListings": "Todos los listados",
       "inStock": "En stock",
-      "unavailable": "No disponible"
+      "unavailable": "No disponible",
+      "clearCartTitle": "Cambiar de Restaurante",
+      "clearCartMessage": "Al cambiar de restaurante se vaciarán los productos de tu carrito actual. ¿Deseas continuar?"
     },
     "form": {
       "titleEdit": "Editar artículo del menú",

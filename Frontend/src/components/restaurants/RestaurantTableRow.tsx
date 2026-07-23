@@ -1,6 +1,7 @@
 import type { Restaurant } from "../../types";
 import { Button } from "../ui/Button";
 import { useTranslation } from "react-i18next";
+import { useAlertStore } from "../../store/useAlertStore";
 
 interface RestaurantTableRowProps {
   restaurant: Restaurant;
@@ -18,11 +19,17 @@ export function RestaurantTableRow({
   onDelete,
 }: RestaurantTableRowProps) {
   const { t } = useTranslation();
+  const showAlert = useAlertStore((state) => state.showAlert);
 
   const handleDeleteClick = () => {
-    if (window.confirm(t("restaurants.table.confirmDelete", { name: restaurant.name }))) {
-      onDelete(restaurant.id);
-    }
+    showAlert({
+      title: t("restaurants.table.confirmDeleteTitle"),
+      message: t("restaurants.table.confirmDelete", { name: restaurant.name }),
+      confirmText: t("common.actions.delete"),
+      cancelText: t("common.actions.cancel"),
+      variant: "danger",
+      onConfirm: () => onDelete(restaurant.id),
+    });
   };
 
   return (
@@ -41,7 +48,7 @@ export function RestaurantTableRow({
           {restaurant.status}
         </span>
       </td>
-      
+
       {isAdmin && (
         <td className="px-6 py-4 text-right">
           <div className="flex justify-end gap-2">
@@ -58,7 +65,9 @@ export function RestaurantTableRow({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              {isDeleting ? t("restaurants.table.removing") : t("restaurants.table.delete")}
+              {isDeleting
+                ? t("restaurants.table.removing")
+                : t("restaurants.table.delete")}
             </Button>
           </div>
         </td>

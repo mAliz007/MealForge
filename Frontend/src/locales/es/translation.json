@@ -138,6 +138,10 @@
       "title": "Su bandeja de selección está vacía.",
       "subtitle": "Navegue a la pestaña del catálogo de menús para seleccionar platos."
     },
+    "accessibility": {
+      "badgeLabel": "Carrito de compras con {{count}} artículo",
+      "badgeLabel_other": "Carrito de compras con {{count}} artículos"
+    },
     "actions": {
       "reviewItems": "Revisando {{count}} artículo (Centro de origen #{{hub}})",
       "reviewItems_plural": "Revisando {{count}} artículos (Centro de origen #{{hub}})",

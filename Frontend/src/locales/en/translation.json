@@ -134,6 +134,10 @@
     "title": "Active Checkout Cart",
     "description": "Review pending checkout batches and transaction pipelines.",
     "transmitting": "Transmitting secure payment and manifest payload...",
+    "accessibility": {
+      "badgeLabel": "Shopping cart with {{count}} item",
+      "badgeLabel_other": "Shopping cart with {{count}} items"
+    },
     "empty": {
       "title": "Your selection tray is empty.",
       "subtitle": "Navigate to the menu catalog tab to select dishes."

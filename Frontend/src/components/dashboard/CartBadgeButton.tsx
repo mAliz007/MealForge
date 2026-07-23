@@ -20,7 +20,8 @@ export function CartBadgeButton() {
   return (
     <IconButton
       component={Link}
-      to={ROUTES.DASHBOARD.CART}
+      to = "/dashboard/cart"
+      //to={ROUTES.DASHBOARD.CART}
       color="inherit"
       aria-label={t("cart.accessibility.badgeLabel", { count: cartCount })}
       sx={{ 

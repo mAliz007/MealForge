@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authService } from "../../services/authService";
 import { ROUTES } from "../../app/router"; // Double check this import path matches your app structure
 import type { ReactNode } from "react";
+import { STALE_TIME_5_MINUTES } from "../../constants/config";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -14,7 +15,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     queryKey: ["auth", "me"],
     queryFn: authService.getCurrentUser,
     retry: false, // If the cookie is expired or missing, stop trying immediately
-    staleTime: 1000 * 60 * 5, // Keep the session cached for 5 minutes before re-checking
+    staleTime: STALE_TIME_5_MINUTES, // Keep the session cached for 5 minutes before re-checking
   });
 
   // 1. Show a loading state while validating the secure cookie with Rails

@@ -3,6 +3,7 @@ import { menuItemService, type MenuItemsFilters } from "../services/menuItemServ
 import type { MenuItem } from "../types";
 import type { MenuItemFormData } from "../utils/schemas";
 import type { PaginatedResponse } from "../types/PagyType";
+import { STALE_TIME_30_SECONDS } from "../constants/config";
 
 export const menuQueryKeys = {
   all: ["menu_items"] as const,
@@ -19,7 +20,7 @@ export function useMenuItems(
     queryKey: menuQueryKeys.list(filters),
     queryFn: () => menuItemService.getAll(filters),
     placeholderData: (previousData) => previousData,
-    staleTime: 1000 * 30,
+    staleTime: STALE_TIME_30_SECONDS,
     ...options,
   });
 }

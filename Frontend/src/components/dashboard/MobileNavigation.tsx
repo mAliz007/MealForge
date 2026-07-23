@@ -23,12 +23,8 @@ import { useAuthUser } from "../../hooks/useAuthUser";
 import { ROUTES } from "../../app/router";
 import { useTheme } from "../../context/ThemeContext"; 
 import { useTranslation } from "react-i18next";
+import type { NavigationItem } from "../../types/navigation";
 
-interface NavigationItem {
-  name: string;
-  path: string;
-  icon: LucideIcon;
-}
 
 interface MobileNavigationProps {
   navigationItems: NavigationItem[];

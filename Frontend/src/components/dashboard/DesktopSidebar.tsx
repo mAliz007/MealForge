@@ -5,12 +5,9 @@ import { LogOut, type LucideIcon } from "lucide-react";
 import { useAuthUser } from "../../hooks/useAuthUser";
 import { ROUTES } from "../../app/router";
 import { useTranslation } from "react-i18next";
+import type { NavigationItem } from "../../types/navigation";
 
-interface NavigationItem {
-  name: string;
-  path: string;
-  icon: LucideIcon;
-}
+
 
 interface DesktopSidebarProps {
   navigationItems: NavigationItem[];

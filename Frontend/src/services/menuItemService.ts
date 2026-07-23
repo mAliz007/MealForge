@@ -1,25 +1,23 @@
-import { apiClient } from "./apiClient"; // Adjust this path to match your layout
+import { apiClient } from "./apiClient";
 import type { MenuItem } from "../types";
 import type { MenuItemFormData } from "../utils/schemas";
+import type { PaginatedResponse } from "../types/PagyType";
 
 export interface MenuItemsFilters {
   restaurant_id?: string | number;
   available?: boolean | string;
+  search?: string;
+  page?: number;
+  limit?: number;
 }
 
 export const menuItemService = {
-  // Inside menuItemService.ts - Place inside getAll:
-getAll: async (filters?: MenuItemsFilters): Promise<MenuItem[]> => {
-  console.log("📡 SERVICE API OUTBOUND:", {
-    filtersPassed: filters,
-    paramsPayload: filters?.restaurant_id
-  });
-
-  const response = await apiClient.get<MenuItem[]>("/v1/menu_items", {
-    params: filters,
-  });
-  return response.data;
-},
+  getAll: async (filters?: MenuItemsFilters): Promise<PaginatedResponse<MenuItem>> => {
+    const response = await apiClient.get<PaginatedResponse<MenuItem>>("/v1/menu_items", {
+      params: filters,
+    });
+    return response.data;
+  },
 
   getById: async (id: number): Promise<MenuItem> => {
     const response = await apiClient.get<MenuItem>(`/v1/menu_items/${id}`);
@@ -27,7 +25,6 @@ getAll: async (filters?: MenuItemsFilters): Promise<MenuItem[]> => {
   },
 
   create: async (data: MenuItemFormData): Promise<MenuItem> => {
-    // Wraps payload in "menu_item" object to satisfy Rails strong params require(:menu_item)
     const response = await apiClient.post<MenuItem>("/v1/menu_items", {
       menu_item: data,
     });

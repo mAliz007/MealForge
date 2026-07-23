@@ -46,6 +46,14 @@
     "adminDescription": "Administre los socios gastronómicos registrados y los estados operativos.",
     "userDescription": "Ver los socios gastronómicos registrados activos.",
     "addBtn": "+ Añadir Restaurante",
+    "searchPlaceholder": "Buscar restaurantes...",
+    "clearSearch": "Limpiar búsqueda",
+    "pagination": {
+      "showingResults": "Mostrando {{from}} a {{to}} de {{total}} restaurantes",
+      "pageInfo": "Página {{page}} de {{totalPages}}",
+      "prev": "Anterior",
+      "next": "Siguiente"
+    },
     "states": {
       "syncing": "Sincronizando registros...",
       "failedSync": "Error al sincronizar registros",
@@ -169,6 +177,9 @@
     "adminDescription": "Configure la disponibilidad del catálogo y las matrices de listado administrativo.",
     "userDescription": "Explore listas culinarias y cree pedidos personalizados de entrega de comida.",
     "addItem": "+ Añadir artículo",
+    "searchPlaceholder": "Buscar artículos del menú...",
+    "clearSearch": "Limpiar búsqueda",
+    "searchBtn": "Buscar",
     "table": {
       "id": "ID",
       "details": "Detalles del artículo",
@@ -177,13 +188,24 @@
       "actions": "Acciones",
       "buildOrder": "Crear pedido"
     },
+    "pagination": {
+      "showing_one": "Mostrando {{from}} a {{to}} de {{count}} artículo",
+      "showing_other": "Mostrando {{from}} a {{to}} de {{count}} artículos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "pageInfo": "Página {{page}} de {{totalPages}}"
+    },
     "filter": {
-      "restaurantLabel": "Restaurante asociado",
-      "allRestaurants": "Todos los socios registrados",
-      "stockLabel": "Estado de inventario",
-      "allListings": "Mostrar todas las publicaciones",
-      "inStock": "Solo disponibles",
-      "unavailable": "Solo no disponibles"
+      "restaurantLabel": "Restaurante",
+      "searchRestaurantPlaceholder": "Buscar restaurante...",
+      "allRestaurants": "Todos los restaurantes",
+      "loading": "Cargando...",
+      "noRestaurants": "No se encontraron restaurantes",
+      "searchLabel": "Buscar artículos del menú",
+      "stockLabel": "Disponibilidad",
+      "allListings": "Todos los listados",
+      "inStock": "En stock",
+      "unavailable": "No disponible"
     },
     "form": {
       "titleEdit": "Editar artículo del menú",

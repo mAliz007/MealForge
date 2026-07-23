@@ -1,8 +1,7 @@
-// frontend/src/views/menu-items/MenuItemsView.tsx
 import { useTranslation } from "react-i18next";
 import { useMenuItemsView } from "../../hooks/useMenuItemsView";
 
-// Isolated Modular Presentation Components
+// Presentation Components
 import { MenuFilterBar } from "../../components/menu-items/MenuFilterBar";
 import { MenuItemRow } from "../../components/menu-items/MenuItemRow";
 import { MenuItemFormPanel } from "../../components/menu-items/MenuItemFormPanel";
@@ -14,17 +13,24 @@ import {
 
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { MenuItemPagination } from "~components/menu-items/MenuItemPagination";
 
 export default function MenuItemsView() {
   const { t } = useTranslation();
 
-  // Connect presentation layer entirely to the clean state machine hook
+  // Destructure pagination and search state from view hook
   const {
     isAdmin,
     isLoading,
     isError,
     error,
     menuItems,
+    meta,
+    page,
+    setPage,
+    limit,
+    search,
+    setSearch,
     restaurantId,
     setRestaurantId,
     available,
@@ -40,16 +46,9 @@ export default function MenuItemsView() {
     shouldSkipFetch,
   } = useMenuItemsView();
 
-  console.log("🔍 VIEW TRACKER:", {
-    restaurantId,
-    typeOfId: typeof restaurantId,
-    shouldSkipFetch,
-    menuItemsCount: menuItems?.length
-  });
-
   return (
     <div className="space-y-6 text-text-main transition-colors duration-200">
-      {/* Page Header Layout */}
+      {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold">{t("menu.title")}</h1>
@@ -69,14 +68,17 @@ export default function MenuItemsView() {
         )}
       </div>
 
-      {/* Filter Management Bar */}
+      {/* Filter Toolbar */}
       <MenuFilterBar
         restaurantId={restaurantId}
         setRestaurantId={setRestaurantId}
         available={available}
         setAvailable={setAvailable}
+        search={search}
+        setSearch={setSearch}
       />
 
+      {/* Slide-over/Modal Form Panel */}
       <MenuItemFormPanel
         open={isFormOpen}
         editingItem={editingItem}
@@ -85,7 +87,7 @@ export default function MenuItemsView() {
         isPending={isPending}
       />
 
-      {/* State Machine UI Router Implementation */}
+      {/* State Router */}
       {isLoading ? (
         <MenuItemLoading />
       ) : isError ? (
@@ -100,33 +102,44 @@ export default function MenuItemsView() {
       ) : !menuItems || menuItems.length === 0 ? (
         <MenuItemEmpty />
       ) : (
-        <Card className="overflow-x-auto p-0 bg-structure border border-text-muted/10 rounded-2xl shadow-sm">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-canvas/50 border-b border-text-muted/10 text-xs font-bold uppercase tracking-wider text-text-muted">
-                <th className="px-6 py-4">{t("menu.table.id")}</th>
-                <th className="px-6 py-4">{t("menu.table.details")}</th>
-                <th className="px-6 py-4">{t("menu.table.price")}</th>
-                <th className="px-6 py-4">{t("menu.table.status")}</th>
-                <th className="px-6 py-4 text-right">
-                  {isAdmin ? t("menu.table.actions") : t("menu.table.buildOrder")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-text-muted/10 text-sm">
-              {menuItems.map((item) => (
-                <MenuItemRow
-                  key={item.id}
-                  item={item}
-                  isAdmin={isAdmin}
-                  isDeleting={deleteMutation.isPending && deleteMutation.variables === item.id}
-                  onEdit={startEdit}
-                  onDelete={(id) => deleteMutation.mutate(id)}
-                />
-              ))}
-            </tbody>
-          </table>
-        </Card>
+        <div className="space-y-4">
+          <Card className="overflow-x-auto p-0 bg-structure border border-text-muted/10 rounded-2xl shadow-sm">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-canvas/50 border-b border-text-muted/10 text-xs font-bold uppercase tracking-wider text-text-muted">
+                  <th className="px-6 py-4">{t("menu.table.id")}</th>
+                  <th className="px-6 py-4">{t("menu.table.details")}</th>
+                  <th className="px-6 py-4">{t("menu.table.price")}</th>
+                  <th className="px-6 py-4">{t("menu.table.status")}</th>
+                  <th className="px-6 py-4 text-right">
+                    {isAdmin ? t("menu.table.actions") : t("menu.table.buildOrder")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-text-muted/10 text-sm">
+                {menuItems.map((item) => (
+                  <MenuItemRow
+                    key={item.id}
+                    item={item}
+                    isAdmin={isAdmin}
+                    isDeleting={deleteMutation.isPending && deleteMutation.variables === item.id}
+                    onEdit={startEdit}
+                    onDelete={(id) => deleteMutation.mutate(id)}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </Card>
+
+          {/* Reusable Pagination Control Bar */}
+          <MenuItemPagination
+            meta={meta}
+            currentPage={page}
+            limit={limit}
+            totalItemsFallback={menuItems.length}
+            onPageChange={setPage}
+          />
+        </div>
       )}
     </div>
   );

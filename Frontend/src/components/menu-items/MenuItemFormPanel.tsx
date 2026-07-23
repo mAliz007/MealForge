@@ -30,7 +30,13 @@ export function MenuItemFormPanel({
   isPending,
 }: MenuItemFormModalProps) {
   const { t } = useTranslation();
-  const { data: restaurants } = useRestaurants();
+  
+  // Fetch up to 30 restaurants for the form dropdown
+  const { data: response } = useRestaurants(1, 30);
+  const restaurantList = response?.data;
+  const meta = response?.meta;
+  const hasMore = meta && meta.count > 30;
+
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
 
   const { register, handleSubmit, reset, control, formState: { errors } } = useForm<MenuItemFormData>({
@@ -142,11 +148,17 @@ export function MenuItemFormPanel({
                     }`}
                   >
                     <option value="" className="bg-canvas">{t("menu.form.selectPlaceholder")}</option>
-                    {restaurants?.map((r) => (
+                    {restaurantList?.map((r) => (
                       <option key={r.id} value={r.id} className="bg-canvas">
                         {r.name}
                       </option>
                     ))}
+                    {hasMore && (
+                      <option value="" disabled className="bg-canvas text-text-muted italic">
+                        ──────────
+                        (Showing 30 of {meta.count} - search in Restaurants view)
+                      </option>
+                    )}
                   </select>
                 )}
               />

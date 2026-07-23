@@ -46,6 +46,14 @@
     "adminDescription": "Manage registered dining partners and operating statuses.",
     "userDescription": "View active registered dining partners.",
     "addBtn": "+ Add Restaurant",
+    "searchPlaceholder": "Search restaurants...",
+    "clearSearch": "Clear search",
+    "pagination": {
+      "showingResults": "Showing {{from}} to {{to}} of {{total}} restaurants",
+      "pageInfo": "Page {{page}} of {{totalPages}}",
+      "prev": "Previous",
+      "next": "Next"
+    },
     "states": {
       "syncing": "Syncing records...",
       "failedSync": "Failed to sync records",
@@ -169,6 +177,9 @@
     "adminDescription": "Configure catalog availability and administrative listing matrices.",
     "userDescription": "Browse culinary lists and build custom food delivery orders.",
     "addItem": "+ Add Menu Item",
+    "searchPlaceholder": "Search menu items...",
+    "clearSearch": "Clear search",
+    "searchBtn": "Search",
     "table": {
       "id": "ID",
       "details": "Item Details",
@@ -177,13 +188,24 @@
       "actions": "Actions",
       "buildOrder": "Build Order"
     },
+    "pagination": {
+      "showing_one": "Showing {{from}} to {{to}} of {{count}} item",
+      "showing_other": "Showing {{from}} to {{to}} of {{count}} items",
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{totalPages}}"
+    },
     "filter": {
       "restaurantLabel": "Partner Restaurant",
+      "restaurantPlaceholder": "Search & select restaurant...",
       "allRestaurants": "All Registered Partners",
       "stockLabel": "Stock State",
       "allListings": "Show All Listings",
       "inStock": "In Stock Only",
-      "unavailable": "Unavailable Only"
+      "unavailable": "Unavailable Only",
+      "noRestaurantsFound": "No restaurants found",
+      "searchLabel": "Search Menu Items",
+      "searchPlaceholder": "Search items by name..."
     },
     "form": {
       "titleEdit": "Edit Menu Item",

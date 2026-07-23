@@ -163,6 +163,13 @@
     }
   },
   "auth": {
+    "fullNameLabel": "Nombre Completo",
+    "fullNamePlaceholder": "Juan Pérez",
+    "emailLabel": "Correo Electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "createAccount": "Crear Cuenta",
     "login": {
       "title": "Bienvenido de nuevo",
       "subtitle": "Inicie sesión para administrar su plataforma de comedor",

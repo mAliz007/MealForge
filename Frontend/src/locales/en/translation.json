@@ -163,6 +163,13 @@
     }
   },
   "auth": {
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
     "login": {
       "title": "Welcome Back",
       "subtitle": "Sign in to manage your dining platform",

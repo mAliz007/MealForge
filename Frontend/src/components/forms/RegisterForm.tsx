@@ -1,34 +1,38 @@
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { registerSchema } from "../../utils/schemas";
 import type { RegisterFormData } from "../../utils/schemas";
 import { Input } from "../ui/Input";
 import { AuthFormLayout } from "./layouts/AuthFormLayout";
-// Import the interface from your centralized types hub
 import type { RegisterFormProps } from "../../types";
 
 function RegisterFields() {
-  const { register, formState: { errors } } = useFormContext<RegisterFormData>();
+  const { t } = useTranslation();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<RegisterFormData>();
 
   return (
     <>
       <Input
-        label="Full Name"
+        label={t("auth.fullNameLabel")}
         id="name"
         type="text"
-        placeholder="John Doe"
+        placeholder={t("auth.fullNamePlaceholder")}
         error={errors.name?.message}
         {...register("name")}
       />
       <Input
-        label="Email Address"
+        label={t("auth.emailLabel")}
         id="email"
         type="email"
-        placeholder="you@example.com"
+        placeholder={t("auth.emailPlaceholder")}
         error={errors.email?.message}
         {...register("email")}
       />
       <Input
-        label="Password"
+        label={t("auth.passwordLabel")}
         id="password"
         type="password"
         placeholder="••••••••"
@@ -39,13 +43,14 @@ function RegisterFields() {
   );
 }
 
-export function RegisterForm({ onSubmit, isLoading }: RegisterFormProps) {
+export function RegisterForm({ onSubmit }: RegisterFormProps) {
+  const { t } = useTranslation();
+
   return (
     <AuthFormLayout
       schema={registerSchema}
-      onSubmitSuccess={onSubmit} // Bridging 'onSubmit' down to layout
-      isLoading={isLoading}       // Passing the mutation loading state down
-      submitButtonText="Create Account"
+      onSubmitSuccess={onSubmit}
+      submitButtonText={t("auth.createAccount")}
     >
       <RegisterFields />
     </AuthFormLayout>

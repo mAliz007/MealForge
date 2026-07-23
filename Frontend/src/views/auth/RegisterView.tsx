@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { RegisterForm } from "../../components/forms/RegisterForm";
 import { Card } from "../../components/ui/Card";
+import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { useRegister } from "../../hooks/useRegister"; // Adjust this path to your hooks directory
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +10,10 @@ export default function RegisterView() {
   const { t } = useTranslation();
   // Extract clean, fully typed handlers and error metrics directly from your hook
   const { onSubmit, isLoading, errorMessages } = useRegister();
+
+  if (isLoading) {
+    return <LoadingSpinner fullScreen message={t("auth.register.creatingAccount") || "Creating account..."} />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-canvas text-text-main px-4 transition-colors duration-200">

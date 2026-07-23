@@ -19,7 +19,7 @@ export function useCartView() {
 
   // Resolve the Restaurant ID safely
   const rawId = Number(restaurantId);
-  const fallbackId = cartItems[0]?.menuItem?.restaurantId ?? (cartItems[0]?.menuItem as any)?.restaurant_id;
+  const fallbackId = cartItems[0]?.menuItem?.restaurant_id ?? (cartItems[0]?.menuItem as any)?.restaurant_id;
   const cleanRestaurantId = !isNaN(rawId) && rawId > 0 ? rawId : Number(fallbackId || 0);
 
   // Static delivery parameters

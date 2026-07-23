@@ -1,16 +1,12 @@
 // frontend/src/components/menu-items/MenuItemStates.tsx
 import { useTranslation } from "react-i18next";
 import { Card } from "../ui/Card";
+import { LoadingSpinner } from "../ui/LoadingSpinner"; // Adjust import path as needed
 
 export function MenuItemLoading() {
   const { t } = useTranslation();
 
-  return (
-    <div className="flex justify-center items-center h-48 text-text-muted">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent mr-3"></div>
-      {t("menu.states.loading")}
-    </div>
-  );
+  return <LoadingSpinner message={t("menu.states.loading")} />;
 }
 
 export function MenuItemError({ message }: { message?: string }) {

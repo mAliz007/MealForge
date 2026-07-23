@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { orderService, type CreateOrderPayload } from "../services/orderService";
 import type { Order } from "../types";
+import { STALE_TIME_10_SECONDS } from "../constants/config";
 
 export const orderQueryKeys = {
   all: ["orders"] as const,
@@ -12,7 +13,7 @@ export function useOrders() {
   return useQuery<Order[], Error>({
     queryKey: orderQueryKeys.lists(),
     queryFn: () => orderService.getAll(),
-    staleTime: 1000 * 10, // Orders are live data; keep stale time slightly lower
+    staleTime: STALE_TIME_10_SECONDS, // Orders are live data; keep stale time slightly lower
   });
 }
 

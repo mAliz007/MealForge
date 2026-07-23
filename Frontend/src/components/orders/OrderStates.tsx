@@ -1,15 +1,11 @@
 import { Card } from "../ui/Card";
 import { useTranslation } from "react-i18next";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 export function OrderLoading() {
   const { t } = useTranslation();
 
-  return (
-    <div className="flex justify-center items-center h-64 text-muted">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mr-2"></div>
-      {t("orders.states.loading")}
-    </div>
-  );
+  return <LoadingSpinner message={t("orders.states.loading")} />;
 }
 
 export function OrderError({ message }: { message?: string }) {

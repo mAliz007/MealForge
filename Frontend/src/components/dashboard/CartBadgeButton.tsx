@@ -2,11 +2,13 @@
 import { Link } from "react-router-dom";
 import { Badge, IconButton } from "@mui/material";
 import { ShoppingCart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useCart } from "../../context/CartContext";
-import { useAuthUser } from "../../hooks/useAuthUser"; // Path to your useAuthUser hook
+import { useAuthUser } from "../../hooks/useAuthUser";
 import { ROUTES } from "../../app/router";
 
 export function CartBadgeButton() {
+  const { t } = useTranslation();
   const { cartCount } = useCart();
   const { isAdmin } = useAuthUser();
 
@@ -18,9 +20,10 @@ export function CartBadgeButton() {
   return (
     <IconButton
       component={Link}
-      to="/dashboard/cart"
+      to = "/dashboard/cart"
+      //to={ROUTES.DASHBOARD.CART}
       color="inherit"
-      aria-label={`cart with ${cartCount} items`}
+      aria-label={t("cart.accessibility.badgeLabel", { count: cartCount })}
       sx={{ 
         // Use our semantic muted text variable for default state
         color: "var(--color-text-muted)",

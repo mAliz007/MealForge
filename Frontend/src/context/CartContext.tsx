@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useAlertStore } from "../store/useAlertStore";
 import type { MenuItem } from "../types";
 import {
   addItem,
@@ -11,7 +13,7 @@ import {
   selectCartRestaurantId,
   selectCartTotal,
   selectCartCount,
-  type CartItem
+  type CartItem,
 } from "../features/cart/cartSlice";
 
 interface CartContextType {
@@ -29,6 +31,8 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const showAlert = useAlertStore((state) => state.showAlert);
 
   // Read data from Redux store via selectors
   const cartItems = useSelector(selectCartItems);
@@ -42,19 +46,26 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (cartItems.length === 0) {
       localStorage.removeItem("food_delivery_cart_restaurant_id");
     } else {
-      localStorage.setItem("food_delivery_cart_restaurant_id", String(restaurantId));
+      localStorage.setItem(
+        "food_delivery_cart_restaurant_id",
+        String(restaurantId)
+      );
     }
   }, [cartItems, restaurantId]);
 
   const addToCart = (item: MenuItem, quantity = 1) => {
     // Cross-restaurant check rule
     if (restaurantId !== null && restaurantId !== item.restaurant_id) {
-      const confirmClear = window.confirm(
-        "You have items from a different restaurant in your cart. Clear cart to add this item?"
-      );
-      if (!confirmClear) return;
-
-      dispatch(replaceCartWithItem({ item, quantity }));
+      showAlert({
+        title: t("cart.clearConflictTitle"),
+        message: t("cart.clearConflictMessage"),
+        confirmText: t("common.actions.confirm"),
+        cancelText: t("common.actions.cancel"),
+        variant: "warning",
+        onConfirm: () => {
+          dispatch(replaceCartWithItem({ item, quantity }));
+        },
+      });
       return;
     }
 

@@ -1,5 +1,6 @@
 import { Card } from "../ui/Card";
 import { useTranslation } from "react-i18next";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 interface StateProps {
   message?: string;
@@ -7,12 +8,7 @@ interface StateProps {
 
 export function RestaurantLoading() {
   const { t } = useTranslation();
-  return (
-    <div className="flex justify-center items-center h-48 text-muted">
-      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-accent mr-2"></div>
-      {t("restaurants.states.syncing")}
-    </div>
-  );
+  return <LoadingSpinner message={t("restaurants.states.syncing")} />;
 }
 
 export function RestaurantError({ message }: StateProps) {

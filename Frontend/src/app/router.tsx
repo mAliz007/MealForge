@@ -10,4 +10,4 @@ export const ROUTES = {
     ORDERS: "orders",
     CART: "cart",
   },
-} as const; // "as const" makes it read-only for TypeScript safety
+} as const; 

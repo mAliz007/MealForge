@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { LoginForm } from "../../components/forms/LoginForm";
 import { Card } from "../../components/ui/Card";
+import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { useLogin } from "../../hooks/useLogin";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +10,10 @@ export default function LoginView() {
   const { t } = useTranslation();
   // Completely clean, typed logic decoupled from UI layout
   const { onSubmit, isLoading, errorMessage } = useLogin();
+
+  if (isLoading) {
+    return <LoadingSpinner fullScreen message={t("auth.login.signingIn") || "Logging in..."} />;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-canvas text-text-main px-4 transition-colors duration-200">

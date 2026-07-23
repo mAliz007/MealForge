@@ -1,6 +1,6 @@
-
 import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
+import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
 import { useCartView } from "../../hooks/useCartView";
 
 export default function CartView() {
@@ -27,10 +27,7 @@ export default function CartView() {
       </div>
 
       {isPending ? (
-        <div className="flex justify-center items-center h-64 text-muted">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mr-2"></div>
-          {t("cart.transmitting")}
-        </div>
+        <LoadingSpinner message={t("cart.transmitting")} />
       ) : cartItems.length === 0 ? (
         <Card className="text-center py-12">
           <p className="text-lg font-medium text-main">{t("cart.empty.title")}</p>

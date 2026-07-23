@@ -9,6 +9,7 @@ interface PagyMeta {
   page?: number;
   pages?: number;
   total_pages?: number;
+  last?: number;
   prev?: number | null;
   next?: number | null;
 }
@@ -33,8 +34,13 @@ export function RestaurantPagination({
   if (!meta) return null;
 
   const page = Number(meta.page ?? currentPage);
-  const totalPages = Number(meta.pages ?? meta.total_pages ?? 1);
   const totalCount = Number(meta.count ?? meta.total ?? totalItemsFallback);
+
+  // Fallback calculation in case backend doesn't send total page count explicitly
+  const calculatedPages = Math.ceil(totalCount / limit) || 1;
+  const totalPages = Number(
+    meta.pages ?? meta.total_pages ?? meta.last ?? calculatedPages
+  );
 
   const from = meta.from ?? (page - 1) * limit + 1;
   const to = meta.to ?? Math.min(page * limit, totalCount);

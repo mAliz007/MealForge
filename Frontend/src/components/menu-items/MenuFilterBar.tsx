@@ -115,7 +115,8 @@ export function MenuFilterBar({
             </button>
 
             {isRestLoading ? (
-              <div className="px-3 py-2 text-xs text-text-muted">
+              <div className="flex items-center gap-2 px-3 py-2 text-xs text-text-muted">
+                <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-primary" />
                 {t("menu.filter.loading", "Loading...")}
               </div>
             ) : matchedRestaurants.length === 0 ? (

@@ -1,9 +1,10 @@
 import { Navigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { authService } from "../../services/authService";
-import { ROUTES } from "../../app/router"; // Double check this import path matches your app structure
+import { ROUTES } from "../../app/router";
 import type { ReactNode } from "react";
 import { STALE_TIME_5_MINUTES } from "../../constants/config";
+import { LoadingSpinner } from "../ui/LoadingSpinner"; // Adjust path if needed
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -20,14 +21,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   // 1. Show a loading state while validating the secure cookie with Rails
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="flex flex-col items-center space-y-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="text-sm font-medium text-gray-500">Verifying session...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message="Verifying session..." fullScreen />;
   }
 
   // 2. If no user data comes back from the serializer, bounce them to login

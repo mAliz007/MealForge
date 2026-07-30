@@ -1,5 +1,5 @@
 // frontend/src/app/DashboardLayout.tsx
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "../services/authService";
@@ -14,6 +14,10 @@ import { MobileNavigation } from "../components/dashboard/MobileNavigation";
 import { CartBadgeButton } from "../components/dashboard/CartBadgeButton";
 import { useTheme } from "../context/ThemeContext";
 
+// Real-time Action Cable Hook & Toast UI
+import { useOrderNotifications, type OrderNotificationPayload } from "../hooks/useOrderNotifications";
+import { NotificationToast } from "../components/ui/NotificationToast";
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -23,6 +27,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const queryClient = useQueryClient();
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
+
+  // Active notification state for real-time alerts
+  const [activeNotification, setActiveNotification] = useState<OrderNotificationPayload | null>(null);
+
+  // Listen for real-time WebSocket order notifications
+  useOrderNotifications((notification) => {
+    setActiveNotification(notification);
+  });
 
   const navigationItems = [
     { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
@@ -128,6 +140,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           {children}
         </main>
       </div>
+
+      {/* Global Real-time Notification Toast */}
+      <NotificationToast 
+        notification={activeNotification}
+        onClose={() => setActiveNotification(null)}
+      />
     </div>
   );
 }

@@ -277,5 +277,13 @@
       "emptyTitle": "No se encontraron selecciones de menú.",
       "emptySubtitle": "Intente ampliar sus parámetros de filtrado activos o vuelva a consultar más tarde."
     }
+  },
+  "notifications": {
+    "orderPlacedTitle": "¡Pedido realizado con éxito!",
+    "orderMessage": "El pedido #{{id}} fue realizado en {{restaurant}}",
+    "total": "Total",
+    "status": "Estado",
+    "viewOrders": "Ver pedidos",
+    "dismiss": "Descartar"
   }
 }

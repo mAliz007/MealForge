@@ -278,5 +278,13 @@
       "emptyTitle": "No menu selections found.",
       "emptySubtitle": "Try broadening your active filter parameters or check back later."
     }
+  },
+  "notifications": {
+    "orderPlacedTitle": "Order Placed Successfully!",
+    "orderMessage": "Order #{{id}} was placed at {{restaurant}}",
+    "total": "Total",
+    "status": "Status",
+    "viewOrders": "View Orders",
+    "dismiss": "Dismiss"
   }
 }

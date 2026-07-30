@@ -42,7 +42,6 @@ export function useCartView() {
 
     createOrderMutation.mutate(payload, {
       onSuccess: () => {
-        alert(t("cart.alerts.success"));
         clearCart();
       },
       onError: (err) => {

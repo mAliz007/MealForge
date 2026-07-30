@@ -1,7 +1,9 @@
+// src/hooks/useOrderNotifications.ts
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthUser } from "./useAuthUser";
 import { getActionCableConsumer } from "../services/actionCable";
+import { useNotificationStore } from "../store/useNotificationStore";
 
 export interface OrderNotificationPayload {
   id: number;
@@ -12,11 +14,10 @@ export interface OrderNotificationPayload {
   message: string;
 }
 
-export function useOrderNotifications(
-  onNotificationReceived?: (notification: OrderNotificationPayload) => void
-) {
+export function useOrderNotifications() {
   const { user } = useAuthUser();
   const queryClient = useQueryClient();
+  const showNotification = useNotificationStore((state) => state.showNotification);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -35,12 +36,11 @@ export function useOrderNotifications(
         received(data: OrderNotificationPayload) {
           console.log("[ActionCable] Notification payload received:", data);
 
-          // Invalidate orders list cache in TanStack Query
+          // 1. Invalidate orders list cache in TanStack Query
           queryClient.invalidateQueries({ queryKey: ["orders"] });
 
-          if (onNotificationReceived) {
-            onNotificationReceived(data);
-          }
+          // 2. Push payload directly to Zustand store
+          showNotification(data);
         },
       }
     );
@@ -48,5 +48,5 @@ export function useOrderNotifications(
     return () => {
       subscription.unsubscribe();
     };
-  }, [user?.id, queryClient, onNotificationReceived]);
+  }, [user?.id, queryClient, showNotification]);
 }

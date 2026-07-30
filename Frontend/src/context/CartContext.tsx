@@ -9,12 +9,21 @@ import {
   updateQuantityState,
   clearCartState,
   replaceCartWithItem,
+  setCartFromServer,
   selectCartItems,
   selectCartRestaurantId,
   selectCartTotal,
   selectCartCount,
   type CartItem,
 } from "../features/cart/cartSlice";
+import {
+  useCart as useCartQuery,
+  useAddToCart,
+  useUpdateCartQuantity,
+  useRemoveCartItem,
+  useClearCart,
+} from "../hooks/useCartQuery";
+import { useAuthUser } from "../hooks/useAuthUser";
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -34,58 +43,119 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation();
   const showAlert = useAlertStore((state) => state.showAlert);
 
-  // Read data from Redux store via selectors
+  // Authenticated user state
+  const { user, isLoading: isAuthLoading } = useAuthUser();
+  const isAuthenticated = Boolean(user);
+
+  // Redux Selectors
   const cartItems = useSelector(selectCartItems);
   const restaurantId = useSelector(selectCartRestaurantId);
   const cartTotal = useSelector(selectCartTotal);
   const cartCount = useSelector(selectCartCount);
 
-  // Keep localStorage sync operational whenever Redux state changes
+  // TanStack Query Hooks
+  const { data: serverCartData } = useCartQuery(isAuthenticated && !isAuthLoading);
+  const addToCartMutation = useAddToCart();
+  const updateQuantityMutation = useUpdateCartQuantity();
+  const removeCartItemMutation = useRemoveCartItem();
+  const clearCartMutation = useClearCart();
+
+  // Sync server cart into Redux when query data changes for logged-in user
   useEffect(() => {
-    localStorage.setItem("food_delivery_cart", JSON.stringify(cartItems));
-    if (cartItems.length === 0) {
-      localStorage.removeItem("food_delivery_cart_restaurant_id");
-    } else {
-      localStorage.setItem(
-        "food_delivery_cart_restaurant_id",
-        String(restaurantId)
+    if (isAuthenticated && serverCartData) {
+      dispatch(
+        setCartFromServer({
+          cartItems: serverCartData.cartItems,
+          restaurantId: serverCartData.restaurantId,
+        })
       );
     }
-  }, [cartItems, restaurantId]);
+  }, [isAuthenticated, serverCartData, dispatch]);
 
-  const addToCart = (item: MenuItem, quantity = 1) => {
-    // Cross-restaurant check rule
-    if (restaurantId !== null && restaurantId !== item.restaurant_id) {
-      showAlert({
-        title: t("cart.clearConflictTitle"),
-        message: t("cart.clearConflictMessage"),
-        confirmText: t("common.actions.confirm"),
-        cancelText: t("common.actions.cancel"),
-        variant: "warning",
-        onConfirm: () => {
+  // Conflict Alert Prompt
+  const triggerConflictAlert = (item: MenuItem, quantity: number) => {
+    showAlert({
+      title: t("cart.clearConflictTitle"),
+      message: t("cart.clearConflictMessage"),
+      confirmText: t("common.actions.confirm"),
+      cancelText: t("common.actions.cancel"),
+      variant: "warning",
+      onConfirm: () => {
+        if (isAuthenticated) {
+          addToCartMutation.mutate({
+            menu_item_id: item.id,
+            quantity,
+            replace_if_conflict: true,
+          });
+        } else {
           dispatch(replaceCartWithItem({ item, quantity }));
-        },
-      });
+        }
+      },
+    });
+  };
+
+  // Handle Add To Cart
+  const addToCart = (item: MenuItem, quantity = 1) => {
+    const executeAdd = (replaceIfConflict = false) => {
+      if (isAuthenticated) {
+        addToCartMutation.mutate(
+          {
+            menu_item_id: item.id,
+            quantity,
+            replace_if_conflict: replaceIfConflict,
+          },
+          {
+            onError: (err: any) => {
+              if (err?.error === "restaurant_conflict") {
+                triggerConflictAlert(item, quantity);
+              }
+            },
+          }
+        );
+      } else {
+        if (replaceIfConflict) {
+          dispatch(replaceCartWithItem({ item, quantity }));
+        } else {
+          dispatch(addItem({ item, quantity }));
+        }
+      }
+    };
+
+    // Quick client-side restaurant conflict check
+    if (restaurantId !== null && restaurantId !== item.restaurant_id) {
+      triggerConflictAlert(item, quantity);
       return;
     }
 
-    dispatch(addItem({ item, quantity }));
+    executeAdd(false);
   };
 
+  // Remove single item
   const removeFromCart = (menuItemId: number) => {
+    if (isAuthenticated) {
+      removeCartItemMutation.mutate(menuItemId);
+    }
     dispatch(removeItem(menuItemId));
   };
 
+  // Update Item Quantity
   const updateQuantity = (menuItemId: number, quantity: number) => {
-    // Rule: Quantity cannot go below 1
     if (quantity <= 0) {
-      dispatch(removeItem(menuItemId));
+      removeFromCart(menuItemId);
       return;
+    }
+
+    if (isAuthenticated) {
+      updateQuantityMutation.mutate({ menuItemId, payload: { quantity } });
     }
     dispatch(updateQuantityState({ menuItemId, quantity }));
   };
 
+  // Clear Entire Cart
   const clearCart = () => {
+    if (isAuthenticated) {
+      clearCartMutation.mutate();
+    }
     dispatch(clearCartState());
   };
 

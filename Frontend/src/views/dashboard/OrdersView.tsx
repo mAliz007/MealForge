@@ -18,10 +18,19 @@ import type { Order } from "../../types";
 export default function OrdersView() {
   const { t } = useTranslation();
   const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
-  const { data: orders, isLoading: isDataLoading, error, isError } = useOrders();
+  const { data: rawOrders, isLoading: isDataLoading, error, isError } = useOrders();
 
   // Selected Order context for the modal inspector
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  // Normalize response: Extract array if nested in an object, or fallback to an empty array
+  const orders: Order[] = Array.isArray(rawOrders)
+    ? rawOrders
+    : Array.isArray((rawOrders as any)?.orders)
+    ? (rawOrders as any).orders
+    : Array.isArray((rawOrders as any)?.data)
+    ? (rawOrders as any).data
+    : [];
 
   const handleInspect = (order: Order) => {
     setSelectedOrder(order);
@@ -50,7 +59,7 @@ export default function OrdersView() {
         <OrderLoading />
       ) : isError ? (
         <OrderError message={error?.message} />
-      ) : !orders || orders.length === 0 ? (
+      ) : orders.length === 0 ? (
         <OrderEmpty />
       ) : (
         <Card className="overflow-x-auto p-0">

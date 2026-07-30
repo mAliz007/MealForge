@@ -5,7 +5,6 @@ import { ShoppingCart } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useCart } from "../../context/CartContext";
 import { useAuthUser } from "../../hooks/useAuthUser";
-import { ROUTES } from "../../app/router";
 
 export function CartBadgeButton() {
   const { t } = useTranslation();

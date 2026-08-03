@@ -66,9 +66,15 @@ export default function App() {
                         path={ROUTES.DASHBOARD.ORDERS}
                         element={<OrdersView />}
                       />
+                      
+                      {/* Cart is strictly restricted to Customers */}
                       <Route
                         path={ROUTES.DASHBOARD.CART}
-                        element={<CartView />}
+                        element={
+                          <ProtectedRoute allowedRoles={["customer"]}>
+                            <CartView />
+                          </ProtectedRoute>
+                        }
                       />
                     </Routes>
                   </DashboardLayout>

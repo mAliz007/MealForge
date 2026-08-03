@@ -134,6 +134,12 @@
       "errorFallback": "Ocurrió un error inesperado al comunicarse con el motor de enrutamiento de pedidos.",
       "emptyTitle": "No hay operaciones de pedido registradas.",
       "emptySubtitle": "Los nuevos tickets de transacción se mostrarán aquí cuando los pedidos se realicen en vivo."
+    },
+    "pagination": {
+      "showingResults": "Mostrando {{from}} a {{to}} de {{total}} pedidos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "pageInfo": "Página {{page}} de {{totalPages}}"
     }
   },
   "cart": {

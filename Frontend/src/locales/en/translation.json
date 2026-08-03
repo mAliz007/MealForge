@@ -119,6 +119,12 @@
       "restaurantNode": "Restaurant #{{id}}",
       "inspectBtn": "Inspect Items"
     },
+    "pagination": {
+      "showingResults": "Showing {{from}} to {{to}} of {{total}} orders",
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{totalPages}}"
+    },
     "modal": {
       "title": "Invoice Specs",
       "manifestRef": "Manifest Reference ID: #{{id}}",

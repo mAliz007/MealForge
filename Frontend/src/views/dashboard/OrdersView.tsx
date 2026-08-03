@@ -1,96 +1,115 @@
 import { useState } from "react";
-import { useOrders } from "../../hooks/useOrders";
-import { useAuthUser } from "../../hooks/useAuthUser";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "../../services/apiClient";
 
-// Modular Presentational Components
-import { OrderRow } from "../../components/orders/OrderRow";
-import { OrderDetailModal } from "../../components/orders/OrderDetailModal";
-import {
-  OrderLoading,
-  OrderError,
-  OrderEmpty,
-} from "../../components/orders/OrderStates";
-
-import { Card } from "../../components/ui/Card";
 import type { Order } from "../../types";
+import type { PagyMeta } from "../../types/PagyType";
+
+import { OrderRow } from "~components/orders/OrderRow";
+import { OrderDetailModal } from "~components/orders/OrderDetailModal";
+import { OrderPagination } from "~components/orders/OrderPagination";
 
 export default function OrdersView() {
   const { t } = useTranslation();
-  const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
-  const { data: rawOrders, isLoading: isDataLoading, error, isError } = useOrders();
 
-  // Selected Order context for the modal inspector
+  const [page, setPage] = useState<number>(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Normalize response: Extract array if nested in an object, or fallback to an empty array
-  const orders: Order[] = Array.isArray(rawOrders)
-    ? rawOrders
-    : Array.isArray((rawOrders as any)?.orders)
-    ? (rawOrders as any).orders
-    : Array.isArray((rawOrders as any)?.data)
-    ? (rawOrders as any).data
-    : [];
+  // Fetch paginated order ledger
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["orders", page],
+    queryFn: async () => {
+      const response = await apiClient.get("/v1/orders", {
+        params: { page },
+      });
+      return response.data as { data: Order[]; meta: PagyMeta };
+    },
+  });
 
-  const handleInspect = (order: Order) => {
-    setSelectedOrder(order);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedOrder(null);
-  };
-
-  const isLoading = isAuthLoading || isDataLoading;
+  const orders = data?.data || [];
+  const meta = data?.meta;
 
   return (
-    <div className="space-y-6">
-      {/* View Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-main">{t("orders.title")}</h1>
-        <p className="text-sm text-muted">
-          {isAdmin 
-            ? t("orders.adminDescription") 
-            : t("orders.userDescription")}
-        </p>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-main">
+            {t("orders.title", { defaultValue: "Order Management Ledger" })}
+          </h1>
+          <p className="text-xs text-muted font-mono mt-1">
+            {t("orders.subtitle", {
+              defaultValue: "Monitor and manage order transactions",
+            })}
+          </p>
+        </div>
       </div>
 
-      {/* Main Ledger States */}
-      {isLoading ? (
-        <OrderLoading />
-      ) : isError ? (
-        <OrderError message={error?.message} />
-      ) : orders.length === 0 ? (
-        <OrderEmpty />
-      ) : (
-        <Card className="overflow-x-auto p-0">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-structure/40 border-b border-structure text-xs font-semibold uppercase tracking-wider text-muted">
-                <th className="px-6 py-3">{t("orders.table.orderId")}</th>
-                <th className="px-6 py-3">{t("orders.table.node")}</th>
-                <th className="px-6 py-3">{t("orders.table.total")}</th>
-                <th className="px-6 py-3">{t("orders.table.state")}</th>
-                <th className="px-6 py-3 text-right">{t("orders.table.invoice")}</th>
+      {/* Main Ledger Table */}
+      <div className="overflow-hidden rounded-xl border border-structure bg-structure/40 shadow-sm">
+        <table className="w-full text-left text-sm">
+          <thead className="border-b border-structure bg-canvas/60 text-xs uppercase font-bold text-muted tracking-wider">
+            <tr>
+              <th className="px-6 py-3">Order Ref</th>
+              <th className="px-6 py-3">Restaurant Node</th>
+              <th className="px-6 py-3">Gross Total</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-structure">
+            {isLoading ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-6 py-8 text-center text-muted font-mono"
+                >
+                  {t("orders.loading", { defaultValue: "Loading orders..." })}
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-structure/50 text-sm text-main">
-              {orders.map((order) => (
+            ) : isError ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-rose-500">
+                  {t("orders.error", {
+                    defaultValue: "Failed to load order records.",
+                  })}
+                </td>
+              </tr>
+            ) : orders.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-muted">
+                  {t("orders.empty", { defaultValue: "No orders found." })}
+                </td>
+              </tr>
+            ) : (
+              orders.map((order) => (
                 <OrderRow
                   key={order.id}
                   order={order}
-                  onInspect={handleInspect}
+                  onInspect={(ord) => setSelectedOrder(ord)}
                 />
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      )}
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Itemization Detail Inspection Modal */}
-      <OrderDetailModal
-        order={selectedOrder}
-        onClose={handleCloseModal}
+      {/* Pagination Bar */}
+      <OrderPagination
+        meta={meta}
+        currentPage={page}
+        limit={20}
+        totalItemsFallback={orders.length}
+        onPageChange={setPage}
       />
+
+      {/* Inspect / Status Modal */}
+      {selectedOrder && (
+        <OrderDetailModal
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+        />
+      )}
     </div>
   );
 }

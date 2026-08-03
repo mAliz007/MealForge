@@ -6,7 +6,9 @@ interface PagyMeta {
   to?: number;
   count?: number;
   total?: number;
+  total_count?: number; // 👈 Added backend Searchkick / Pagy metadata key
   page?: number;
+  current_page?: number; // 👈 Added key
   pages?: number;
   total_pages?: number;
   last?: number;
@@ -33,16 +35,20 @@ export function RestaurantPagination({
 
   if (!meta) return null;
 
-  const page = Number(meta.page ?? currentPage);
-  const totalCount = Number(meta.count ?? meta.total ?? totalItemsFallback);
-
-  // Fallback calculation in case backend doesn't send total page count explicitly
-  const calculatedPages = Math.ceil(totalCount / limit) || 1;
-  const totalPages = Number(
-    meta.pages ?? meta.total_pages ?? meta.last ?? calculatedPages
+  const page = Number(meta.current_page ?? meta.page ?? currentPage);
+  // ✅ Now checks meta.total_count from backend meta!
+  const totalCount = Number(
+    meta.total_count ?? meta.count ?? meta.total ?? totalItemsFallback
   );
 
-  const from = meta.from ?? (page - 1) * limit + 1;
+  const calculatedPages = Math.ceil(totalCount / limit) || 1;
+  const totalPages = Number(
+    meta.total_pages ?? meta.pages ?? meta.last ?? calculatedPages
+  );
+
+  // ✅ Guard against 0 total items or page out of bounds
+  const rawFrom = totalCount > 0 ? (page - 1) * limit + 1 : 0;
+  const from = meta.from ?? Math.min(rawFrom, totalCount);
   const to = meta.to ?? Math.min(page * limit, totalCount);
 
   const hasNext =

@@ -109,6 +109,7 @@
     "title": "Historial de transacciones",
     "adminDescription": "Monitoree los libros de transacciones de restaurantes globales y registros de cumplimiento.",
     "userDescription": "Revise y realice el seguimiento en tiempo real del estado de cumplimiento de sus selecciones culinarias.",
+    "subtitle": "Monitorear transacciones de pedidos",
     "table": {
       "orderId": "ID del pedido",
       "node": "Nodo de cumplimiento",

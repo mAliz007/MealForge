@@ -5,7 +5,7 @@ import type { RestaurantFormData } from "../../utils/schemas";
 import { useTranslation } from "react-i18next";
 
 interface RestaurantFormModalProps {
-  open: boolean; // Controls whether the modal is visible
+  open: boolean;
   editingRestaurant?: Restaurant;
   onSubmit: (formData: RestaurantFormData) => void;
   onCancel: () => void;
@@ -18,32 +18,32 @@ export function RestaurantFormCard({
   onCancel,
 }: RestaurantFormModalProps) {
   const { t } = useTranslation();
-  
+
   const formDefaults: RestaurantFormData | undefined = editingRestaurant
     ? {
-        name: editingRestaurant.name,
-        location: editingRestaurant.location,
-        status: editingRestaurant.status,
-      }
+      name: editingRestaurant.name,
+      location: editingRestaurant.location,
+      status: editingRestaurant.status,
+      user_id: editingRestaurant.user_id ?? undefined,
+    }
     : undefined;
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onCancel} // Correctly using onCancel from props here
-      fullWidth 
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      fullWidth
       maxWidth="sm"
-      // Fixed: Migrated PaperProps configuration into slotProps.paper for MUI v6/v7
       slotProps={{
         paper: {
           sx: {
             backgroundColor: "var(--color-structure)",
-            backgroundImage: "none", // Prevent MUI dark-mode gradient overlays
+            backgroundImage: "none",
             color: "var(--color-text-main)",
             borderRadius: "12px",
             border: "1px solid var(--color-structure)",
-          }
-        }
+          },
+        },
       }}
     >
       <DialogTitle sx={{ fontWeight: "bold", color: "var(--color-text-main)" }}>
@@ -51,13 +51,13 @@ export function RestaurantFormCard({
           ? t("restaurants.formCard.modifyTitle", { name: editingRestaurant.name })
           : t("restaurants.formCard.registerTitle")}
       </DialogTitle>
-      
-      <DialogContent 
-        dividers 
-        sx={{ 
+
+      <DialogContent
+        dividers
+        sx={{
           p: 3,
           borderColor: "rgba(255, 255, 255, 0.08)",
-          color: "var(--color-text-main)"
+          color: "var(--color-text-main)",
         }}
       >
         <RestaurantForm

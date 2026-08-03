@@ -110,6 +110,7 @@
     "title": "Transaction History",
     "adminDescription": "Monitor the global restaurant transaction ledgers and fulfillment records.",
     "userDescription": "Review and track the real-time fulfillment state of your culinary selections.",
+    "subtitle": "Monitor order transactions",
     "table": {
       "orderId": "Order ID",
       "node": "Fulfillment Node",

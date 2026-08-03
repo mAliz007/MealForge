@@ -5,9 +5,11 @@ import { Input } from "../ui/Input";
 import { EntityFormLayout } from "./layouts/EntityFormLayout";
 import type { RestaurantFormProps } from "../../types";
 import { useTranslation } from "react-i18next";
+import { useAuthUser } from "../../hooks/useAuthUser";
 
 function RestaurantFields() {
   const { t } = useTranslation();
+  const { isAdmin } = useAuthUser();
   const { register, formState: { errors } } = useFormContext<RestaurantFormData>();
 
   return (
@@ -20,6 +22,7 @@ function RestaurantFields() {
         error={errors.name?.message}
         {...register("name")}
       />
+
       <Input
         label={t("restaurants.form.labels.location")}
         id="location"
@@ -28,12 +31,24 @@ function RestaurantFields() {
         error={errors.location?.message}
         {...register("location")}
       />
-      
+
+      {/* Admin-only numeric User ID input */}
+      {isAdmin && (
+        <Input
+          label={t("restaurants.form.labels.userId", { defaultValue: "Owner User ID" })}
+          id="user_id"
+          type="number"
+          placeholder={t("restaurants.form.placeholders.userId", { defaultValue: "e.g. 5" })}
+          error={errors.user_id?.message}
+          {...register("user_id")}
+        />
+      )}
+
       <div className="w-full flex flex-col gap-1.5">
         <label htmlFor="status" className="text-xs font-semibold text-muted uppercase tracking-wider">
           {t("restaurants.form.labels.status")}
         </label>
-        
+
         <select
           id="status"
           className={`w-full px-3 py-2 bg-canvas border rounded-lg text-sm transition-shadow duration-200 focus:outline-none focus:ring-2 ${
@@ -50,7 +65,7 @@ function RestaurantFields() {
             {t("restaurants.form.labels.closed")}
           </option>
         </select>
-        
+
         {errors.status && (
           <p className="text-xs font-medium text-red-500 mt-0.5">{errors.status.message}</p>
         )}
@@ -69,8 +84,8 @@ export function RestaurantForm({ defaultValues, onSubmitSuccess, onCancel }: Res
       onSubmitSuccess={onSubmitSuccess}
       onCancel={onCancel}
       submitButtonText={
-        defaultValues 
-          ? t("restaurants.form.actions.save") 
+        defaultValues
+          ? t("restaurants.form.actions.save")
           : t("restaurants.form.actions.create")
       }
     >

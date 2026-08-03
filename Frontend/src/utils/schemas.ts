@@ -1,10 +1,10 @@
-// frontend/src/utils/schemas.ts
 import { z } from "zod";
 
 export const restaurantSchema = z.object({
   name: z.string().min(1, "Restaurant name is required"),
   location: z.string().min(1, "Location is required"),
-  status: z.enum(["open", "closed"]),
+  status: z.enum(["open", "closed"]), // Adjust values if backend expects "active"/"inactive"
+  user_id: z.coerce.number().min(1, "Owner User ID must be a positive number").optional(),
 });
 
 export const menuItemSchema = z.object({

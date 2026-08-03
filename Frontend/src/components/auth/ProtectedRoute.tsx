@@ -1,34 +1,33 @@
 import { Navigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { authService } from "../../services/authService";
+import { useAuthUser } from "../../hooks/useAuthUser"; // Adjust path if needed
 import { ROUTES } from "../../app/router";
 import type { ReactNode } from "react";
-import { STALE_TIME_5_MINUTES } from "../../constants/config";
-import { LoadingSpinner } from "../ui/LoadingSpinner"; // Adjust path if needed
+import type { UserRole } from "../../types/auth";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 interface ProtectedRouteProps {
   children: ReactNode;
+  allowedRoles?: UserRole[];
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  // Check our authentication status on mount / page refreshes
-  const { data: authData, isLoading } = useQuery({
-    queryKey: ["auth", "me"],
-    queryFn: authService.getCurrentUser,
-    retry: false, // If the cookie is expired or missing, stop trying immediately
-    staleTime: STALE_TIME_5_MINUTES, // Keep the session cached for 5 minutes before re-checking
-  });
+export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const { user, isLoading, hasRole } = useAuthUser();
 
-  // 1. Show a loading state while validating the secure cookie with Rails
+  // 1. Show a loading state while validating the session
   if (isLoading) {
     return <LoadingSpinner message="Verifying session..." fullScreen />;
   }
 
-  // 2. If no user data comes back from the serializer, bounce them to login
-  if (!authData?.user) {
+  // 2. If no user data comes back, bounce them to login
+  if (!user) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  // 3. Authenticated! Render the dashboard layout safely
+  // 3. If allowedRoles is defined and user's role isn't included, redirect to main dashboard
+  if (allowedRoles && !hasRole(allowedRoles)) {
+    return <Navigate to={ROUTES.DASHBOARD.DEFAULT} replace />;
+  }
+
+  // 4. Authenticated & authorized! Render children safely
   return <>{children}</>;
 }

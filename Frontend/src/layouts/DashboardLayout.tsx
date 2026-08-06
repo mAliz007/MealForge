@@ -1,10 +1,9 @@
-// frontend/src/app/DashboardLayout.tsx
 import { type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "../services/authService";
 import { ROUTES } from "../app/router";
-import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages } from "lucide-react";
+import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages, Users } from "lucide-react";
 import { IconButton } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +32,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { t, i18n } = useTranslation();
 
   // Get active role context
-  const { isCustomer } = useAuthUser();
+  const { isCustomer, isOwner } = useAuthUser();
 
   // Active notification state powered by Zustand
   const activeNotification = useNotificationStore((state) => state.activeNotification);
@@ -47,7 +46,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
     { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
     { name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag },
-    // Cart is restricted strictly to customers
+    
+    // Staff & Role Management is visible strictly to Owners
+    ...(isOwner 
+      ? [{ name: "Staff & Roles", path: "/dashboard/staff", icon: Users }] 
+      : []),
+
+    // Cart is restricted strictly to Customers
     ...(isCustomer 
       ? [{ name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart }] 
       : []),

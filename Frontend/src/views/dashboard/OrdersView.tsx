@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../services/apiClient";
+import { useAuthUser } from "../../hooks/useAuthUser";
 
 import type { Order } from "../../types";
 import type { PagyMeta } from "../../types/PagyType";
@@ -12,16 +13,27 @@ import { OrderPagination } from "~components/orders/OrderPagination";
 
 export default function OrdersView() {
   const { t } = useTranslation();
+  const { isAdmin, isOwner, hasPermission, restaurantId } = useAuthUser();
 
   const [page, setPage] = useState<number>(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+  // Granular capability checks
+  const canManageOrders =
+    isAdmin ||
+    isOwner ||
+    hasPermission("order.update", restaurantId) ||
+    hasPermission("order.read", restaurantId);
+
+  const canUpdateStatus =
+    isAdmin || isOwner || hasPermission("order.update", restaurantId);
+
   // Fetch paginated order ledger
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["orders", page],
+    queryKey: ["orders", page, restaurantId],
     queryFn: async () => {
       const response = await apiClient.get("/v1/orders", {
-        params: { page },
+        params: { page, restaurant_id: restaurantId },
       });
       return response.data as { data: Order[]; meta: PagyMeta };
     },
@@ -86,6 +98,7 @@ export default function OrdersView() {
                 <OrderRow
                   key={order.id}
                   order={order}
+                  canUpdateStatus={canUpdateStatus}
                   onInspect={(ord) => setSelectedOrder(ord)}
                 />
               ))
@@ -107,6 +120,7 @@ export default function OrdersView() {
       {selectedOrder && (
         <OrderDetailModal
           order={selectedOrder}
+          canUpdateStatus={canUpdateStatus}
           onClose={() => setSelectedOrder(null)}
         />
       )}

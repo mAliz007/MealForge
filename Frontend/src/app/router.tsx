@@ -8,6 +8,7 @@ export const ROUTES = {
     RESTAURANTS: "restaurants",
     MENU_ITEMS: "menu-items",
     ORDERS: "orders",
+    STAFF: "staff",
     CART: "cart",
   },
-} as const; 
+} as const;

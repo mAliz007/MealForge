@@ -16,8 +16,8 @@ export function useMenuItemsView() {
   const { t } = useTranslation();
   const showAlert = useAlertStore((state) => state.showAlert);
 
-  // 1. Role Authentication & Cart Scopes
-  const { isAdmin, isOwner, isLoading: isAuthLoading } = useAuthUser();
+  // 1. Role Authentication & Context Scopes
+  const { isAdmin, isOwner, restaurantId: userRestaurantId, isLoading: isAuthLoading } = useAuthUser();
   const { restaurantId: cartRestaurantId, clearCart } = useCart();
 
   // 2. Filter & Pagination States
@@ -28,13 +28,26 @@ export function useMenuItemsView() {
   const [limit, setLimit] = useState<number>(20);
 
   // 3. Unify Restaurant State Identity
-  // Admins & Owners use local selection or backend default tenant context.
-  // Customers fallback to cart selection.
-  const effectiveRestaurantId = (isAdmin || isOwner)
-    ? localRestaurantId 
-    : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
+  const effectiveRestaurantId = isAdmin
+    ? localRestaurantId
+    : userRestaurantId
+      ? String(userRestaurantId)
+      : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
 
-  // Reset page to 1 whenever search, restaurant, or available filters change
+  // Sync effect: Lock non-admin users to their assigned restaurant ID
+  useEffect(() => {
+    if (!isAdmin && userRestaurantId) {
+      setLocalRestaurantId(String(userRestaurantId));
+    }
+  }, [isAdmin, userRestaurantId]);
+
+  // Sync effect: Reset local selection if cart is emptied (customers)
+  useEffect(() => {
+    if (!isAdmin && !isOwner && !userRestaurantId && cartRestaurantId === null) {
+      setLocalRestaurantId("");
+    }
+  }, [cartRestaurantId, isAdmin, isOwner, userRestaurantId]);
+
   const handleSearchChange = (val: string) => {
     setSearch(val);
     setPage(1);
@@ -45,21 +58,13 @@ export function useMenuItemsView() {
     setPage(1);
   };
 
-  // Sync effect: Reset local dropdown selection back to empty if the cart is fully emptied out (for customers)
-  useEffect(() => {
-    if (!isAdmin && !isOwner && cartRestaurantId === null) {
-      setLocalRestaurantId("");
-    }
-  }, [cartRestaurantId, isAdmin, isOwner]);
-
   const handleRestaurantFilterChange = (newId: string) => {
     setPage(1);
-    if (isAdmin || isOwner) {
+    if (isAdmin || isOwner || userRestaurantId) {
       setLocalRestaurantId(newId);
       return;
     }
 
-    // Customer Interceptor Workflow: Switching restaurants while holding current active items
     if (cartRestaurantId !== null && newId !== String(cartRestaurantId) && newId !== "") {
       showAlert({
         title: t("menu.filter.clearCartTitle"),
@@ -78,13 +83,13 @@ export function useMenuItemsView() {
   };
 
   // 4. Operational Gatekeepers
-  // Owners & Admins never skip fetch. Customers skip ONLY if no restaurant is selected yet.
-  const shouldSkipFetch = !isAdmin && !isOwner && !effectiveRestaurantId;
+  // Non-admins MUST have an effectiveRestaurantId, and auth MUST be done loading.
+  const shouldSkipFetch = isAuthLoading || (!isAdmin && !effectiveRestaurantId);
 
   const activeFilters = {
-    ...(!isOwner && effectiveRestaurantId && { restaurant_id: Number(effectiveRestaurantId) }),
-    ...(available && { available: available === "true" }),
-    ...(search && { search }),
+    ...(effectiveRestaurantId ? { restaurant_id: Number(effectiveRestaurantId) } : {}),
+    ...(available ? { available: available === "true" } : {}),
+    ...(search ? { search } : {}),
     page,
     limit,
   };
@@ -146,7 +151,7 @@ export function useMenuItemsView() {
   return {
     t,
     isAdmin,
-    isOwner, // <-- Exported for MenuItemsView and child components
+    isOwner,
     isLoading,
     isError: shouldSkipFetch ? false : isError,
     error: shouldSkipFetch ? null : error,

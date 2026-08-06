@@ -13,6 +13,7 @@ import RestaurantsView from "~views/dashboard/RestaurantsView";
 import MenuItemsView from "~views/dashboard/MenuItemsView";
 import OrdersView from "~views/dashboard/OrdersView";
 import CartView from "~views/dashboard/CartView";
+import StaffManagementView from "~views/dashboard/StaffManagementView";
 import { CartProvider } from "../context/CartContext";
 
 // Import Global Alert Dialog
@@ -66,13 +67,23 @@ export default function App() {
                         path={ROUTES.DASHBOARD.ORDERS}
                         element={<OrdersView />}
                       />
-                      
+
                       {/* Cart is strictly restricted to Customers */}
                       <Route
                         path={ROUTES.DASHBOARD.CART}
                         element={
                           <ProtectedRoute allowedRoles={["customer"]}>
                             <CartView />
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      {/* Moved inside <Routes> */}
+                      <Route
+                        path={ROUTES.DASHBOARD.STAFF}
+                        element={
+                          <ProtectedRoute allowedRoles={["owner"]}>
+                            <StaffManagementView />
                           </ProtectedRoute>
                         }
                       />
@@ -85,7 +96,7 @@ export default function App() {
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         </BrowserRouter>
-        
+
         {/* Mount Global Alert Dialog */}
         <AlertDialog />
       </CartProvider>

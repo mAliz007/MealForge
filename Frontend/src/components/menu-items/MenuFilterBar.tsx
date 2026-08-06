@@ -22,14 +22,14 @@ export function MenuFilterBar({
   setSearch,
 }: MenuFilterBarProps) {
   const { t } = useTranslation();
-  const { isOwner } = useAuthUser();
+  const { isAdmin } = useAuthUser(); // Only Super Admins can select restaurants
 
   // 1. Restaurant Search Dropdown State
   const [restQuery, setRestQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fetch matching restaurants dynamically as user types in restaurant filter (only when not owner)
+  // Fetch matching restaurants dynamically (only executed for Super Admins)
   const { data: restResponse, isLoading: isRestLoading } = useRestaurants(
     1,
     10,
@@ -71,8 +71,8 @@ export function MenuFilterBar({
   return (
     <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
       
-      {/* 1. Restaurant Search & Select Overlay Filter (Hidden for Owners) */}
-      {!isOwner && (
+      {/* 1. Restaurant Search & Select Filter (Visible ONLY for Super Admins) */}
+      {isAdmin && (
         <div className="w-full sm:w-64 space-y-1 relative" ref={dropdownRef}>
           <label className="text-xs font-semibold text-text-muted">
             {t("menu.filter.restaurantLabel", "Restaurant")}
@@ -104,7 +104,7 @@ export function MenuFilterBar({
             )}
           </div>
 
-          {/* Floating Dropdown Results Overlay - Theme Aware */}
+          {/* Floating Dropdown Results Overlay */}
           {isDropdownOpen && (
             <div className="absolute z-50 mt-1 w-full max-h-56 overflow-y-auto rounded-md border border-text-muted/20 bg-structure shadow-lg divide-y divide-text-muted/10 transition-colors">
               <button

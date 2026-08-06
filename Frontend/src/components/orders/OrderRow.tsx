@@ -1,6 +1,7 @@
 import { Button } from "../ui/Button";
 import type { Order } from "../../types";
 import { useTranslation } from "react-i18next";
+import { useAuthUser } from "../../hooks/useAuthUser";
 
 interface OrderRowProps {
   order: Order;
@@ -9,21 +10,34 @@ interface OrderRowProps {
 
 export function OrderRow({ order, onInspect }: OrderRowProps) {
   const { t } = useTranslation();
+  const { isAdmin, isOwner, restaurantId } = useAuthUser();
 
   const statusColors = {
     pending: "bg-amber-500/10 text-amber-500",
     confirmed: "bg-emerald-500/10 text-emerald-500",
+    preparing: "bg-blue-500/10 text-blue-500",
+    completed: "bg-emerald-500/10 text-emerald-500",
     cancelled: "bg-red-500/10 text-red-500",
   };
 
   const displayTotal = Number(order.total_amount ?? (order as any).total_amount ?? (order as any).total ?? 0);
   const displayStatus = order.status || "pending";
 
+  const orderRestaurantId = order.restaurant_id ?? (order as any).restaurant_id;
+  const isOrderOwner = isOwner && Number(restaurantId) === Number(orderRestaurantId);
+
   return (
     <tr className="hover:bg-structure/30 transition-colors">
-      <td className="px-6 py-4 font-mono font-medium text-main">#{order.id}</td>
+      <td className="px-6 py-4 font-mono font-medium text-main">
+        #{order.id}
+        {isOrderOwner && (
+          <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-primary/10 text-primary border border-primary/20">
+            {t("orders.table.yourTenant", { defaultValue: "Your Restaurant" })}
+          </span>
+        )}
+      </td>
       <td className="px-6 py-4 font-mono text-sm text-muted">
-        {t("orders.table.restaurantNode", { id: order.restaurant_id ?? (order as any).restaurant_id })}
+        {t("orders.table.restaurantNode", { id: orderRestaurantId })}
       </td>
       <td className="px-6 py-4 font-semibold text-main">${displayTotal.toFixed(2)}</td>
       <td className="px-6 py-4">

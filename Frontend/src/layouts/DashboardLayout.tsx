@@ -14,6 +14,9 @@ import { MobileNavigation } from "../components/dashboard/MobileNavigation";
 import { CartBadgeButton } from "../components/dashboard/CartBadgeButton";
 import { useTheme } from "../context/ThemeContext";
 
+// Auth Hook
+import { useAuthUser } from "../hooks/useAuthUser";
+
 // Real-time Action Cable Hook, Toast UI, & Store
 import { useOrderNotifications } from "../hooks/useOrderNotifications";
 import { NotificationToast } from "../components/ui/NotificationToast";
@@ -29,6 +32,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
 
+  // Get active role context
+  const { isCustomer } = useAuthUser();
+
   // Active notification state powered by Zustand
   const activeNotification = useNotificationStore((state) => state.activeNotification);
   const clearNotification = useNotificationStore((state) => state.clearNotification);
@@ -36,11 +42,15 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   // Maintain real-time WebSocket subscription
   useOrderNotifications();
 
+  // Dynamically filter navigation links based on user role
   const navigationItems = [
     { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
     { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
     { name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag },
-    { name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart },
+    // Cart is restricted strictly to customers
+    ...(isCustomer 
+      ? [{ name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart }] 
+      : []),
   ];
 
   const logoutMutation = useMutation({
@@ -132,7 +142,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             {theme === "light" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </IconButton>
 
-          <CartBadgeButton />
+          {/* Render cart icon only for customers */}
+          {isCustomer && <CartBadgeButton />}
         </header>
 
         {/* Core Screen View */}

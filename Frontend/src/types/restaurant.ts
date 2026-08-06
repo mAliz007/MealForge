@@ -3,4 +3,5 @@ export type Restaurant = {
   name: string;
   location: string;
   status: "open" | "closed";
+  user_id?: number | null; 
 };

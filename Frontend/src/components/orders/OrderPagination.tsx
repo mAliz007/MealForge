@@ -1,22 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
+import type { PagyMeta } from "../../types/PagyType";
 
-interface PagyMeta {
-  from?: number;
-  to?: number;
-  count?: number;
-  total?: number;
-  total_count?: number; // 👈 Added backend Searchkick / Pagy metadata key
-  page?: number;
-  current_page?: number; // 👈 Added key
-  pages?: number;
-  total_pages?: number;
-  last?: number;
-  prev?: number | null;
-  next?: number | null;
-}
-
-interface RestaurantPaginationProps {
+interface OrderPaginationProps {
   meta?: PagyMeta;
   currentPage: number;
   limit: number;
@@ -24,31 +10,27 @@ interface RestaurantPaginationProps {
   onPageChange: (page: number | ((prev: number) => number)) => void;
 }
 
-export function RestaurantPagination({
+export function OrderPagination({
   meta,
   currentPage,
   limit,
   totalItemsFallback,
   onPageChange,
-}: RestaurantPaginationProps) {
+}: OrderPaginationProps) {
   const { t } = useTranslation();
 
   if (!meta) return null;
 
-  const page = Number(meta.current_page ?? meta.page ?? currentPage);
-  // ✅ Now checks meta.total_count from backend meta!
-  const totalCount = Number(
-    meta.total_count ?? meta.count ?? meta.total ?? totalItemsFallback
-  );
+  const page = Number(meta.page ?? currentPage);
+  const totalCount = Number(meta.count ?? meta.total ?? totalItemsFallback);
 
+  // Fallback calculation in case backend doesn't send total page count explicitly
   const calculatedPages = Math.ceil(totalCount / limit) || 1;
   const totalPages = Number(
-    meta.total_pages ?? meta.pages ?? meta.last ?? calculatedPages
+    meta.pages ?? meta.total_pages ?? (meta as any).last ?? calculatedPages
   );
 
-  // ✅ Guard against 0 total items or page out of bounds
-  const rawFrom = totalCount > 0 ? (page - 1) * limit + 1 : 0;
-  const from = meta.from ?? Math.min(rawFrom, totalCount);
+  const from = meta.from ?? (page - 1) * limit + 1;
   const to = meta.to ?? Math.min(page * limit, totalCount);
 
   const hasNext =
@@ -64,7 +46,12 @@ export function RestaurantPagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
       <span className="text-sm text-muted">
-        {t("restaurants.pagination.showingResults", { from, to, total: totalCount })}
+        {t("orders.pagination.showingResults", {
+          defaultValue: "Showing {{from}} to {{to}} of {{total}} orders",
+          from,
+          to,
+          total: totalCount,
+        })}
       </span>
 
       <div className="flex items-center gap-2">
@@ -77,12 +64,16 @@ export function RestaurantPagination({
             <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            {t("restaurants.pagination.prev")}
+            {t("orders.pagination.prev", { defaultValue: "Previous" })}
           </span>
         </Button>
 
         <span className="text-sm font-medium px-2">
-          {t("restaurants.pagination.pageInfo", { page, totalPages })}
+          {t("orders.pagination.pageInfo", {
+            defaultValue: "Page {{page}} of {{totalPages}}",
+            page,
+            totalPages,
+          })}
         </span>
 
         <Button
@@ -91,7 +82,7 @@ export function RestaurantPagination({
           disabled={!hasNext}
         >
           <span className="flex items-center gap-1.5">
-            {t("restaurants.pagination.next")}
+            {t("orders.pagination.next", { defaultValue: "Next" })}
             <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

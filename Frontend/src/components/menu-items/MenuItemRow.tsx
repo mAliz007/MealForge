@@ -6,7 +6,7 @@ import type { MenuItem } from "../../types";
 
 interface MenuItemRowProps {
   item: MenuItem;
-  isAdmin: boolean;
+  isAdmin: boolean; // Receives canManage (isAdmin || isOwner) from parent view
   isDeleting: boolean;
   onEdit: (item: MenuItem) => void;
   onDelete: (id: number) => void;
@@ -21,16 +21,16 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
   const safePrice = Number(item.price) || 0;
 
   return (
-    <tr className="border-b border-structure hover:bg-structure/30 transition-colors">
+    <tr className="border-b border-text-muted/10 hover:bg-structure/30 transition-colors">
       {/* ID Column */}
       <td className="px-6 py-4 font-mono text-xs text-text-muted">#{item.id}</td>
       
       {/* Name and Meta */}
       <td className="px-6 py-4">
         <div className="font-semibold text-text-main">{item.name}</div>
-        <div className="text-xs text-text-muted">
-          {t("menu.row.metaRestaurantId", { id: item.restaurant_id })}
-        </div>
+        {item.description && (
+          <div className="text-xs text-text-muted line-clamp-1 mt-0.5">{item.description}</div>
+        )}
       </td>
       
       {/* Price */}
@@ -41,11 +41,11 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
             item.available 
-              ? "bg-accent/10 text-accent dark:bg-accent/20" 
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20" 
               : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-500/20"
           }`}
         >
-          {item.available ? t("menu.row.statusInStock") : t("menu.row.statusUnavailable")}
+          {item.available ? t("menu.row.statusInStock", "In Stock") : t("menu.row.statusUnavailable", "Unavailable")}
         </span>
       </td>
       
@@ -54,7 +54,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
         {isAdmin ? (
           <div className="flex justify-end gap-2">
             <Button variant="secondary" className="px-2.5 py-1 text-xs" onClick={() => onEdit(item)}>
-              {t("menu.row.btnEdit")}
+              {t("menu.row.btnEdit", "Edit")}
             </Button>
             <Button
               variant="danger"
@@ -62,7 +62,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               onClick={() => onDelete(item.id)}
               disabled={isDeleting}
             >
-              {isDeleting ? t("menu.row.btnRemoving") : t("menu.row.btnDelete")}
+              {isDeleting ? t("menu.row.btnRemoving", "Deleting...") : t("menu.row.btnDelete", "Delete")}
             </Button>
           </div>
         ) : (
@@ -73,7 +73,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
               disabled={!item.available}
-              className="w-14 rounded-lg border border-structure bg-canvas text-text-main px-2 py-1 text-center text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-50"
+              className="w-14 rounded-lg border border-text-muted/20 bg-canvas text-text-main px-2 py-1 text-center text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:opacity-50"
             />
             <Button
               variant="primary"
@@ -84,7 +84,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
               }}
               disabled={!item.available}
             >
-              {t("menu.row.btnAddToTray")}
+              {t("menu.row.btnAddToTray", "Add to Tray")}
             </Button>
           </div>
         )}

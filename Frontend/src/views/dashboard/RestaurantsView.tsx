@@ -19,7 +19,7 @@ import { RestaurantPagination } from "~components/restaurants/RestaurantPaginati
 
 export default function RestaurantsView() {
   const { t } = useTranslation();
-  const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
+  const { isAdmin, isOwner, isLoading: isAuthLoading } = useAuthUser();
 
   // State
   const [page, setPage] = useState(1);
@@ -89,12 +89,16 @@ export default function RestaurantsView() {
           </p>
         </div>
 
-        {/* Action Controls Grouped Cleanly */}
+        {/* Action Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-          <div className="w-full sm:w-64 shrink-0">
-            <RestaurantSearch value={search} onSearch={handleSearchChange} />
-          </div>
+          {/* Hide Search Bar for Owners */}
+          {!isOwner && (
+            <div className="w-full sm:w-64 shrink-0">
+              <RestaurantSearch value={search} onSearch={handleSearchChange} />
+            </div>
+          )}
 
+          {/* Add Button - Admin Only */}
           {isAdmin && (
             <Button
               variant="primary"
@@ -130,18 +134,22 @@ export default function RestaurantsView() {
           <RestaurantTable
             restaurants={restaurants}
             isAdmin={isAdmin}
+            isOwner={isOwner}
             deletingId={deleteMutation.isPending ? (deleteMutation.variables as number) : null}
             onEdit={startEdit}
             onDelete={(id) => deleteMutation.mutate(id)}
           />
 
-          <RestaurantPagination
-            meta={meta}
-            currentPage={page}
-            limit={limit}
-            totalItemsFallback={restaurants.length}
-            onPageChange={setPage}
-          />
+          {/* Pagination omitted for Owners */}
+          {!isOwner && (
+            <RestaurantPagination
+              meta={meta}
+              currentPage={page}
+              limit={limit}
+              totalItemsFallback={restaurants.length}
+              onPageChange={setPage}
+            />
+          )}
         </div>
       )}
     </div>

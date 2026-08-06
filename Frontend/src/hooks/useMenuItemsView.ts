@@ -17,7 +17,7 @@ export function useMenuItemsView() {
   const showAlert = useAlertStore((state) => state.showAlert);
 
   // 1. Role Authentication & Cart Scopes
-  const { isAdmin, isLoading: isAuthLoading } = useAuthUser();
+  const { isAdmin, isOwner, isLoading: isAuthLoading } = useAuthUser();
   const { restaurantId: cartRestaurantId, clearCart } = useCart();
 
   // 2. Filter & Pagination States
@@ -27,8 +27,10 @@ export function useMenuItemsView() {
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
 
-  // 3. Unify Restaurant State Identity to prevent loop racing
-  const effectiveRestaurantId = isAdmin 
+  // 3. Unify Restaurant State Identity
+  // Admins & Owners use local selection or backend default tenant context.
+  // Customers fallback to cart selection.
+  const effectiveRestaurantId = (isAdmin || isOwner)
     ? localRestaurantId 
     : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
 
@@ -43,16 +45,16 @@ export function useMenuItemsView() {
     setPage(1);
   };
 
-  // Sync effect: Reset local dropdown selection back to empty if the cart is fully emptied out
+  // Sync effect: Reset local dropdown selection back to empty if the cart is fully emptied out (for customers)
   useEffect(() => {
-    if (!isAdmin && cartRestaurantId === null) {
+    if (!isAdmin && !isOwner && cartRestaurantId === null) {
       setLocalRestaurantId("");
     }
-  }, [cartRestaurantId, isAdmin]);
+  }, [cartRestaurantId, isAdmin, isOwner]);
 
   const handleRestaurantFilterChange = (newId: string) => {
     setPage(1);
-    if (isAdmin) {
+    if (isAdmin || isOwner) {
       setLocalRestaurantId(newId);
       return;
     }
@@ -76,17 +78,18 @@ export function useMenuItemsView() {
   };
 
   // 4. Operational Gatekeepers
-  const shouldSkipFetch = !isAdmin && !effectiveRestaurantId;
+  // Owners & Admins never skip fetch. Customers skip ONLY if no restaurant is selected yet.
+  const shouldSkipFetch = !isAdmin && !isOwner && !effectiveRestaurantId;
 
   const activeFilters = {
-    ...(effectiveRestaurantId && { restaurant_id: Number(effectiveRestaurantId) }),
+    ...(!isOwner && effectiveRestaurantId && { restaurant_id: Number(effectiveRestaurantId) }),
     ...(available && { available: available === "true" }),
     ...(search && { search }),
     page,
     limit,
   };
 
-  // 5. Query Executions passing configuration object downstream
+  // 5. Query Executions
   const { data: responseData, isLoading: isDataLoading, error, isError } = useMenuItems(
     activeFilters,
     { enabled: !shouldSkipFetch }
@@ -143,6 +146,7 @@ export function useMenuItemsView() {
   return {
     t,
     isAdmin,
+    isOwner, // <-- Exported for MenuItemsView and child components
     isLoading,
     isError: shouldSkipFetch ? false : isError,
     error: shouldSkipFetch ? null : error,

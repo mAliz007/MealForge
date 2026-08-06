@@ -6,6 +6,7 @@ import { useAlertStore } from "../../store/useAlertStore";
 interface RestaurantTableRowProps {
   restaurant: Restaurant;
   isAdmin: boolean;
+  isOwner?: boolean;
   isDeleting: boolean;
   onEdit: (restaurant: Restaurant) => void;
   onDelete: (id: number) => void;
@@ -14,6 +15,7 @@ interface RestaurantTableRowProps {
 export function RestaurantTableRow({
   restaurant,
   isAdmin,
+  isOwner = false,
   isDeleting,
   onEdit,
   onDelete,
@@ -32,6 +34,8 @@ export function RestaurantTableRow({
     });
   };
 
+  const showActions = isAdmin || isOwner;
+
   return (
     <tr className="hover:bg-structure/30 transition-colors">
       <td className="px-6 py-4 font-mono font-medium">#{restaurant.id}</td>
@@ -49,9 +53,11 @@ export function RestaurantTableRow({
         </span>
       </td>
 
-      {isAdmin && (
+      {/* Render action cell ONLY if Admin or Owner */}
+      {showActions && (
         <td className="px-6 py-4 text-right">
           <div className="flex justify-end gap-2">
+            {/* Edit: Available to both Admins and Owners */}
             <Button
               variant="secondary"
               className="px-2.5 py-1 text-xs"
@@ -59,16 +65,20 @@ export function RestaurantTableRow({
             >
               {t("restaurants.table.edit")}
             </Button>
-            <Button
-              variant="danger"
-              className="px-2.5 py-1 text-xs"
-              onClick={handleDeleteClick}
-              disabled={isDeleting}
-            >
-              {isDeleting
-                ? t("restaurants.table.removing")
-                : t("restaurants.table.delete")}
-            </Button>
+
+            {/* Delete: STRICTLY Admin only */}
+            {isAdmin && (
+              <Button
+                variant="danger"
+                className="px-2.5 py-1 text-xs"
+                onClick={handleDeleteClick}
+                disabled={isDeleting}
+              >
+                {isDeleting
+                  ? t("restaurants.table.removing")
+                  : t("restaurants.table.delete")}
+              </Button>
+            )}
           </div>
         </td>
       )}

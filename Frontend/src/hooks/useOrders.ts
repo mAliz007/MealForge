@@ -6,6 +6,7 @@ import { STALE_TIME_10_SECONDS } from "../constants/config";
 export const orderQueryKeys = {
   all: ["orders"] as const,
   lists: () => [...orderQueryKeys.all, "list"] as const,
+  listWithParams: (params: Record<string, unknown>) => [...orderQueryKeys.lists(), params] as const,
   detail: (id: number) => [...orderQueryKeys.all, "detail", id] as const,
 };
 
@@ -32,7 +33,20 @@ export function useCreateOrder() {
     mutationFn: (payload) => orderService.create(payload),
     onSuccess: () => {
       // Clear order caches to instantly list new pending checkout entries
-      queryClient.invalidateQueries({ queryKey: orderQueryKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: orderQueryKeys.all });
+    },
+  });
+}
+
+export function useUpdateOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation<Order, Error, { id: number; status: string }>({
+    mutationFn: ({ id, status }) => orderService.update(id, { status }),
+    onSuccess: (_, variables) => {
+      // Refetch all order lists and clear specific order cache
+      queryClient.invalidateQueries({ queryKey: orderQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: orderQueryKeys.detail(variables.id) });
     },
   });
 }

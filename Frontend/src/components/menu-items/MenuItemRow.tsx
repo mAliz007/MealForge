@@ -6,13 +6,23 @@ import type { MenuItem } from "../../types";
 
 interface MenuItemRowProps {
   item: MenuItem;
-  isAdmin: boolean; // Receives canManage (isAdmin || isOwner) from parent view
+  isAdmin: boolean; // True if user is Admin/Owner or has staff management capabilities
+  canEdit?: boolean;
+  canDelete?: boolean;
   isDeleting: boolean;
   onEdit: (item: MenuItem) => void;
   onDelete: (id: number) => void;
 }
 
-export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: MenuItemRowProps) {
+export function MenuItemRow({
+  item,
+  isAdmin,
+  canEdit = true,
+  canDelete = true,
+  isDeleting,
+  onEdit,
+  onDelete,
+}: MenuItemRowProps) {
   const { t } = useTranslation();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
@@ -24,7 +34,7 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
     <tr className="border-b border-text-muted/10 hover:bg-structure/30 transition-colors">
       {/* ID Column */}
       <td className="px-6 py-4 font-mono text-xs text-text-muted">#{item.id}</td>
-      
+
       {/* Name and Meta */}
       <td className="px-6 py-4">
         <div className="font-semibold text-text-main">{item.name}</div>
@@ -32,38 +42,51 @@ export function MenuItemRow({ item, isAdmin, isDeleting, onEdit, onDelete }: Men
           <div className="text-xs text-text-muted line-clamp-1 mt-0.5">{item.description}</div>
         )}
       </td>
-      
+
       {/* Price */}
       <td className="px-6 py-4 font-semibold text-text-main">${safePrice.toFixed(2)}</td>
-      
+
       {/* Availability Status Badge */}
       <td className="px-6 py-4">
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
-            item.available 
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20" 
+            item.available
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20"
               : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-500/20"
           }`}
         >
-          {item.available ? t("menu.row.statusInStock", "In Stock") : t("menu.row.statusUnavailable", "Unavailable")}
+          {item.available
+            ? t("menu.row.statusInStock", "In Stock")
+            : t("menu.row.statusUnavailable", "Unavailable")}
         </span>
       </td>
-      
+
       {/* Actions */}
       <td className="px-6 py-4 text-right">
         {isAdmin ? (
           <div className="flex justify-end gap-2">
-            <Button variant="secondary" className="px-2.5 py-1 text-xs" onClick={() => onEdit(item)}>
-              {t("menu.row.btnEdit", "Edit")}
-            </Button>
-            <Button
-              variant="danger"
-              className="px-2.5 py-1 text-xs"
-              onClick={() => onDelete(item.id)}
-              disabled={isDeleting}
-            >
-              {isDeleting ? t("menu.row.btnRemoving", "Deleting...") : t("menu.row.btnDelete", "Delete")}
-            </Button>
+            {canEdit && (
+              <Button
+                variant="secondary"
+                className="px-2.5 py-1 text-xs"
+                onClick={() => onEdit(item)}
+              >
+                {t("menu.row.btnEdit", "Edit")}
+              </Button>
+            )}
+
+            {canDelete && (
+              <Button
+                variant="danger"
+                className="px-2.5 py-1 text-xs"
+                onClick={() => onDelete(item.id)}
+                disabled={isDeleting}
+              >
+                {isDeleting
+                  ? t("menu.row.btnRemoving", "Deleting...")
+                  : t("menu.row.btnDelete", "Delete")}
+              </Button>
+            )}
           </div>
         ) : (
           <div className="flex justify-end items-center gap-2">

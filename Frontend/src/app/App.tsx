@@ -1,9 +1,9 @@
-// Frontend/src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 import { ROUTES } from "./router";
 import { ProtectedRoute } from "../components/auth/ProtectedRoute";
+import {  PermissionGuard } from "../components/auth/PermissionGuard";
 
 // Import Views Explicitly
 import LandingView from "~views/LandingView";
@@ -59,13 +59,25 @@ export default function App() {
                         path={ROUTES.DASHBOARD.RESTAURANTS}
                         element={<RestaurantsView />}
                       />
+                      
+                      {/* Menu Items protected by category permission */}
                       <Route
                         path={ROUTES.DASHBOARD.MENU_ITEMS}
-                        element={<MenuItemsView />}
+                        element={
+                          <PermissionGuard categoryPrefix="menu_item">
+                            <MenuItemsView />
+                          </PermissionGuard>
+                        }
                       />
+
+                      {/* Orders protected by category permission */}
                       <Route
                         path={ROUTES.DASHBOARD.ORDERS}
-                        element={<OrdersView />}
+                        element={
+                          <PermissionGuard categoryPrefix="order">
+                            <OrdersView />
+                          </PermissionGuard>
+                        }
                       />
 
                       {/* Cart is strictly restricted to Customers */}
@@ -78,7 +90,7 @@ export default function App() {
                         }
                       />
 
-                      {/* Moved inside <Routes> */}
+                      {/* Staff Management strictly restricted to Owners */}
                       <Route
                         path={ROUTES.DASHBOARD.STAFF}
                         element={

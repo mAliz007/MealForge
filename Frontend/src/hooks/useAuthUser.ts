@@ -50,7 +50,33 @@ export function useAuthUser() {
     return false;
   };
 
-  // FIX: Extract restaurantId safely for both Owner (root) and Staff (restaurant_access array)
+  /**
+   * Helper to verify if a user has ANY permission matching a category prefix (e.g., "order" or "menu_item").
+   * Automatically allows Admins, Owners, and Customers.
+   */
+  const hasAnyCategoryPermission = (categoryPrefix: string, restaurantId?: number | null): boolean => {
+    if (!userObject) return false;
+    if (isAdmin || isOwner || isCustomer) return true;
+
+    if (isStaff && userObject.restaurant_access) {
+      if (!restaurantId) {
+        return userObject.restaurant_access.some((access) =>
+          access.permissions.some((perm) => perm.startsWith(categoryPrefix))
+        );
+      }
+
+      const access = userObject.restaurant_access.find(
+        (a) => a.restaurant_id === restaurantId
+      );
+      return access
+        ? access.permissions.some((perm) => perm.startsWith(categoryPrefix))
+        : false;
+    }
+
+    return false;
+  };
+
+  // Extract restaurantId safely for both Owner (root) and Staff (restaurant_access array)
   const effectiveUserRestaurantId =
     userObject?.restaurant_id ??
     userObject?.restaurant_access?.[0]?.restaurant_id ??
@@ -65,6 +91,7 @@ export function useAuthUser() {
     isCustomer,
     hasRole,
     hasPermission,
+    hasAnyCategoryPermission,
     restaurantId: effectiveUserRestaurantId,
     restaurantAccess: userObject?.restaurant_access ?? [],
     isLoading,

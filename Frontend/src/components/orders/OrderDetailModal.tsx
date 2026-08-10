@@ -44,7 +44,7 @@ export function OrderDetailModal({
 }: OrderDetailModalProps) {
   // 1. ALL HOOKS FIRST
   const { t } = useTranslation();
-  const { user, isAdmin, isOwner, restaurantId } = useAuthUser();
+  const { user, isAdmin, isOwner, restaurantId, hasPermission } = useAuthUser();
   const updateOrder = useUpdateOrder();
 
   // Local status state for real-time instant UI reflection
@@ -79,12 +79,20 @@ export function OrderDetailModal({
 
   const displayStatus = currentStatus.toLowerCase();
 
-  // Match restaurant node and combine admin/owner checks with explicit prop allowance
+  // Match restaurant node safely comparing string representations
   const isTargetRestaurant =
-    !activeRestaurantId || Number(activeRestaurantId) === Number(displayRestaurantId);
+    !activeRestaurantId ||
+    !displayRestaurantId ||
+    String(activeRestaurantId) === String(displayRestaurantId);
+
+  // Check backend capability using exact permission key 'order.update_status'
+  const hasUpdatePermission =
+    canUpdateStatus ||
+    hasPermission("order.update_status", activeRestaurantId) ||
+    hasPermission("order.update", activeRestaurantId);
 
   const canManageOrder =
-    isAdmin || (isTargetRestaurant && (isOwner || canUpdateStatus));
+    isAdmin || (isTargetRestaurant && (isOwner || hasUpdatePermission));
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nextStatus = e.target.value;

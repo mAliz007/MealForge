@@ -18,15 +18,17 @@ export default function OrdersView() {
   const [page, setPage] = useState<number>(1);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Granular capability checks
+  // Granular capability checks using exact backend permission keys
   const canManageOrders =
     isAdmin ||
     isOwner ||
-    hasPermission("order.update", restaurantId) ||
+    hasPermission("order.update_status", restaurantId) ||
     hasPermission("order.read", restaurantId);
 
   const canUpdateStatus =
-    isAdmin || isOwner || hasPermission("order.update", restaurantId);
+    isAdmin || 
+    isOwner || 
+    hasPermission("order.update_status", restaurantId);
 
   // Fetch paginated order ledger
   const { data, isLoading, isError } = useQuery({

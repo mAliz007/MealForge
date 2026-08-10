@@ -1,4 +1,6 @@
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { PermissionsBadgeGrid } from "./PermissionsBadgeGrid";
 
 export interface RoleItem {
   id: number;
@@ -9,55 +11,89 @@ export interface RoleItem {
 
 interface RoleCardGridProps {
   rolesList: RoleItem[];
+  onEditRole?: (role: RoleItem) => void;
   onDeleteRole: (roleId: number, roleName: string) => void;
   isPending?: boolean;
+  canManage?: boolean;
 }
 
-export function RoleCardGrid({ rolesList, onDeleteRole, isPending }: RoleCardGridProps) {
+export function RoleCardGrid({
+  rolesList,
+  onEditRole,
+  onDeleteRole,
+  isPending,
+  canManage = true,
+}: RoleCardGridProps) {
+  const { t } = useTranslation();
+
   if (rolesList.length === 0) {
     return (
       <div className="p-12 text-center text-text-muted bg-structure border border-text-muted/15 rounded-xl">
-        <p className="font-medium">No roles found.</p>
+        <p className="font-medium">{t("staffManagement.roleCardGrid.empty")}</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="flex flex-col gap-3">
       {rolesList.map((role) => (
         <div
           key={role.id}
-          className="bg-structure border border-text-muted/15 rounded-xl p-5 space-y-3 relative group hover:border-text-muted/30 transition-colors"
+          className="bg-structure border border-text-muted/15 rounded-xl p-4 flex flex-col md:flex-row md:items-start justify-between gap-4 hover:border-text-muted/30 transition-colors min-w-0"
         >
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-text-main">{role.name}</h3>
-            <div className="flex items-center gap-2">
-              {role.system_key ? (
-                <span className="text-xs px-2 py-0.5 bg-text-muted/10 text-text-muted rounded">
-                  System Role
-                </span>
-              ) : (
+          {/* Role Name & System Tag */}
+          <div className="min-w-0 md:w-48 flex items-center gap-2 shrink-0 pt-1">
+            <h3 className="font-bold text-text-main text-base truncate" title={role.name}>
+              {role.name}
+            </h3>
+            {role.system_key === "owner" && (
+              <span className="text-[10px] px-2 py-0.5 bg-text-muted/10 text-text-muted font-medium rounded uppercase tracking-wider shrink-0">
+                {t("staffManagement.roleCardGrid.systemRole")}
+              </span>
+            )}
+          </div>
+
+          {/* Grouped & Formatted Permissions Badge Grid */}
+          <div className="flex-1 min-w-0">
+            <PermissionsBadgeGrid permissions={role.permissions || []} />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2 justify-end border-t md:border-t-0 pt-2 md:pt-1 border-text-muted/10 shrink-0">
+            {!canManage ? (
+              <span className="text-xs text-text-muted italic truncate">
+                {t("staffManagement.roleCardGrid.readOnly")}
+              </span>
+            ) : role.system_key === "owner" ? (
+              <span className="text-xs text-text-muted italic truncate">
+                {t("staffManagement.roleCardGrid.protected")}
+              </span>
+            ) : (
+              <>
+                {onEditRole && (
+                  <button
+                    type="button"
+                    onClick={() => onEditRole(role)}
+                    disabled={isPending}
+                    className="p-1.5 text-text-muted hover:text-primary hover:bg-primary/10 rounded-md transition-colors disabled:opacity-50 shrink-0"
+                    title={t("staffManagement.roleCardGrid.actions.editTitle")}
+                    aria-label={t("staffManagement.roleCardGrid.actions.editTitle")}
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </button>
+                )}
                 <button
+                  type="button"
                   onClick={() => onDeleteRole(role.id, role.name)}
                   disabled={isPending}
-                  className="p-1 text-text-muted hover:text-red-500 transition-colors disabled:opacity-50"
-                  title="Delete Custom Role"
+                  className="p-1.5 text-text-muted hover:text-red-500 hover:bg-red-500/10 rounded-md transition-colors disabled:opacity-50 shrink-0"
+                  title={t("staffManagement.roleCardGrid.actions.deleteTitle")}
+                  aria-label={t("staffManagement.roleCardGrid.actions.deleteTitle")}
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
-              )}
-            </div>
-          </div>
-          <p className="text-xs text-text-muted">Granted Permissions:</p>
-          <div className="flex flex-wrap gap-1.5">
-            {role.permissions?.map((perm) => (
-              <span
-                key={perm}
-                className="text-[11px] px-2 py-0.5 rounded bg-primary/10 text-primary font-mono"
-              >
-                {perm}
-              </span>
-            ))}
+              </>
+            )}
           </div>
         </div>
       ))}

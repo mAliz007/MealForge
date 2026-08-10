@@ -292,5 +292,112 @@
     "status": "Estado",
     "viewOrders": "Ver pedidos",
     "dismiss": "Descartar"
+  },
+  "staffManagement": {
+    "title": "Gestión de Personal y Roles",
+    "subtitle": "Cree roles personalizados con permisos granulares específicos y asigne miembros del personal a su restaurante.",
+    "newRole": "Nuevo Rol",
+    "addStaff": "Agregar Personal",
+    "loading": "Cargando vista de gestión...",
+    "tabs": {
+      "staff": "Personal ({{count}})",
+      "roles": "Roles Personalizados ({{count}})"
+    },
+    "alerts": {
+      "addStaffSuccess": "¡Miembro del personal agregado con éxito!",
+      "addStaffError": "Error al agregar al miembro del personal.",
+      "revokeSuccess": "Acceso del miembro del personal revocado.",
+      "revokeError": "Error al revocar el acceso del personal.",
+      "createRoleSuccess": "¡Rol creado con éxito!",
+      "createRoleError": "Error al crear el rol personalizado.",
+      "updateRoleSuccess": "¡Rol actualizado con éxito!",
+      "updateRoleError": "Error al actualizar el rol.",
+      "deleteRoleSuccess": "Rol personalizado eliminado con éxito.",
+      "deleteRoleError": "Error al eliminar el rol (puede estar asignado a personal activo)."
+    },
+    "confirmations": {
+      "revoke": "¿Revocar el acceso de {{name}}?",
+      "deleteRole": "¿Eliminar el rol \"{{name}}\"?"
+    },
+    "addStaffModal": {
+      "title": "Agregar Miembro del Personal",
+      "labels": {
+        "fullName": "Nombre Completo",
+        "email": "Correo Electrónico",
+        "password": "Contraseña (Opcional si el usuario ya existe)",
+        "role": "Asignar Rol Personalizado"
+      },
+      "placeholders": {
+        "fullName": "ej. Juan Pérez",
+        "email": "ej. juan@restaurante.com",
+        "password": "Mínimo 6 caracteres",
+        "selectRole": "Seleccionar un rol..."
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Asignar Personal",
+        "submitting": "Asignando..."
+      }
+    },
+    "createRoleModal": {
+      "title": "Crear Rol Personalizado",
+      "labels": {
+        "roleName": "Nombre del Rol",
+        "permissions": "Seleccionar Permisos Concedidos ({{count}} seleccionados)"
+      },
+      "placeholders": {
+        "roleName": "ej. Chef Principal"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Guardar Rol",
+        "submitting": "Creando..."
+      }
+    },
+    "editRoleModal": {
+      "title": "Editar Rol: {{name}}",
+      "labels": {
+        "roleName": "Nombre del Rol",
+        "permissions": "Permisos"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Guardar Cambios",
+        "submitting": "Guardando..."
+      }
+    },
+    "roleCardGrid": {
+      "empty": "No se encontraron roles.",
+      "systemRole": "Rol de Sistema",
+      "noPermissions": "Sin permisos asignados",
+      "readOnly": "Solo lectura",
+      "protected": "Protegido",
+      "actions": {
+        "editTitle": "Editar Permisos del Rol",
+        "deleteTitle": "Eliminar Rol Personalizado"
+      }
+    },
+    "staffTable": {
+      "empty": {
+        "title": "No se encontraron miembros del personal.",
+        "subtitle": "Agregue su primer empleado para comenzar."
+      },
+      "headers": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "role": "Rol",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "defaultRole": "Personal",
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "readOnly": "Solo lectura",
+      "actions": {
+        "revokeTitle": "Revocar acceso del personal"
+      }
+    }
   }
 }

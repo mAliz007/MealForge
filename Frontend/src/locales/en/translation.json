@@ -72,7 +72,6 @@
       "removing": "Removing...",
       "confirmDeleteTitle": "Delete Restaurant",
       "confirmDelete": "Are you sure you want to delete {{name}}? This action cannot be undone."
-      
     },
     "formCard": {
       "registerTitle": "Register New Dining Partner",
@@ -293,5 +292,112 @@
     "status": "Status",
     "viewOrders": "View Orders",
     "dismiss": "Dismiss"
+  },
+  "staffManagement": {
+    "title": "Staff & Role Management",
+    "subtitle": "Create custom roles with specific granular permissions and assign staff members to your restaurant.",
+    "newRole": "New Role",
+    "addStaff": "Add Staff Member",
+    "loading": "Loading management view...",
+    "tabs": {
+      "staff": "Staff Members ({{count}})",
+      "roles": "Custom Roles ({{count}})"
+    },
+    "alerts": {
+      "addStaffSuccess": "Staff member added successfully!",
+      "addStaffError": "Failed to add staff member.",
+      "revokeSuccess": "Staff member access revoked.",
+      "revokeError": "Failed to revoke staff access.",
+      "createRoleSuccess": "Role created successfully!",
+      "createRoleError": "Failed to create custom role.",
+      "updateRoleSuccess": "Role updated successfully!",
+      "updateRoleError": "Failed to update role.",
+      "deleteRoleSuccess": "Custom role deleted successfully.",
+      "deleteRoleError": "Failed to delete role (it may be assigned to active staff)."
+    },
+    "confirmations": {
+      "revoke": "Revoke access for {{name}}?",
+      "deleteRole": "Delete role \"{{name}}\"?"
+    },
+    "addStaffModal": {
+      "title": "Add Staff Member",
+      "labels": {
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "password": "Password (Optional if user exists)",
+        "role": "Assign Custom Role"
+      },
+      "placeholders": {
+        "fullName": "e.g. John Doe",
+        "email": "e.g. john@restaurant.com",
+        "password": "Minimum 6 characters",
+        "selectRole": "Select a role..."
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Assign Staff",
+        "submitting": "Assigning..."
+      }
+    },
+    "createRoleModal": {
+      "title": "Create Custom Role",
+      "labels": {
+        "roleName": "Role Name",
+        "permissions": "Select Granted Permissions ({{count}} selected)"
+      },
+      "placeholders": {
+        "roleName": "e.g. Head Chef"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Save Role",
+        "submitting": "Creating..."
+      }
+    },
+    "editRoleModal": {
+      "title": "Edit Role: {{name}}",
+      "labels": {
+        "roleName": "Role Name",
+        "permissions": "Permissions"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Save Changes",
+        "submitting": "Saving..."
+      }
+    },
+    "roleCardGrid": {
+      "empty": "No roles found.",
+      "systemRole": "System Role",
+      "noPermissions": "All permissions assigned",
+      "readOnly": "Read only",
+      "protected": "Protected",
+      "actions": {
+        "editTitle": "Edit Role Permissions",
+        "deleteTitle": "Delete Custom Role"
+      }
+    },
+    "staffTable": {
+      "empty": {
+        "title": "No staff members found.",
+        "subtitle": "Add your first employee to get started."
+      },
+      "headers": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "defaultRole": "Staff",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "readOnly": "Read only",
+      "actions": {
+        "revokeTitle": "Revoke Staff Access"
+      }
+    }
   }
 }

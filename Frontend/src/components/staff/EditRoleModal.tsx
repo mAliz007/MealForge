@@ -1,48 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import type { Permission } from "../../types/auth";
+import type { RoleItem } from "./RoleCardGrid";
 import { PermissionSelector } from "./PermissionSelector";
 
-interface CreateRoleModalProps {
+interface EditRoleModalProps {
   isOpen: boolean;
   onClose: () => void;
-  permissionsCatalog: Array<string | { key: string }>;
-  onSubmit: (data: { name: string; permissions: string[] }) => void;
-  isPending: boolean;
+  role: RoleItem | null;
+  permissionsCatalog: Permission[];
+  onSubmit: (roleId: number, payload: { name: string; permissions: string[] }) => void;
+  isPending?: boolean;
 }
 
-export function CreateRoleModal({
+export function EditRoleModal({
   isOpen,
   onClose,
+  role,
   permissionsCatalog,
   onSubmit,
   isPending,
-}: CreateRoleModalProps) {
+}: EditRoleModalProps) {
   const { t } = useTranslation();
   const [roleName, setRoleName] = useState("");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (role) {
+      setRoleName(role.name);
+      setSelectedPermissions(role.permissions || []);
+    }
+  }, [role]);
 
+  if (!isOpen || !role) return null;
+
+  // Extract catalog keys into simple array of strings
   const catalogKeys = permissionsCatalog.map((perm) =>
     typeof perm === "string" ? perm : perm.key
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!roleName.trim() || selectedPermissions.length === 0) return;
-    onSubmit({ name: roleName.trim(), permissions: selectedPermissions });
+    if (!roleName.trim()) return;
+    onSubmit(role.id, {
+      name: roleName.trim(),
+      permissions: selectedPermissions,
+    });
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      {/* Modal Container: Height capped to 90vh, flex-col layout */}
-      <div className="bg-structure border border-text-muted/20 rounded-xl w-full max-w-xl shadow-2xl max-h-[90vh] flex flex-col">
-        
-        {/* Fixed Top Header */}
-        <div className="flex items-center justify-between border-b border-text-muted/15 p-6 pb-4 shrink-0">
+      {/* Outer Modal Container with max height set */}
+      <div className="bg-structure border border-text-muted/15 rounded-xl max-w-xl w-full shadow-2xl max-h-[90vh] flex flex-col">
+        {/* Fixed Header */}
+        <div className="flex items-center justify-between border-b border-text-muted/10 p-6 pb-4 shrink-0">
           <h2 className="text-lg font-bold text-text-main truncate pr-2">
-            {t("staffManagement.createRoleModal.title")}
+            {t("staffManagement.editRoleModal.title", { name: role.name })}
           </h2>
           <button
             onClick={onClose}
@@ -52,29 +66,26 @@ export function CreateRoleModal({
           </button>
         </div>
 
-        {/* SINGLE SCROLL CONTAINER: Covers role name, all permissions, and submit actions */}
+        {/* Single Scroll Container wrapping all form elements */}
         <form onSubmit={handleSubmit} className="overflow-y-auto p-6 space-y-5 flex-1">
-          {/* Role Name Input */}
+          {/* Role Name */}
           <div>
             <label className="block text-xs font-semibold uppercase text-text-muted mb-1">
-              {t("staffManagement.createRoleModal.labels.roleName")}
+              {t("staffManagement.editRoleModal.labels.roleName")}
             </label>
             <input
               type="text"
-              required
               value={roleName}
               onChange={(e) => setRoleName(e.target.value)}
               className="w-full px-3 py-2 bg-canvas border border-text-muted/20 rounded-lg text-sm text-text-main focus:outline-none focus:border-primary truncate"
-              placeholder={t("staffManagement.createRoleModal.placeholders.roleName")}
+              required
             />
           </div>
 
-          {/* Permissions Wrapper (No inner max-heights or overflows) */}
+          {/* Permissions Section */}
           <div>
             <label className="block text-xs font-semibold uppercase text-text-muted mb-2">
-              {t("staffManagement.createRoleModal.labels.permissions", {
-                count: selectedPermissions.length,
-              })}
+              {t("staffManagement.editRoleModal.labels.permissions")}
             </label>
             <div className="border border-text-muted/15 rounded-lg p-3 bg-canvas/50">
               <PermissionSelector
@@ -85,23 +96,23 @@ export function CreateRoleModal({
             </div>
           </div>
 
-          {/* Form Actions (Scrolls smoothly at the end of the form) */}
-          <div className="flex justify-end gap-3 pt-3 border-t border-text-muted/10">
+          {/* Form Action Buttons at the bottom of the scroll view */}
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-text-muted/10">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-semibold text-text-muted hover:text-text-main transition-colors truncate"
+              className="px-4 py-2 text-sm font-medium text-text-muted hover:text-text-main transition-colors truncate"
             >
-              {t("staffManagement.createRoleModal.buttons.cancel")}
+              {t("staffManagement.editRoleModal.buttons.cancel")}
             </button>
             <button
               type="submit"
-              disabled={isPending || !roleName.trim() || selectedPermissions.length === 0}
+              disabled={isPending || !roleName.trim()}
               className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 truncate"
             >
               {isPending
-                ? t("staffManagement.createRoleModal.buttons.submitting")
-                : t("staffManagement.createRoleModal.buttons.submit")}
+                ? t("staffManagement.editRoleModal.buttons.submitting")
+                : t("staffManagement.editRoleModal.buttons.submit")}
             </button>
           </div>
         </form>

@@ -15,7 +15,7 @@ export function OrderRow({
   onInspect,
 }: OrderRowProps) {
   const { t } = useTranslation();
-  const { isAdmin, isOwner, restaurantId } = useAuthUser();
+  const { isAdmin, isOwner, restaurantId, hasPermission } = useAuthUser();
 
   const statusColors = {
     pending: "bg-amber-500/10 text-amber-500",
@@ -30,13 +30,22 @@ export function OrderRow({
   );
   const displayStatus = order.status || "pending";
 
-  const orderRestaurantId = order.restaurant_id ?? (order as any).restaurant_id;
+  const orderRestaurantId =
+    order.restaurant_id ?? (order as any).restaurant_id ?? (order as any).restaurant?.id;
 
-  // Check if current user (Owner or Staff) belongs to this restaurant node
+  // Safely compare IDs across types
   const isAssignedRestaurant =
-    Number(restaurantId) === Number(orderRestaurantId);
+    !restaurantId ||
+    !orderRestaurantId ||
+    String(restaurantId) === String(orderRestaurantId);
 
-  const isOrderOwner = (isOwner || canUpdateStatus) && isAssignedRestaurant;
+  // Check permission using exact backend key 'order.update_status'
+  const hasUpdatePermission =
+    canUpdateStatus ||
+    hasPermission("order.update_status", restaurantId) ||
+    hasPermission("order.update", restaurantId);
+
+  const isOrderOwner = isAdmin || ((isOwner || hasUpdatePermission) && isAssignedRestaurant);
 
   return (
     <tr className="hover:bg-structure/30 transition-colors">

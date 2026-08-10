@@ -34,7 +34,7 @@ export function useMenuItemsView() {
       ? String(userRestaurantId)
       : (cartRestaurantId !== null ? String(cartRestaurantId) : localRestaurantId);
 
-  // Sync effect: Lock non-admin users to their assigned restaurant ID
+  // Sync effect: Lock non-admin staff/owners to their assigned restaurant ID
   useEffect(() => {
     if (!isAdmin && userRestaurantId) {
       setLocalRestaurantId(String(userRestaurantId));
@@ -60,17 +60,26 @@ export function useMenuItemsView() {
 
   const handleRestaurantFilterChange = (newId: string) => {
     setPage(1);
-    if (isAdmin || isOwner || userRestaurantId) {
+
+    // Staff or Owners locked to a restaurant
+    if (userRestaurantId) {
+      setLocalRestaurantId(String(userRestaurantId));
+      return;
+    }
+
+    // Admins or Customers without items in cart
+    if (isAdmin || cartRestaurantId === null) {
       setLocalRestaurantId(newId);
       return;
     }
 
+    // Customer with active cart items switching to another restaurant
     if (cartRestaurantId !== null && newId !== String(cartRestaurantId) && newId !== "") {
       showAlert({
-        title: t("menu.filter.clearCartTitle"),
-        message: t("menu.filter.clearCartMessage"),
-        confirmText: t("common.actions.confirm"),
-        cancelText: t("common.actions.cancel"),
+        title: t("menu.filter.clearCartTitle", "Clear Cart?"),
+        message: t("menu.filter.clearCartMessage", "Changing restaurants will clear your current cart items."),
+        confirmText: t("common.actions.confirm", "Confirm"),
+        cancelText: t("common.actions.cancel", "Cancel"),
         variant: "warning",
         onConfirm: () => {
           clearCart(); 
@@ -83,7 +92,6 @@ export function useMenuItemsView() {
   };
 
   // 4. Operational Gatekeepers
-  // Non-admins MUST have an effectiveRestaurantId, and auth MUST be done loading.
   const shouldSkipFetch = isAuthLoading || (!isAdmin && !effectiveRestaurantId);
 
   const activeFilters = {

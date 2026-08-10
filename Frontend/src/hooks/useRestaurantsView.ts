@@ -28,10 +28,11 @@ export function useRestaurantsView() {
   const [search, setSearch] = useState<string>("");
 
   // 3. Operational Gatekeepers
-  const shouldSkipFetch = isAuthLoading || (!isAdmin && !restaurantId);
+  const shouldSkipFetch = isAuthLoading;
 
-  // 4. Scope Non-Admins to their specific assigned restaurant ID
-  const scopedRestaurantId = !isAdmin && restaurantId ? Number(restaurantId) : null;
+  // 4. Scope ONLY Owner and Staff to their assigned restaurant ID.
+  // Customers and Admins pass `null` to fetch all public restaurants.
+  const scopedRestaurantId = (isOwner || isStaff) && restaurantId ? Number(restaurantId) : null;
 
   // 5. Query Execution
   const {

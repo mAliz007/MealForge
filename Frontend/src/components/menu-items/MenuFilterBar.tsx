@@ -22,14 +22,17 @@ export function MenuFilterBar({
   setSearch,
 }: MenuFilterBarProps) {
   const { t } = useTranslation();
-  const { isAdmin } = useAuthUser(); // Only Super Admins can select restaurants
+  const { isAdmin, isOwner, restaurantId: userRestaurantId } = useAuthUser();
+
+  // Allow Super Admins AND Customers (users without a locked userRestaurantId) to select restaurants
+  const canSelectRestaurant = isAdmin || (!isOwner && !userRestaurantId);
 
   // 1. Restaurant Search Dropdown State
   const [restQuery, setRestQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fetch matching restaurants dynamically (only executed for Super Admins)
+  // Fetch matching restaurants dynamically (executed for Admins & Customers)
   const { data: restResponse, isLoading: isRestLoading } = useRestaurants(
     1,
     10,
@@ -71,8 +74,8 @@ export function MenuFilterBar({
   return (
     <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-end">
       
-      {/* 1. Restaurant Search & Select Filter (Visible ONLY for Super Admins) */}
-      {isAdmin && (
+      {/* 1. Restaurant Search & Select Filter (Visible for Admins AND Customers) */}
+      {canSelectRestaurant && (
         <div className="w-full sm:w-64 space-y-1 relative" ref={dropdownRef}>
           <label className="text-xs font-semibold text-text-muted">
             {t("menu.filter.restaurantLabel", "Restaurant")}

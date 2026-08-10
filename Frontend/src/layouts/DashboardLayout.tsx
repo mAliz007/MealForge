@@ -32,7 +32,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { t, i18n } = useTranslation();
 
   // Get active role context and permission checker
-  const { isCustomer, isOwner, isAdmin, hasAnyCategoryPermission } = useAuthUser();
+  const { isCustomer, isOwner, hasAnyCategoryPermission } = useAuthUser();
 
   // Active notification state powered by Zustand
   const activeNotification = useNotificationStore((state) => state.activeNotification);
@@ -57,8 +57,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       ? [{ name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag }] 
       : []),
     
-    // Staff & Role Management is visible strictly to Owners & Admins
-    ...(isOwner || isAdmin 
+    // Staff & Role Management is visible strictly to Owners
+    ...(isOwner 
       ? [{ name: "Staff & Roles", path: "/dashboard/staff", icon: Users }] 
       : []),
 

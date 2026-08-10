@@ -62,3 +62,9 @@ export function useDeleteOrder() {
     },
   });
 }
+
+export function useDownloadInvoice() {
+  return useMutation<void, Error, number>({
+    mutationFn: (id: number) => orderService.downloadInvoice(id),
+  });
+}

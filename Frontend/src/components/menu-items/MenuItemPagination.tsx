@@ -46,7 +46,7 @@ export function MenuItemPagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
       <span className="text-sm text-muted">
-        {t("restaurants.pagination.showingResults", { from, to, total: totalCount })}
+        {t("menu.pagination.showing_other", { from, to, count: totalCount })}
       </span>
 
       <div className="flex items-center gap-2">

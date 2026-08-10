@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuthUser } from "../../hooks/useAuthUser"; // Adjust path if needed
+import { useAuthUser } from "../../hooks/useAuthUser";
 import { ROUTES } from "../../app/router";
 import type { ReactNode } from "react";
 import type { UserRole } from "../../types/auth";
@@ -13,21 +13,21 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const { user, isLoading, hasRole } = useAuthUser();
 
-  // 1. Show a loading state while validating the session
+  // 1. Show a loading state while validating session
   if (isLoading) {
     return <LoadingSpinner message="Verifying session..." fullScreen />;
   }
 
-  // 2. If no user data comes back, bounce them to login
+  // 2. Redirect unauthenticated visitors to login
   if (!user) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
-  // 3. If allowedRoles is defined and user's role isn't included, redirect to main dashboard
+  // 3. Verify user's role against allowed roles
   if (allowedRoles && !hasRole(allowedRoles)) {
     return <Navigate to={ROUTES.DASHBOARD.DEFAULT} replace />;
   }
 
-  // 4. Authenticated & authorized! Render children safely
+  // 4. Authorized - render children
   return <>{children}</>;
 }

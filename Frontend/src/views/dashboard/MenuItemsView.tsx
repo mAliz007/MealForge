@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useMenuItemsView } from "../../hooks/useMenuItemsView";
+import { useAuthUser } from "../../hooks/useAuthUser";
 
 // Presentation Components
 import { MenuFilterBar } from "../../components/menu-items/MenuFilterBar";
@@ -17,6 +18,7 @@ import { MenuItemPagination } from "../../components/menu-items/MenuItemPaginati
 
 export default function MenuItemsView() {
   const { t } = useTranslation();
+  const { hasPermission } = useAuthUser();
 
   // Destructure pagination, role flags, and state from view hook
   const {
@@ -47,8 +49,17 @@ export default function MenuItemsView() {
     shouldSkipFetch,
   } = useMenuItemsView();
 
-  // Permission helper: both Admins and Restaurant Owners can manage menu items
-  const canManage = isAdmin || isOwner;
+  // Convert string restaurantId to number or undefined for permission check
+  const numericRestaurantId = restaurantId ? Number(restaurantId) : undefined;
+
+  // Granular capability checks using useAuthUser
+  const canCreate = isAdmin || isOwner || hasPermission("menu_item.create", numericRestaurantId);
+  const canEdit = isAdmin || isOwner || hasPermission("menu_item.update", numericRestaurantId);
+  const canDelete = isAdmin || isOwner || hasPermission("menu_item.destroy", numericRestaurantId);
+
+
+  // General flag indicating if the user has management capabilities on this view
+  const canManage = canCreate || canEdit || canDelete;
 
   return (
     <div className="space-y-6 text-text-main transition-colors duration-200">
@@ -57,13 +68,13 @@ export default function MenuItemsView() {
         <div>
           <h1 className="text-2xl font-bold">{t("menu.title", "Menu Items")}</h1>
           <p className="text-sm text-text-muted mt-0.5">
-            {canManage 
-              ? t("menu.adminDescription", "Manage menu offerings and availability.") 
+            {canManage
+              ? t("menu.adminDescription", "Manage menu offerings and availability.")
               : t("menu.userDescription", "Browse restaurant menu items.")}
           </p>
         </div>
 
-        {canManage && (
+        {canCreate && (
           <div className="flex flex-wrap gap-2">
             <Button variant="primary" onClick={openCreateForm}>
               {t("menu.addItem", "Add Menu Item")}
@@ -102,7 +113,10 @@ export default function MenuItemsView() {
             {t("menu.selectRestaurantTitle", "Please Select a Restaurant")}
           </p>
           <p className="text-sm text-text-muted mt-1">
-            {t("menu.selectRestaurantSubtitle", "Choose a location from the selection filter bar above to browse their menu items.")}
+            {t(
+              "menu.selectRestaurantSubtitle",
+              "Choose a location from the selection filter bar above to browse their menu items."
+            )}
           </p>
         </Card>
       ) : !menuItems || menuItems.length === 0 ? (
@@ -128,6 +142,8 @@ export default function MenuItemsView() {
                     key={item.id}
                     item={item}
                     isAdmin={canManage}
+                    canEdit={canEdit}
+                    canDelete={canDelete}
                     isDeleting={deleteMutation.isPending && deleteMutation.variables === item.id}
                     onEdit={startEdit}
                     onDelete={(id) => deleteMutation.mutate(id)}

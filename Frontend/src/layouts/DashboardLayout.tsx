@@ -1,10 +1,9 @@
-// frontend/src/app/DashboardLayout.tsx
 import { type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "../services/authService";
 import { ROUTES } from "../app/router";
-import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages } from "lucide-react";
+import { Utensils, BookOpen, ShoppingBag, ShoppingCart, Sun, Moon, Languages, Users } from "lucide-react";
 import { IconButton } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
@@ -32,8 +31,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { theme, toggleTheme } = useTheme();
   const { t, i18n } = useTranslation();
 
-  // Get active role context
-  const { isCustomer } = useAuthUser();
+  // Get active role context and permission checker
+  const { isCustomer, isOwner, isAdmin, hasAnyCategoryPermission } = useAuthUser();
 
   // Active notification state powered by Zustand
   const activeNotification = useNotificationStore((state) => state.activeNotification);
@@ -42,12 +41,28 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   // Maintain real-time WebSocket subscription
   useOrderNotifications();
 
-  // Dynamically filter navigation links based on user role
+  // Evaluate permission checks for menu and order modules
+  const canViewMenu = hasAnyCategoryPermission("menu_item");
+  const canViewOrders = hasAnyCategoryPermission("order");
+
+  // Dynamically filter navigation links based on user role and permissions
   const navigationItems = [
     { name: t("navbar.restaurants"), path: "/dashboard/restaurants", icon: Utensils },
-    { name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen },
-    { name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag },
-    // Cart is restricted strictly to customers
+
+    ...(canViewMenu 
+      ? [{ name: t("navbar.menuCatalog"), path: "/dashboard/menu-items", icon: BookOpen }] 
+      : []),
+
+    ...(canViewOrders 
+      ? [{ name: t("navbar.ordersLedger"), path: "/dashboard/orders", icon: ShoppingBag }] 
+      : []),
+    
+    // Staff & Role Management is visible strictly to Owners & Admins
+    ...(isOwner || isAdmin 
+      ? [{ name: "Staff & Roles", path: "/dashboard/staff", icon: Users }] 
+      : []),
+
+    // Cart is restricted strictly to Customers
     ...(isCustomer 
       ? [{ name: t("navbar.activeCart"), path: "/dashboard/cart", icon: ShoppingCart }] 
       : []),

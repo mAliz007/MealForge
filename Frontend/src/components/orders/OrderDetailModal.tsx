@@ -7,6 +7,7 @@ import { useUpdateOrder } from "../../hooks/useOrders";
 
 interface OrderDetailModalProps {
   order: Order | null;
+  canUpdateStatus?: boolean;
   onClose: () => void;
 }
 
@@ -36,11 +37,15 @@ const STATUS_COLORS: Record<string, { badge: string; option: string }> = {
 
 const ORDER_STATUSES = ["pending", "confirmed", "preparing", "completed", "cancelled"] as const;
 
-export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
+export function OrderDetailModal({
+  order,
+  canUpdateStatus = false,
+  onClose,
+}: OrderDetailModalProps) {
   // 1. ALL HOOKS FIRST
   const { t } = useTranslation();
-  const { user, isAdmin, isOwner, restaurantId } = useAuthUser();
-  const updateOrder  = useUpdateOrder(); // Using custom useOrders hook!
+  const { user, isAdmin, isOwner, restaurantId, hasPermission } = useAuthUser();
+  const updateOrder = useUpdateOrder();
 
   // Local status state for real-time instant UI reflection
   const [currentStatus, setCurrentStatus] = useState<string>(
@@ -65,8 +70,8 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
   const displayRestaurantId =
     order.restaurant_id ?? (order as any).restaurant_id ?? (order as any).restaurant?.id;
 
-  // Resilient fallback extraction for user's owned restaurant ID
-  const ownerRestaurantId =
+  // Resilient fallback extraction for user's owned/assigned restaurant ID
+  const activeRestaurantId =
     restaurantId ??
     user?.restaurant_id ??
     (user as any)?.restaurant?.id ??
@@ -74,16 +79,24 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
 
   const displayStatus = currentStatus.toLowerCase();
 
-  // Admins manage all; Owners manage orders matching their restaurant ID
+  // Match restaurant node safely comparing string representations
+  const isTargetRestaurant =
+    !activeRestaurantId ||
+    !displayRestaurantId ||
+    String(activeRestaurantId) === String(displayRestaurantId);
+
+  // Check backend capability using exact permission key 'order.update_status'
+  const hasUpdatePermission =
+    canUpdateStatus ||
+    hasPermission("order.update_status", activeRestaurantId) ||
+    hasPermission("order.update", activeRestaurantId);
+
   const canManageOrder =
-    isAdmin ||
-    (isOwner &&
-      (!ownerRestaurantId || Number(ownerRestaurantId) === Number(displayRestaurantId)));
+    isAdmin || (isTargetRestaurant && (isOwner || hasUpdatePermission));
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nextStatus = e.target.value;
     if (nextStatus && nextStatus !== displayStatus) {
-      // Optimistically update local view while triggering hook mutation
       setCurrentStatus(nextStatus);
 
       updateOrder.mutate({
@@ -112,7 +125,7 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
             </p>
           </div>
 
-          {/* Dynamic Badge updated live */}
+          {/* Dynamic Badge */}
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider border transition-colors ${currentStyle.badge}`}
           >
@@ -139,7 +152,7 @@ export function OrderDetailModal({ order, onClose }: OrderDetailModalProps) {
             </div>
           </div>
 
-          {/* Status Dropdown Controls for Owner & Admin */}
+          {/* Status Dropdown Controls */}
           {canManageOrder && (
             <div className="border border-structure rounded-lg p-4 bg-canvas/40 space-y-2">
               <div className="flex items-center justify-between">

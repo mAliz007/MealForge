@@ -1,22 +1,29 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import { restaurantService } from "../services/restaurantService";
 import type { RestaurantFormData } from "../utils/schemas";
 import type { Restaurant } from "../types";
 import type { PaginatedResponse } from "../types/PagyType";
 
-// Query keys factory dictionary
+// Query keys factory dictionary including restaurantId
 export const restaurantKeys = {
   all: ["restaurants"] as const,
-  list: (page: number, limit: number, search: string = "") =>
-    ["restaurants", "list", { page, limit, search }] as const,
+  list: (page: number, limit: number, search: string = "", restaurantId?: number | null) =>
+    ["restaurants", "list", { page, limit, search, restaurantId }] as const,
 };
 
-// Hook to Fetch List (Supports Pagination + Search)
-export function useRestaurants(page = 1, limit = 20, search = "") {
+// Hook to Fetch List (Supports Pagination + Search + Role Scoping + Query Options)
+export function useRestaurants(
+  page = 1,
+  limit = 20,
+  search = "",
+  restaurantId?: number | null,
+  options?: Omit<UseQueryOptions<PaginatedResponse<Restaurant>, Error>, "queryKey" | "queryFn">
+) {
   return useQuery<PaginatedResponse<Restaurant>, Error>({
-    queryKey: restaurantKeys.list(page, limit, search),
+    queryKey: restaurantKeys.list(page, limit, search, restaurantId),
     queryFn: () => restaurantService.getAll(page, limit, search),
     placeholderData: (previousData) => previousData,
+    ...options,
   });
 }
 

@@ -1,9 +1,9 @@
-// Frontend/src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 import { ROUTES } from "./router";
 import { ProtectedRoute } from "../components/auth/ProtectedRoute";
+import {  PermissionGuard } from "../components/auth/PermissionGuard";
 
 // Import Views Explicitly
 import LandingView from "~views/LandingView";
@@ -13,6 +13,7 @@ import RestaurantsView from "~views/dashboard/RestaurantsView";
 import MenuItemsView from "~views/dashboard/MenuItemsView";
 import OrdersView from "~views/dashboard/OrdersView";
 import CartView from "~views/dashboard/CartView";
+import StaffManagementView from "~views/dashboard/StaffManagementView";
 import { CartProvider } from "../context/CartContext";
 
 // Import Global Alert Dialog
@@ -58,21 +59,43 @@ export default function App() {
                         path={ROUTES.DASHBOARD.RESTAURANTS}
                         element={<RestaurantsView />}
                       />
+                      
+                      {/* Menu Items protected by category permission */}
                       <Route
                         path={ROUTES.DASHBOARD.MENU_ITEMS}
-                        element={<MenuItemsView />}
+                        element={
+                          <PermissionGuard categoryPrefix="menu_item">
+                            <MenuItemsView />
+                          </PermissionGuard>
+                        }
                       />
+
+                      {/* Orders protected by category permission */}
                       <Route
                         path={ROUTES.DASHBOARD.ORDERS}
-                        element={<OrdersView />}
+                        element={
+                          <PermissionGuard categoryPrefix="order">
+                            <OrdersView />
+                          </PermissionGuard>
+                        }
                       />
-                      
+
                       {/* Cart is strictly restricted to Customers */}
                       <Route
                         path={ROUTES.DASHBOARD.CART}
                         element={
                           <ProtectedRoute allowedRoles={["customer"]}>
                             <CartView />
+                          </ProtectedRoute>
+                        }
+                      />
+
+                      {/* Staff Management strictly restricted to Owners */}
+                      <Route
+                        path={ROUTES.DASHBOARD.STAFF}
+                        element={
+                          <ProtectedRoute allowedRoles={["owner"]}>
+                            <StaffManagementView />
                           </ProtectedRoute>
                         }
                       />
@@ -85,7 +108,7 @@ export default function App() {
             <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
           </Routes>
         </BrowserRouter>
-        
+
         {/* Mount Global Alert Dialog */}
         <AlertDialog />
       </CartProvider>

@@ -1,0 +1,117 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "../ui/Button";
+import { useCart } from "../../context/CartContext";
+import type { MenuItem } from "../../types";
+
+interface MenuItemRowProps {
+  item: MenuItem;
+  isAdmin: boolean; // True if user is Admin/Owner or has staff management capabilities
+  canEdit?: boolean;
+  canDelete?: boolean;
+  isDeleting: boolean;
+  onEdit: (item: MenuItem) => void;
+  onDelete: (id: number) => void;
+}
+
+export function MenuItemRow({
+  item,
+  isAdmin,
+  canEdit = true,
+  canDelete = true,
+  isDeleting,
+  onEdit,
+  onDelete,
+}: MenuItemRowProps) {
+  const { t } = useTranslation();
+  const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+
+  // Safely coerce price to a number in case the backend sent it down as a string
+  const safePrice = Number(item.price) || 0;
+
+  return (
+    <tr className="border-b border-text-muted/10 hover:bg-structure/30 transition-colors">
+      {/* ID Column */}
+      <td className="px-6 py-4 font-mono text-xs text-text-muted">#{item.id}</td>
+
+      {/* Name and Meta */}
+      <td className="px-6 py-4">
+        <div className="font-semibold text-text-main">{item.name}</div>
+        {item.description && (
+          <div className="text-xs text-text-muted line-clamp-1 mt-0.5">{item.description}</div>
+        )}
+      </td>
+
+      {/* Price */}
+      <td className="px-6 py-4 font-semibold text-text-main">${safePrice.toFixed(2)}</td>
+
+      {/* Availability Status Badge */}
+      <td className="px-6 py-4">
+        <span
+          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors ${
+            item.available
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 dark:bg-emerald-500/20"
+              : "bg-red-500/10 text-red-600 dark:text-red-400 dark:bg-red-500/20"
+          }`}
+        >
+          {item.available
+            ? t("menu.row.statusInStock", "In Stock")
+            : t("menu.row.statusUnavailable", "Unavailable")}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td className="px-6 py-4 text-right">
+        {isAdmin ? (
+          <div className="flex justify-end gap-2">
+            {canEdit && (
+              <Button
+                variant="secondary"
+                className="px-2.5 py-1 text-xs"
+                onClick={() => onEdit(item)}
+              >
+                {t("menu.row.btnEdit", "Edit")}
+              </Button>
+            )}
+
+            {canDelete && (
+              <Button
+                variant="danger"
+                className="px-2.5 py-1 text-xs"
+                onClick={() => onDelete(item.id)}
+                disabled={isDeleting}
+              >
+                {isDeleting
+                  ? t("menu.row.btnRemoving", "Deleting...")
+                  : t("menu.row.btnDelete", "Delete")}
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="flex justify-end items-center gap-2">
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              disabled={!item.available}
+              className="w-14 rounded-lg border border-text-muted/20 bg-canvas text-text-main px-2 py-1 text-center text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary disabled:opacity-50"
+            />
+            <Button
+              variant="primary"
+              className="px-3 py-1 text-xs font-medium"
+              onClick={() => {
+                addToCart(item, quantity);
+                setQuantity(1); // Reset input count
+              }}
+              disabled={!item.available}
+            >
+              {t("menu.row.btnAddToTray", "Add to Tray")}
+            </Button>
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+}

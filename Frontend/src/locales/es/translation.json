@@ -1,0 +1,405 @@
+{
+  "home": {
+    "title": "Plataforma de Comercio SmartSplit",
+    "subtitle": "Página de Destino Pública — Sistema Operativo."
+  },
+  "landing": {
+    "header": {
+      "dashboardBtn": "Ir al Panel"
+    },
+    "hero": {
+      "tag": "✨ Milestone 3 Ventanas de Visualización Disponibles",
+      "titleMain": "División de Comidas en Grupo",
+      "titleSub": "Simplificado a la Perfección.",
+      "description": "Bienvenido al diseño prototipo de la plataforma FoodSplits. Navegue instantáneamente a través de menús de restaurantes integrados, matrices de catálogos simulados y carritos de artículos activos simulados.",
+      "launchBtn": "Iniciar Aplicación de Espacio de Trabajo",
+      "signInBtn": "Pantalla de Inicio de Sesión"
+    },
+    "features": {
+      "router": {
+        "title": "Estructura de Enrutador Anidado",
+        "desc": "Paradigmas limpios de validación que pasan variables estáticas a través de las rutas de diseño sin problemas."
+      },
+      "matrix": {
+        "title": "Matriz de Datos Simulados",
+        "desc": "Proporciona estados de carga interactivos y selectores de vista vacíos listos para usar."
+      },
+      "compliant": {
+        "title": "Interfaces de Tipo Totalmente Compatibles",
+        "desc": "Impone propiedades explícitas para Restaurantes, Artículos de Menú y hojas de registro de Pedidos activos."
+      }
+    },
+    "footer": {
+      "copyright": "PRÁCTICAS EN EL ESPACIO DE TRABAJO DE FOODSPLITS © 2026"
+    }
+  },
+  "navbar": {
+    "restaurants": "Restaurantes",
+    "menuCatalog": "Catálogo de Menú",
+    "ordersLedger": "Registro de Pedidos",
+    "activeCart": "Carrito Activo",
+    "logout": "Cerrar Sesión",
+    "loggingOut": "Cerrando Sesión..."
+  },
+  "restaurants": {
+    "title": "Restaurantes",
+    "adminDescription": "Administre los socios gastronómicos registrados y los estados operativos.",
+    "userDescription": "Ver los socios gastronómicos registrados activos.",
+    "addBtn": "+ Añadir Restaurante",
+    "searchPlaceholder": "Buscar restaurantes...",
+    "clearSearch": "Limpiar búsqueda",
+    "pagination": {
+      "showingResults": "Mostrando {{from}} a {{to}} de {{total}} restaurantes",
+      "pageInfo": "Página {{page}} de {{totalPages}}",
+      "prev": "Anterior",
+      "next": "Siguiente"
+    },
+    "states": {
+      "syncing": "Sincronizando registros...",
+      "failedSync": "Error al sincronizar registros",
+      "defaultError": "Por favor, verifique su autenticación o conectividad con el servidor.",
+      "noneFound": "No se encontraron restaurantes.",
+      "addFirst": "Comience agregando su primer socio gastronómico."
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "location": "Ubicación",
+      "status": "Estado",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "removing": "Eliminando...",
+      "confirmDeleteTitle": "Eliminar Restaurante",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar {{name}}? Esta acción no se puede deshacer."
+    },
+    "formCard": {
+      "registerTitle": "Registrar nuevo socio gastronómico",
+      "modifyTitle": "Modificar: {{name}}"
+    },
+    "form": {
+      "labels": {
+        "name": "Nombre del restaurante",
+        "location": "Ubicación",
+        "status": "Estado operativo",
+        "open": "Abierto",
+        "closed": "Cerrado"
+      },
+      "placeholders": {
+        "name": "p. ej. El Gourmet Burger Hub",
+        "location": "p. ej. Sector Centro A"
+      },
+      "actions": {
+        "save": "Guardar cambios",
+        "create": "Crear restaurante"
+      }
+    }
+  },
+  "common": {
+    "alert": {
+      "title": "¿Estás seguro?"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "delete": "Eliminar"
+    }
+  },
+  "orders": {
+    "title": "Historial de transacciones",
+    "adminDescription": "Monitoree los libros de transacciones de restaurantes globales y registros de cumplimiento.",
+    "userDescription": "Revise y realice el seguimiento en tiempo real del estado de cumplimiento de sus selecciones culinarias.",
+    "subtitle": "Monitorear transacciones de pedidos",
+    "table": {
+      "orderId": "ID del pedido",
+      "node": "Nodo de cumplimiento",
+      "total": "Total bruto",
+      "state": "Estado de cumplimiento",
+      "invoice": "Detalles de factura",
+      "restaurantNode": "Restaurante #{{id}}",
+      "inspectBtn": "Inspeccionar artículos"
+    },
+    "modal": {
+      "title": "Especificaciones de factura",
+      "manifestRef": "ID de referencia del manifiesto: #{{id}}",
+      "stateLabel": "Estado: {{status}}",
+      "processingNode": "Nodo de procesamiento",
+      "restaurantHub": "Centro de restaurantes #{{id}}",
+      "financialAccounting": "Contabilidad financiera",
+      "grossValue": "Valor bruto transaccionado",
+      "dismissBtn": "Descartar",
+      "downloadInvoice": "Descargar factura",
+      "generatingPdf": "Generando PDF..."
+    },
+    "states": {
+      "loading": "Sincronizando recibos abiertos...",
+      "errorTitle": "Fallo en el pipeline de transacciones",
+      "errorFallback": "Ocurrió un error inesperado al comunicarse con el motor de enrutamiento de pedidos.",
+      "emptyTitle": "No hay operaciones de pedido registradas.",
+      "emptySubtitle": "Los nuevos tickets de transacción se mostrarán aquí cuando los pedidos se realicen en vivo."
+    },
+    "pagination": {
+      "showingResults": "Mostrando {{from}} a {{to}} de {{total}} pedidos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "pageInfo": "Página {{page}} de {{totalPages}}"
+    }
+  },
+  "cart": {
+    "title": "Carrito de pago activo",
+    "description": "Revise los lotes de pago pendientes y los pipelines de transacciones.",
+    "transmitting": "Transmitiendo el pago seguro y la carga del manifiesto...",
+    "clearConflictTitle": "Restaurante Diferente",
+    "clearConflictMessage": "Tienes productos de otro restaurante en tu carrito. ¿Deseas vaciar el carrito y agregar este producto?",
+    "empty": {
+      "title": "Su bandeja de selección está vacía.",
+      "subtitle": "Navegue a la pestaña del catálogo de menús para seleccionar platos."
+    },
+    "accessibility": {
+      "badgeLabel": "Carrito de compras con {{count}} artículo",
+      "badgeLabel_other": "Carrito de compras con {{count}} artículos"
+    },
+    "actions": {
+      "reviewItems": "Revisando {{count}} artículo (Centro de origen #{{hub}})",
+      "reviewItems_plural": "Revisando {{count}} artículos (Centro de origen #{{hub}})",
+      "clearTray": "Limpiar bandeja",
+      "each": "${{price}} c/u",
+      "remove": "Eliminar",
+      "checkout": "Proceder a la pasarela de pago"
+    },
+    "sidebar": {
+      "title": "Estimación del pedido",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Tarifa de envío",
+      "totalDue": "Total a pagar"
+    },
+    "alerts": {
+      "invalidHub": "Flujo de pago rechazado: No se pudo identificar un ID de restaurante válido para esta transacción.",
+      "success": "¡Transacción completa! Su pedido ha sido realizado con éxito.",
+      "error": "Flujo de pago rechazado: {{message}}"
+    }
+  },
+  "auth": {
+    "fullNameLabel": "Nombre Completo",
+    "fullNamePlaceholder": "Juan Pérez",
+    "emailLabel": "Correo Electrónico",
+    "emailPlaceholder": "tu@ejemplo.com",
+    "passwordLabel": "Contraseña",
+    "signIn": "Iniciar Sesión",
+    "createAccount": "Crear Cuenta",
+    "login": {
+      "title": "Bienvenido de nuevo",
+      "subtitle": "Inicie sesión para administrar su plataforma de comedor",
+      "noAccount": "¿No tiene una cuenta?",
+      "registerLink": "Regístrese aquí"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "subtitle": "Comience como administrador de la plataforma",
+      "hasAccount": "¿Ya tiene una cuenta?",
+      "loginLink": "Iniciar sesión"
+    }
+  },
+  "menu": {
+    "title": "Catálogo de Menú",
+    "adminDescription": "Configure la disponibilidad del catálogo y las matrices de listado administrativo.",
+    "userDescription": "Explore listas culinarias y cree pedidos personalizados de entrega de comida.",
+    "addItem": "+ Añadir artículo",
+    "searchPlaceholder": "Buscar artículos del menú...",
+    "clearSearch": "Limpiar búsqueda",
+    "searchBtn": "Buscar",
+    "table": {
+      "id": "ID",
+      "details": "Detalles del artículo",
+      "price": "Precio",
+      "status": "Estado",
+      "actions": "Acciones",
+      "buildOrder": "Crear pedido"
+    },
+    "pagination": {
+      "showing_one": "Mostrando {{from}} a {{to}} de {{count}} artículo",
+      "showing_other": "Mostrando {{from}} a {{to}} de {{count}} artículos",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "pageInfo": "Página {{page}} de {{totalPages}}"
+    },
+    "filter": {
+      "restaurantLabel": "Restaurante",
+      "searchRestaurantPlaceholder": "Buscar restaurante...",
+      "allRestaurants": "Todos los restaurantes",
+      "loading": "Cargando...",
+      "noRestaurants": "No se encontraron restaurantes",
+      "searchLabel": "Buscar artículos del menú",
+      "stockLabel": "Disponibilidad",
+      "allListings": "Todos los listados",
+      "inStock": "En stock",
+      "unavailable": "No disponible",
+      "clearCartTitle": "Cambiar de Restaurante",
+      "clearCartMessage": "Al cambiar de restaurante se vaciarán los productos de tu carrito actual. ¿Deseas continuar?"
+    },
+    "form": {
+      "titleEdit": "Editar artículo del menú",
+      "titleCreate": "Crear artículo del menú",
+      "fieldName": "Nombre del artículo",
+      "fieldPrice": "Precio ($)",
+      "fieldRestaurant": "Restaurante propietario",
+      "selectPlaceholder": "Seleccionar socio corporativo...",
+      "fieldAvailable": "Disponible de inmediato",
+      "btnCancel": "Cancelar",
+      "btnSaving": "Guardando...",
+      "btnSaveEdit": "Aplicar cambios",
+      "btnSaveCreate": "Crear selección",
+      "validation": {
+        "nameRequired": "El nombre del artículo es obligatorio",
+        "priceRequired": "El precio es obligatorio",
+        "restaurantRequired": "Es obligatorio seleccionar un socio"
+      },
+      "title": "Detalles del artículo",
+      "subtitle": "Configure las opciones y propiedades para esta selección.",
+      "labels": {
+        "name": "Nombre del artículo",
+        "price": "Precio ($)",
+        "restaurant": "Asignar al restaurante",
+        "placeholderSelect": "Seleccionar un restaurante..."
+      },
+      "placeholders": {
+        "name": "ej. Papas fritas con ajo y parmesano"
+      },
+      "actions": {
+        "save": "Guardar artículo",
+        "create": "Agregar al menú"
+      }
+    },
+    "row": {
+      "metaRestaurantId": "ID de restaurante asociado: {{id}}",
+      "statusInStock": "Disponible",
+      "statusUnavailable": "No disponible",
+      "btnEdit": "Editar",
+      "btnDelete": "Eliminar",
+      "btnRemoving": "Eliminando...",
+      "btnAddToTray": "Agregar a la bandeja"
+    },
+    "states": {
+      "loading": "Asignando referencias del catálogo...",
+      "errorTitle": "Error al sincronizar las referencias del catálogo",
+      "errorFallback": "Ocurrió un error inesperado al comunicarse con el servicio del catálogo.",
+      "emptyTitle": "No se encontraron selecciones de menú.",
+      "emptySubtitle": "Intente ampliar sus parámetros de filtrado activos o vuelva a consultar más tarde."
+    }
+  },
+  "notifications": {
+    "orderPlacedTitle": "¡Pedido realizado con éxito!",
+    "orderMessage": "El pedido #{{id}} fue realizado en {{restaurant}}",
+    "total": "Total",
+    "status": "Estado",
+    "viewOrders": "Ver pedidos",
+    "dismiss": "Descartar"
+  },
+  "staffManagement": {
+    "title": "Gestión de Personal y Roles",
+    "subtitle": "Cree roles personalizados con permisos granulares específicos y asigne miembros del personal a su restaurante.",
+    "newRole": "Nuevo Rol",
+    "addStaff": "Agregar Personal",
+    "loading": "Cargando vista de gestión...",
+    "tabs": {
+      "staff": "Personal ({{count}})",
+      "roles": "Roles Personalizados ({{count}})"
+    },
+    "alerts": {
+      "addStaffSuccess": "¡Miembro del personal agregado con éxito!",
+      "addStaffError": "Error al agregar al miembro del personal.",
+      "revokeSuccess": "Acceso del miembro del personal revocado.",
+      "revokeError": "Error al revocar el acceso del personal.",
+      "createRoleSuccess": "¡Rol creado con éxito!",
+      "createRoleError": "Error al crear el rol personalizado.",
+      "updateRoleSuccess": "¡Rol actualizado con éxito!",
+      "updateRoleError": "Error al actualizar el rol.",
+      "deleteRoleSuccess": "Rol personalizado eliminado con éxito.",
+      "deleteRoleError": "Error al eliminar el rol (puede estar asignado a personal activo)."
+    },
+    "confirmations": {
+      "revoke": "¿Revocar el acceso de {{name}}?",
+      "deleteRole": "¿Eliminar el rol \"{{name}}\"?"
+    },
+    "addStaffModal": {
+      "title": "Agregar Miembro del Personal",
+      "labels": {
+        "fullName": "Nombre Completo",
+        "email": "Correo Electrónico",
+        "password": "Contraseña (Opcional si el usuario ya existe)",
+        "role": "Asignar Rol Personalizado"
+      },
+      "placeholders": {
+        "fullName": "ej. Juan Pérez",
+        "email": "ej. juan@restaurante.com",
+        "password": "Mínimo 6 caracteres",
+        "selectRole": "Seleccionar un rol..."
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Asignar Personal",
+        "submitting": "Asignando..."
+      }
+    },
+    "createRoleModal": {
+      "title": "Crear Rol Personalizado",
+      "labels": {
+        "roleName": "Nombre del Rol",
+        "permissions": "Seleccionar Permisos Concedidos ({{count}} seleccionados)"
+      },
+      "placeholders": {
+        "roleName": "ej. Chef Principal"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Guardar Rol",
+        "submitting": "Creando..."
+      }
+    },
+    "editRoleModal": {
+      "title": "Editar Rol: {{name}}",
+      "labels": {
+        "roleName": "Nombre del Rol",
+        "permissions": "Permisos"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "submit": "Guardar Cambios",
+        "submitting": "Guardando..."
+      }
+    },
+    "roleCardGrid": {
+      "empty": "No se encontraron roles.",
+      "systemRole": "Rol de Sistema",
+      "noPermissions": "Sin permisos asignados",
+      "readOnly": "Solo lectura",
+      "protected": "Protegido",
+      "actions": {
+        "editTitle": "Editar Permisos del Rol",
+        "deleteTitle": "Eliminar Rol Personalizado"
+      }
+    },
+    "staffTable": {
+      "empty": {
+        "title": "No se encontraron miembros del personal.",
+        "subtitle": "Agregue su primer empleado para comenzar."
+      },
+      "headers": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "role": "Rol",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "defaultRole": "Personal",
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "readOnly": "Solo lectura",
+      "actions": {
+        "revokeTitle": "Revocar acceso del personal"
+      }
+    }
+  }
+}

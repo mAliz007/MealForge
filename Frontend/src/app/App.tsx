@@ -1,0 +1,128 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import posthog from "posthog-js";
+import { PostHogProvider } from "@posthog/react";
+
+import { DashboardLayout } from "../layouts/DashboardLayout";
+import { ROUTES } from "./router";
+import { ProtectedRoute } from "../components/auth/ProtectedRoute";
+import { PermissionGuard } from "../components/auth/PermissionGuard";
+
+// Import Views
+import LandingView from "~views/LandingView";
+import LoginView from "~views/auth/LoginView";
+import RegisterView from "~views/auth/RegisterView";
+import RestaurantsView from "~views/dashboard/RestaurantsView";
+import MenuItemsView from "~views/dashboard/MenuItemsView";
+import OrdersView from "~views/dashboard/OrdersView";
+import CartView from "~views/dashboard/CartView";
+import StaffManagementView from "~views/dashboard/StaffManagementView";
+import { CartProvider } from "../context/CartContext";
+
+// Import Global Alert Dialog
+import { AlertDialog } from "../components/ui/AlertDialog";
+
+// Initialize PostHog before the app mounts
+posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
+  api_host: import.meta.env.VITE_POSTHOG_HOST,
+  person_profiles: "identified_only",
+});
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
+
+export default function App() {
+  return (
+    <PostHogProvider client={posthog}>
+      <QueryClientProvider client={queryClient}>
+        <CartProvider>
+          <BrowserRouter>
+            <Routes>
+              {/* Main Entry Points */}
+              <Route path={ROUTES.HOME} element={<LandingView />} />
+              <Route path={ROUTES.LOGIN} element={<LoginView />} />
+              <Route path={ROUTES.REGISTER} element={<RegisterView />} />
+
+              {/* Nested Dashboard Router Wrapper Subtree */}
+              <Route
+                path={ROUTES.DASHBOARD_ROOT}
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <Routes>
+                        <Route
+                          index
+                          element={
+                            <Navigate
+                              to={ROUTES.DASHBOARD.DEFAULT}
+                              replace
+                            />
+                          }
+                        />
+                        <Route
+                          path={ROUTES.DASHBOARD.RESTAURANTS}
+                          element={<RestaurantsView />}
+                        />
+
+                        {/* Menu Items protected by category permission */}
+                        <Route
+                          path={ROUTES.DASHBOARD.MENU_ITEMS}
+                          element={
+                            <PermissionGuard categoryPrefix="menu_item">
+                              <MenuItemsView />
+                            </PermissionGuard>
+                          }
+                        />
+
+                        {/* Orders protected by category permission */}
+                        <Route
+                          path={ROUTES.DASHBOARD.ORDERS}
+                          element={
+                            <PermissionGuard categoryPrefix="order">
+                              <OrdersView />
+                            </PermissionGuard>
+                          }
+                        />
+
+                        {/* Cart is strictly restricted to Customers */}
+                        <Route
+                          path={ROUTES.DASHBOARD.CART}
+                          element={
+                            <ProtectedRoute allowedRoles={["customer"]}>
+                              <CartView />
+                            </ProtectedRoute>
+                          }
+                        />
+
+                        {/* Staff Management strictly restricted to Owners */}
+                        <Route
+                          path={ROUTES.DASHBOARD.STAFF}
+                          element={
+                            <ProtectedRoute allowedRoles={["owner"]}>
+                              <StaffManagementView />
+                            </ProtectedRoute>
+                          }
+                        />
+                      </Routes>
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
+            </Routes>
+          </BrowserRouter>
+
+          {/* Mount Global Alert Dialog */}
+          <AlertDialog />
+        </CartProvider>
+      </QueryClientProvider>
+    </PostHogProvider>
+  );
+}

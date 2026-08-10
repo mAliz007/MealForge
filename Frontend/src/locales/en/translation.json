@@ -1,0 +1,405 @@
+{
+  "home": {
+    "title": "SmartSplit Commerce Platform",
+    "subtitle": "Public Landing Page — System Operational."
+  },
+  "landing": {
+    "header": {
+      "dashboardBtn": "Go to Dashboard"
+    },
+    "hero": {
+      "tag": "✨ Milestone 3 Live Viewports Available",
+      "titleMain": "Group Meal Splitting",
+      "titleSub": "Simplified Perfectly.",
+      "description": "Welcome to the FoodSplits platform prototype layout shell. Navigate across integrated restaurant menus, simulated catalog arrays, and mock active item carts instantly.",
+      "launchBtn": "Launch Workspace App",
+      "signInBtn": "Sign In Screen"
+    },
+    "features": {
+      "router": {
+        "title": "Nested Router Framework",
+        "desc": "Clean validation paradigms passing static variables down layout routes smoothly."
+      },
+      "matrix": {
+        "title": "Mock Data Matrix",
+        "desc": "Provides interactive loading states and empty view toggles out-of-the-box."
+      },
+      "compliant": {
+        "title": "Fully Compliant Type Interfaces",
+        "desc": "Enforces explicit properties for Restaurants, Menu Items, and active Orders ledger sheets."
+      }
+    },
+    "footer": {
+      "copyright": "FOODSPLITS WORKSPACE INTERNSHIP © 2026"
+    }
+  },
+  "navbar": {
+    "restaurants": "Restaurants",
+    "menuCatalog": "Menu Catalog",
+    "ordersLedger": "Orders Ledger",
+    "activeCart": "Active Cart",
+    "logout": "Log Out",
+    "loggingOut": "Logging Out..."
+  },
+  "restaurants": {
+    "title": "Restaurants",
+    "adminDescription": "Manage registered dining partners and operating statuses.",
+    "userDescription": "View active registered dining partners.",
+    "addBtn": "+ Add Restaurant",
+    "searchPlaceholder": "Search restaurants...",
+    "clearSearch": "Clear search",
+    "pagination": {
+      "showingResults": "Showing {{from}} to {{to}} of {{total}} restaurants",
+      "pageInfo": "Page {{page}} of {{totalPages}}",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "states": {
+      "syncing": "Syncing records...",
+      "failedSync": "Failed to sync records",
+      "defaultError": "Please check your authentication or server connectivity.",
+      "noneFound": "No restaurants found.",
+      "addFirst": "Get started by adding your first dining partner."
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "location": "Location",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "removing": "Removing...",
+      "confirmDeleteTitle": "Delete Restaurant",
+      "confirmDelete": "Are you sure you want to delete {{name}}? This action cannot be undone."
+    },
+    "formCard": {
+      "registerTitle": "Register New Dining Partner",
+      "modifyTitle": "Modify: {{name}}"
+    },
+    "form": {
+      "labels": {
+        "name": "Restaurant Name",
+        "location": "Location",
+        "status": "Operating Status",
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "placeholders": {
+        "name": "e.g. The Gourmet Burger Hub",
+        "location": "e.g. Downtown Sector A"
+      },
+      "actions": {
+        "save": "Save Changes",
+        "create": "Create Restaurant"
+      }
+    }
+  },
+  "common": {
+    "alert": {
+      "title": "Are you sure?"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "delete": "Delete"
+    }
+  },
+  "orders": {
+    "title": "Transaction History",
+    "adminDescription": "Monitor the global restaurant transaction ledgers and fulfillment records.",
+    "userDescription": "Review and track the real-time fulfillment state of your culinary selections.",
+    "subtitle": "Monitor order transactions",
+    "table": {
+      "orderId": "Order ID",
+      "node": "Fulfillment Node",
+      "total": "Gross Total",
+      "state": "Fulfillment State",
+      "invoice": "Invoice Details",
+      "restaurantNode": "Restaurant #{{id}}",
+      "inspectBtn": "Inspect Items"
+    },
+    "pagination": {
+      "showingResults": "Showing {{from}} to {{to}} of {{total}} orders",
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{totalPages}}"
+    },
+    "modal": {
+      "downloadInvoice": "Download Invoice",
+      "generatingPdf": "Generating PDF...",
+      "title": "Invoice Specs",
+      "manifestRef": "Manifest Reference ID: #{{id}}",
+      "stateLabel": "State: {{status}}",
+      "processingNode": "Processing Node",
+      "restaurantHub": "Restaurant Hub #{{id}}",
+      "financialAccounting": "Financial Accounting",
+      "grossValue": "Gross Transacted Value",
+      "dismissBtn": "Dismiss"
+    },
+    "states": {
+      "loading": "Syncing open receipts...",
+      "errorTitle": "Transactional Pipeline Failure",
+      "errorFallback": "An unexpected error occurred while communicating with the order routing engine.",
+      "emptyTitle": "No order operations on record.",
+      "emptySubtitle": "New transaction tickets will populate here when orders go down live."
+    }
+  },
+  "cart": {
+    "title": "Active Checkout Cart",
+    "description": "Review pending checkout batches and transaction pipelines.",
+    "transmitting": "Transmitting secure payment and manifest payload...",
+    "clearConflictTitle": "Different Restaurant",
+    "clearConflictMessage": "You have items from a different restaurant in your cart. Clear cart and add this item instead?",
+    "accessibility": {
+      "badgeLabel": "Shopping cart with {{count}} item",
+      "badgeLabel_other": "Shopping cart with {{count}} items"
+    },
+    "empty": {
+      "title": "Your selection tray is empty.",
+      "subtitle": "Navigate to the menu catalog tab to select dishes."
+    },
+    "actions": {
+      "reviewItems": "Reviewing {{count}} Item (Source Hub #{{hub}})",
+      "reviewItems_plural": "Reviewing {{count}} Items (Source Hub #{{hub}})",
+      "clearTray": "Clear Tray",
+      "each": "${{price}} each",
+      "remove": "Remove",
+      "checkout": "Proceed to Payment Gateway"
+    },
+    "sidebar": {
+      "title": "Order Estimation",
+      "subtotal": "Subtotal",
+      "deliveryFee": "Delivery Fee",
+      "totalDue": "Total Due"
+    },
+    "alerts": {
+      "invalidHub": "Checkout pipeline rejected: Unable to identify a valid Restaurant ID for this transaction.",
+      "success": "Transaction complete! Your order has been placed successfully.",
+      "error": "Checkout pipeline rejected: {{message}}"
+    }
+  },
+  "auth": {
+    "fullNameLabel": "Full Name",
+    "fullNamePlaceholder": "John Doe",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "login": {
+      "title": "Welcome Back",
+      "subtitle": "Sign in to manage your dining platform",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Get started as a platform administrator",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign In"
+    }
+  },
+  "menu": {
+    "title": "Menu Catalog",
+    "adminDescription": "Configure catalog availability and administrative listing matrices.",
+    "userDescription": "Browse culinary lists and build custom food delivery orders.",
+    "addItem": "+ Add Menu Item",
+    "searchPlaceholder": "Search menu items...",
+    "clearSearch": "Clear search",
+    "searchBtn": "Search",
+    "table": {
+      "id": "ID",
+      "details": "Item Details",
+      "price": "Price",
+      "status": "Status",
+      "actions": "Actions",
+      "buildOrder": "Build Order"
+    },
+    "pagination": {
+      "showing_one": "Showing {{from}} to {{to}} of {{count}} item",
+      "showing_other": "Showing {{from}} to {{to}} of {{count}} items",
+      "prev": "Previous",
+      "next": "Next",
+      "pageInfo": "Page {{page}} of {{totalPages}}"
+    },
+    "filter": {
+      "restaurantLabel": "Partner Restaurant",
+      "restaurantPlaceholder": "Search & select restaurant...",
+      "allRestaurants": "All Registered Partners",
+      "stockLabel": "Stock State",
+      "allListings": "Show All Listings",
+      "inStock": "In Stock Only",
+      "unavailable": "Unavailable Only",
+      "noRestaurantsFound": "No restaurants found",
+      "searchLabel": "Search Menu Items",
+      "searchPlaceholder": "Search items by name...",
+      "clearCartTitle": "Switch Restaurant",
+      "clearCartMessage": "Changing restaurants will clear your current cart items. Do you want to proceed?"
+    },
+    "form": {
+      "titleEdit": "Edit Menu Item",
+      "titleCreate": "Create Menu Item",
+      "fieldName": "Item Name",
+      "fieldPrice": "Price ($)",
+      "fieldRestaurant": "Restaurant Owner",
+      "selectPlaceholder": "Select corporate partner...",
+      "fieldAvailable": "Available Immediately",
+      "btnCancel": "Cancel",
+      "btnSaving": "Saving...",
+      "btnSaveEdit": "Apply Changes",
+      "btnSaveCreate": "Create Selection",
+      "validation": {
+        "nameRequired": "Item name is required",
+        "priceRequired": "Price is required",
+        "restaurantRequired": "Selecting a partner is required"
+      },
+      "title": "Menu Item Details",
+      "subtitle": "Configure options and properties for this selection.",
+      "labels": {
+        "name": "Menu Item Name",
+        "price": "Price ($)",
+        "restaurant": "Assign to Restaurant",
+        "placeholderSelect": "Select a restaurant..."
+      },
+      "placeholders": {
+        "name": "e.g. Garlic Parmesan Fries"
+      },
+      "actions": {
+        "save": "Save Item",
+        "create": "Add Menu Item"
+      }
+    },
+    "row": {
+      "metaRestaurantId": "Associated Restaurant ID: {{id}}",
+      "statusInStock": "In Stock",
+      "statusUnavailable": "Unavailable",
+      "btnEdit": "Edit",
+      "btnDelete": "Delete",
+      "btnRemoving": "Removing...",
+      "btnAddToTray": "Add to Tray"
+    },
+    "states": {
+      "loading": "Mapping catalog references...",
+      "errorTitle": "Failed to Sync Catalog References",
+      "errorFallback": "An unexpected error occurred while communicating with the catalog service.",
+      "emptyTitle": "No menu selections found.",
+      "emptySubtitle": "Try broadening your active filter parameters or check back later."
+    }
+  },
+  "notifications": {
+    "orderPlacedTitle": "Order Placed Successfully!",
+    "orderMessage": "Order #{{id}} was placed at {{restaurant}}",
+    "total": "Total",
+    "status": "Status",
+    "viewOrders": "View Orders",
+    "dismiss": "Dismiss"
+  },
+  "staffManagement": {
+    "title": "Staff & Role Management",
+    "subtitle": "Create custom roles with specific granular permissions and assign staff members to your restaurant.",
+    "newRole": "New Role",
+    "addStaff": "Add Staff Member",
+    "loading": "Loading management view...",
+    "tabs": {
+      "staff": "Staff Members ({{count}})",
+      "roles": "Custom Roles ({{count}})"
+    },
+    "alerts": {
+      "addStaffSuccess": "Staff member added successfully!",
+      "addStaffError": "Failed to add staff member.",
+      "revokeSuccess": "Staff member access revoked.",
+      "revokeError": "Failed to revoke staff access.",
+      "createRoleSuccess": "Role created successfully!",
+      "createRoleError": "Failed to create custom role.",
+      "updateRoleSuccess": "Role updated successfully!",
+      "updateRoleError": "Failed to update role.",
+      "deleteRoleSuccess": "Custom role deleted successfully.",
+      "deleteRoleError": "Failed to delete role (it may be assigned to active staff)."
+    },
+    "confirmations": {
+      "revoke": "Revoke access for {{name}}?",
+      "deleteRole": "Delete role \"{{name}}\"?"
+    },
+    "addStaffModal": {
+      "title": "Add Staff Member",
+      "labels": {
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "password": "Password (Optional if user exists)",
+        "role": "Assign Custom Role"
+      },
+      "placeholders": {
+        "fullName": "e.g. John Doe",
+        "email": "e.g. john@restaurant.com",
+        "password": "Minimum 6 characters",
+        "selectRole": "Select a role..."
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Assign Staff",
+        "submitting": "Assigning..."
+      }
+    },
+    "createRoleModal": {
+      "title": "Create Custom Role",
+      "labels": {
+        "roleName": "Role Name",
+        "permissions": "Select Granted Permissions ({{count}} selected)"
+      },
+      "placeholders": {
+        "roleName": "e.g. Head Chef"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Save Role",
+        "submitting": "Creating..."
+      }
+    },
+    "editRoleModal": {
+      "title": "Edit Role: {{name}}",
+      "labels": {
+        "roleName": "Role Name",
+        "permissions": "Permissions"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "submit": "Save Changes",
+        "submitting": "Saving..."
+      }
+    },
+    "roleCardGrid": {
+      "empty": "No roles found.",
+      "systemRole": "System Role",
+      "noPermissions": "All permissions assigned",
+      "readOnly": "Read only",
+      "protected": "Protected",
+      "actions": {
+        "editTitle": "Edit Role Permissions",
+        "deleteTitle": "Delete Custom Role"
+      }
+    },
+    "staffTable": {
+      "empty": {
+        "title": "No staff members found.",
+        "subtitle": "Add your first employee to get started."
+      },
+      "headers": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "defaultRole": "Staff",
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "readOnly": "Read only",
+      "actions": {
+        "revokeTitle": "Revoke Staff Access"
+      }
+    }
+  }
+}

@@ -45,4 +45,23 @@ export const orderService = {
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/v1/orders/${id}`);
   },
+
+  downloadInvoice: async (id: number): Promise<void> => {
+    const response = await apiClient.get(`/v1/orders/${id}/download_invoice`, {
+      responseType: "blob",
+    });
+
+    // Create a downloadable blob URL from response
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", `FoodSplit-Invoice-${id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up DOM and memory
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+  },
 };

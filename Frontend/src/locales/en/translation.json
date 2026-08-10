@@ -126,6 +126,8 @@
       "pageInfo": "Page {{page}} of {{totalPages}}"
     },
     "modal": {
+      "downloadInvoice": "Download Invoice",
+      "generatingPdf": "Generating PDF...",
       "title": "Invoice Specs",
       "manifestRef": "Manifest Reference ID: #{{id}}",
       "stateLabel": "State: {{status}}",
@@ -133,7 +135,7 @@
       "restaurantHub": "Restaurant Hub #{{id}}",
       "financialAccounting": "Financial Accounting",
       "grossValue": "Gross Transacted Value",
-      "dismissBtn": "Dismiss Ledger Entry"
+      "dismissBtn": "Dismiss"
     },
     "states": {
       "loading": "Syncing open receipts...",

@@ -127,7 +127,9 @@
       "restaurantHub": "Centro de restaurantes #{{id}}",
       "financialAccounting": "Contabilidad financiera",
       "grossValue": "Valor bruto transaccionado",
-      "dismissBtn": "Descartar entrada de libro"
+      "dismissBtn": "Descartar",
+      "downloadInvoice": "Descargar factura",
+      "generatingPdf": "Generando PDF..."
     },
     "states": {
       "loading": "Sincronizando recibos abiertos...",

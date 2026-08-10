@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { Button } from "../ui/Button";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 import type { Order } from "../../types";
 import { useTranslation } from "react-i18next";
 import { useAuthUser } from "../../hooks/useAuthUser";
-import { useUpdateOrder } from "../../hooks/useOrders";
+import { useUpdateOrder, useDownloadInvoice } from "../../hooks/useOrders";
 
 interface OrderDetailModalProps {
   order: Order | null;
@@ -46,6 +47,7 @@ export function OrderDetailModal({
   const { t } = useTranslation();
   const { user, isAdmin, isOwner, restaurantId, hasPermission } = useAuthUser();
   const updateOrder = useUpdateOrder();
+  const downloadInvoice = useDownloadInvoice();
 
   // Local status state for real-time instant UI reflection
   const [currentStatus, setCurrentStatus] = useState<string>(
@@ -104,6 +106,10 @@ export function OrderDetailModal({
         status: nextStatus,
       });
     }
+  };
+
+  const handleDownloadInvoice = () => {
+    downloadInvoice.mutate(order.id);
   };
 
   const currentStyle =
@@ -203,8 +209,31 @@ export function OrderDetailModal({
           )}
         </div>
 
-        {/* Action Button */}
-        <div className="mt-6 flex justify-end">
+        {/* Action Controls Footer */}
+        <div className="mt-6 flex justify-between items-center border-t border-structure pt-4">
+          <Button
+            variant="outline"
+            className="px-4 py-2 text-sm flex items-center gap-2 disabled:opacity-70"
+            disabled={downloadInvoice.isPending}
+            onClick={handleDownloadInvoice}
+          >
+            {downloadInvoice.isPending ? (
+              <div className="flex items-center space-x-2 py-0.5">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current" />
+                <span className="text-xs font-medium">
+                  {t("orders.modal.generatingPdf", { defaultValue: "Generating PDF..." })}
+                </span>
+              </div>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>{t("orders.modal.downloadInvoice", { defaultValue: "Download Invoice" })}</span>
+              </>
+            )}
+          </Button>
+
           <Button variant="primary" className="px-4 py-2 text-sm" onClick={onClose}>
             {t("orders.modal.dismissBtn")}
           </Button>

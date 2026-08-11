@@ -189,15 +189,38 @@
     "createAccount": "Create Account",
     "login": {
       "title": "Welcome Back",
-      "subtitle": "Sign in to manage your dining platform",
+      "subtitle": "Sign in to start ordering",
       "noAccount": "Don't have an account?",
-      "registerLink": "Register here"
+      "registerLink": "Register here",
+      "adminPortalPrefix": "Are you a restaurant manager?",
+      "adminPortalLink": "Admin Login"
     },
     "register": {
       "title": "Create Account",
-      "subtitle": "Get started as a platform administrator",
+      "subtitle": "Get started ",
       "hasAccount": "Already have an account?",
       "loginLink": "Sign In"
+    },
+    "adminLogin": {
+      "title": "Admin Portal Login",
+      "subtitle": "Sign in to manage your restaurant",
+      "noAccount": "Don't have a restaurant account?",
+      "registerLink": "Register Restaurant",
+      "customerPortalPrefix": "Looking to order food?",
+      "customerPortalLink": "Customer Login"
+    },
+    "adminRegister": {
+      "title": "Register Restaurant",
+      "subtitle": "Create an owner account and register your business",
+      "creatingAccount": "Setting up your restaurant and owner account...",
+      "ownerDetails": "Owner Account Details",
+      "restaurantDetails": "Restaurant Details",
+      "restaurantName": "Restaurant Name",
+      "location": "City / Location",
+      "address": "Full Address (Optional)",
+      "createButton": "Register Restaurant & Account",
+      "hasAccount": "Already have a manager account?",
+      "loginLink": "Admin Login"
     }
   },
   "menu": {

@@ -33,7 +33,7 @@ export function useLogin(options: UseLoginOptions = {}) {
       if (portal === "admin") {
         navigate(ROUTES.DASHBOARD.DEFAULT);
       } else {
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.DASHBOARD.DEFAULT);
       }
     },
     onError: (error: any) => {

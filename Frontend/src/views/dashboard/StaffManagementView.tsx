@@ -44,7 +44,7 @@ export default function StaffManagementView() {
           {state.canManageStaff && (
             <button
               onClick={() => actions.setIsStaffModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary hover:opacity-90 rounded-lg transition-all active:scale-[0.98]"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary bg-primary hover:opacity-90 rounded-lg transition-all active:scale-[0.98]"
             >
               <UserPlus className="h-4 w-4" />
               {t("staffManagement.addStaff")}

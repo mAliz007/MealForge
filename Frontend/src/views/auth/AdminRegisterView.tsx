@@ -1,26 +1,29 @@
 import { Link } from "react-router-dom";
-import { RegisterForm } from "../../components/forms/RegisterForm";
+import { AdminRegisterForm } from "../../components/forms/AdminRegisterForm";
 import { Card } from "../../components/ui/Card";
 import { LoadingSpinner } from "../../components/ui/LoadingSpinner";
-import { useRegister } from "../../hooks/useRegister";
+import { useAdminRegister } from "../../hooks/useAdminRegister";
 import { useTranslation } from "react-i18next";
 import { ROUTES } from "../../app/router";
 
-export default function RegisterView() {
+export default function AdminRegisterView() {
   const { t } = useTranslation();
-  const { onSubmit, isLoading, errorMessages } = useRegister();
+  const { onSubmit, isLoading, errorMessages } = useAdminRegister();
 
   if (isLoading) {
     return (
       <LoadingSpinner
         fullScreen
-        message={t("auth.register.creatingAccount") || "Creating account..."}
+        message={
+          t("auth.adminRegister.creatingAccount") ||
+          "Setting up your restaurant and owner account..."
+        }
       />
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-canvas text-text-main px-4 transition-colors duration-200">
+    <div className="min-h-screen flex items-center justify-center bg-canvas text-text-main px-4 py-8 transition-colors duration-200">
       <Card className="w-full max-w-md p-8 shadow-xl bg-structure border border-text-muted/10 rounded-2xl">
         <div className="text-center mb-6">
           <Link
@@ -31,10 +34,11 @@ export default function RegisterView() {
             F
           </Link>
           <h2 className="text-3xl font-extrabold tracking-tight">
-            {t("auth.register.title")}
+            {t("auth.adminRegister.title") || "Register Restaurant"}
           </h2>
           <p className="text-sm text-text-muted mt-1">
-            {t("auth.register.subtitle")}
+            {t("auth.adminRegister.subtitle") ||
+              "Create an owner account and register your business"}
           </p>
         </div>
 
@@ -48,15 +52,15 @@ export default function RegisterView() {
           </div>
         )}
 
-        <RegisterForm onSubmit={onSubmit} isLoading={isLoading} />
+        <AdminRegisterForm onSubmit={onSubmit} isLoading={isLoading} />
 
         <div className="text-center mt-6 text-sm text-text-muted">
-          {t("auth.register.hasAccount")}{" "}
+          {t("auth.adminRegister.hasAccount") || "Already have a manager account?"}{" "}
           <Link
-            to={ROUTES.LOGIN}
+            to={ROUTES.ADMIN_LOGIN || "/admin/login"}
             className="font-semibold text-blue-500 hover:text-blue-400 hover:underline transition-colors"
           >
-            {t("auth.register.loginLink")}
+            {t("auth.adminRegister.loginLink") || "Admin Login"}
           </Link>
         </div>
       </Card>

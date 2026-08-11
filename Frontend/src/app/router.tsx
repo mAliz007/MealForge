@@ -2,6 +2,11 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/login",
   REGISTER: "/register",
+
+  ADMIN_LOGIN: "/admin/login",
+  ADMIN_REGISTER: "/admin/register",
+
+  
   DASHBOARD_ROOT: "/dashboard/*",
   DASHBOARD: {
     DEFAULT: "/dashboard/restaurants",

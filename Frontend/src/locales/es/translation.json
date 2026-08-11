@@ -180,24 +180,47 @@
     }
   },
   "auth": {
-    "fullNameLabel": "Nombre Completo",
+    "fullNameLabel": "Nombre completo",
     "fullNamePlaceholder": "Juan Pérez",
-    "emailLabel": "Correo Electrónico",
+    "emailLabel": "Correo electrónico",
     "emailPlaceholder": "tu@ejemplo.com",
     "passwordLabel": "Contraseña",
-    "signIn": "Iniciar Sesión",
-    "createAccount": "Crear Cuenta",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
     "login": {
       "title": "Bienvenido de nuevo",
-      "subtitle": "Inicie sesión para administrar su plataforma de comedor",
-      "noAccount": "¿No tiene una cuenta?",
-      "registerLink": "Regístrese aquí"
+      "subtitle": "Inicia sesión para gestionar tu plataforma",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate aquí",
+      "adminPortalPrefix": "¿Eres gerente de un restaurante?",
+      "adminPortalLink": "Acceso de Admin"
     },
     "register": {
       "title": "Crear cuenta",
-      "subtitle": "Comience como administrador de la plataforma",
-      "hasAccount": "¿Ya tiene una cuenta?",
+      "subtitle": "Comienza como administrador de la plataforma",
+      "hasAccount": "¿Ya tienes una cuenta?",
       "loginLink": "Iniciar sesión"
+    },
+    "adminLogin": {
+      "title": "Acceso al Portal de Administración",
+      "subtitle": "Inicia sesión para gestionar tu restaurante",
+      "noAccount": "¿No tienes una cuenta de restaurante?",
+      "registerLink": "Registrar Restaurante",
+      "customerPortalPrefix": "¿Buscas pedir comida?",
+      "customerPortalLink": "Acceso de Cliente"
+    },
+    "adminRegister": {
+      "title": "Registrar Restaurante",
+      "subtitle": "Crea una cuenta de propietario y registra tu negocio",
+      "creatingAccount": "Configurando tu restaurante y cuenta de propietario...",
+      "ownerDetails": "Datos del Propietario",
+      "restaurantDetails": "Datos del Restaurante",
+      "restaurantName": "Nombre del Restaurante",
+      "location": "Ciudad / Ubicación",
+      "address": "Dirección completa (Opcional)",
+      "createButton": "Registrar Restaurante y Cuenta",
+      "hasAccount": "¿Ya tienes una cuenta de administrador?",
+      "loginLink": "Iniciar Sesión de Admin"
     }
   },
   "menu": {

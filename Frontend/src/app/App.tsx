@@ -21,6 +21,7 @@ import { CartProvider } from "../context/CartContext";
 
 // Import Global Alert Dialog
 import { AlertDialog } from "../components/ui/AlertDialog";
+import AdminRegisterView from "~views/auth/AdminRegisterView";
 
 // Initialize PostHog before the app mounts
 posthog.init(import.meta.env.VITE_POSTHOG_KEY, {
@@ -48,6 +49,8 @@ export default function App() {
               <Route path={ROUTES.HOME} element={<LandingView />} />
               <Route path={ROUTES.LOGIN} element={<LoginView />} />
               <Route path={ROUTES.REGISTER} element={<RegisterView />} />
+              <Route path={ROUTES.ADMIN_LOGIN} element={<LoginView portal="admin" />} />
+              <Route path={ROUTES.ADMIN_REGISTER} element={<AdminRegisterView />} />
 
               {/* Nested Dashboard Router Wrapper Subtree */}
               <Route

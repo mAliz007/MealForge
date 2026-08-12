@@ -24,17 +24,51 @@ export const menuItemService = {
     return response.data;
   },
 
-  create: async (data: MenuItemFormData): Promise<MenuItem> => {
-    const response = await apiClient.post<MenuItem>("/v1/menu_items", {
-      menu_item: data,
-    });
+  create: async (data: MenuItemFormData | FormData): Promise<MenuItem> => {
+    let payload: any;
+    let headers: Record<string, string> = {};
+
+    if (data instanceof FormData) {
+      // Wrap FormData keys into menu_item[...] format if not already formatted
+      const formattedData = new FormData();
+      data.forEach((value, key) => {
+        if (key.startsWith("menu_item[")) {
+          formattedData.append(key, value);
+        } else {
+          formattedData.append(`menu_item[${key}]`, value);
+        }
+      });
+      payload = formattedData;
+      headers["Content-Type"] = "multipart/form-data";
+    } else {
+      payload = { menu_item: data };
+    }
+
+    const response = await apiClient.post<MenuItem>("/v1/menu_items", payload, { headers });
     return response.data;
   },
 
-  update: async (id: number, data: Partial<MenuItemFormData>): Promise<MenuItem> => {
-    const response = await apiClient.put<MenuItem>(`/v1/menu_items/${id}`, {
-      menu_item: data,
-    });
+  update: async (id: number, data: Partial<MenuItemFormData> | FormData): Promise<MenuItem> => {
+    let payload: any;
+    let headers: Record<string, string> = {};
+
+    if (data instanceof FormData) {
+      // Wrap FormData keys into menu_item[...] format if not already formatted
+      const formattedData = new FormData();
+      data.forEach((value, key) => {
+        if (key.startsWith("menu_item[")) {
+          formattedData.append(key, value);
+        } else {
+          formattedData.append(`menu_item[${key}]`, value);
+        }
+      });
+      payload = formattedData;
+      headers["Content-Type"] = "multipart/form-data";
+    } else {
+      payload = { menu_item: data };
+    }
+
+    const response = await apiClient.put<MenuItem>(`/v1/menu_items/${id}`, payload, { headers });
     return response.data;
   },
 

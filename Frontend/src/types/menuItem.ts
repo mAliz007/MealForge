@@ -5,4 +5,5 @@ export type MenuItem = {
   description?: string;
   price: number;
   available: boolean;
+  image_url?: string | null;
 };

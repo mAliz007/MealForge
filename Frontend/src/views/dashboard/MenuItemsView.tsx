@@ -57,7 +57,6 @@ export default function MenuItemsView() {
   const canEdit = isAdmin || isOwner || hasPermission("menu_item.update", numericRestaurantId);
   const canDelete = isAdmin || isOwner || hasPermission("menu_item.destroy", numericRestaurantId);
 
-
   // General flag indicating if the user has management capabilities on this view
   const canManage = canCreate || canEdit || canDelete;
 
@@ -128,6 +127,7 @@ export default function MenuItemsView() {
               <thead>
                 <tr className="bg-canvas/50 border-b border-text-muted/10 text-xs font-bold uppercase tracking-wider text-text-muted">
                   <th className="px-6 py-4">{t("menu.table.id", "ID")}</th>
+                  <th className="px-6 py-4">{t("menu.table.image", "Image")}</th>
                   <th className="px-6 py-4">{t("menu.table.details", "Details")}</th>
                   <th className="px-6 py-4">{t("menu.table.price", "Price")}</th>
                   <th className="px-6 py-4">{t("menu.table.status", "Status")}</th>

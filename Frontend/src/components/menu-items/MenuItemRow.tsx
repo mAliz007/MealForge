@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import type { MenuItem } from "../../types";
 import { Button } from "../ui/Button";
+import { useAddToCart } from "../../hooks/useCartQuery";
 
 interface MenuItemRowProps {
   item: MenuItem;
@@ -26,8 +27,26 @@ export function MenuItemRow({
   const { t } = useTranslation();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  // Initialize TanStack Query mutation hook
+  const addToCartMutation = useAddToCart();
+
   // Safely parse price to Number in case backend returns string
   const formattedPrice = Number(item.price || 0).toFixed(2);
+
+  const handleAddToCart = () => {
+    addToCartMutation.mutate(
+      {
+        menu_item_id: item.id,
+        quantity: 1,
+      },
+      {
+        onError: (error) => {
+          // Handle 422 restaurant conflict or other errors if needed
+          console.error("Failed to add item to cart:", error);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -95,16 +114,18 @@ export function MenuItemRow({
         {/* Status Badge */}
         <td className="px-6 py-4">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${item.available
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${
+              item.available
                 ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                 : "bg-red-500/10 text-red-500 border-red-500/20"
-              }`}
+            }`}
           >
             {item.available
               ? t("menu.row.statusInStock", "In Stock")
               : t("menu.row.statusUnavailable", "Unavailable")}
           </span>
         </td>
+
         {/* Action Buttons Column */}
         <td className="px-6 py-4 text-right whitespace-nowrap">
           {isAdmin ? (
@@ -135,7 +156,9 @@ export function MenuItemRow({
             <Button
               variant="primary"
               className="text-xs py-1.5 px-3 w-28 text-center"
-              disabled={!item.available}
+              disabled={!item.available || addToCartMutation.isPending}
+              isLoading={addToCartMutation.isPending}
+              onClick={handleAddToCart}
             >
               {t("menu.row.btnAddToCart", "Add to Cart")}
             </Button>
@@ -191,7 +214,9 @@ export function MenuItemRow({
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <span className="text-xs">{t("menu.preview.noImage", "No image available")}</span>
+                  <span className="text-xs">
+                    {t("menu.preview.noImage", "No image available")}
+                  </span>
                 </div>
               )}
             </div>
@@ -208,10 +233,11 @@ export function MenuItemRow({
               </div>
               <div>
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${item.available
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${
+                    item.available
                       ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                       : "bg-red-500/10 text-red-500 border-red-500/20"
-                    }`}
+                  }`}
                 >
                   {item.available
                     ? t("menu.row.statusInStock", "In Stock")

@@ -27,7 +27,7 @@ export function useMenuItems(
 
 export function useCreateMenuItem() {
   const queryClient = useQueryClient();
-  return useMutation<MenuItem, Error, MenuItemFormData>({
+  return useMutation<MenuItem, Error, MenuItemFormData | FormData>({
     mutationFn: (data) => menuItemService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: menuQueryKeys.lists() });
@@ -37,7 +37,7 @@ export function useCreateMenuItem() {
 
 export function useUpdateMenuItem() {
   const queryClient = useQueryClient();
-  return useMutation<MenuItem, Error, { id: number; data: Partial<MenuItemFormData> }>({
+  return useMutation<MenuItem, Error, { id: number; data: Partial<MenuItemFormData> | FormData }>({
     mutationFn: ({ id, data }) => menuItemService.update(id, data),
     onSuccess: (updatedItem) => {
       queryClient.invalidateQueries({ queryKey: menuQueryKeys.lists() });

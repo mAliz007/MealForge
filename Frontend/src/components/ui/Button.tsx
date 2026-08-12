@@ -13,11 +13,11 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  // Base structural styles for the button
+  // Base structural styles with relative positioning for overlay loading state
   const baseStyles =
-    "inline-flex items-center justify-center font-medium rounded-lg px-4 py-2 text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
+    "relative inline-flex items-center justify-center font-medium rounded-lg px-4 py-2 text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none cursor-pointer";
 
-  // Variant color definitions using clean Tailwind utility classes
+  // Variant color definitions using Tailwind utility classes
   const variants = {
     primary: "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
     secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500",
@@ -32,15 +32,17 @@ export function Button({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading ? (
-        <span className="inline-flex items-center gap-2">
-          {/* Reusable spinner ring styled for buttons */}
+      {/* Absolute overlay spinner keeps button dimensions fixed */}
+      {isLoading && (
+        <span className="absolute inset-0 flex items-center justify-center gap-2 bg-inherit rounded-lg">
           <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent" />
-          Loading...
         </span>
-      ) : (
-        children
       )}
+      
+      {/* Children content remains rendered but invisible during loading to preserve exact dimensions */}
+      <span className={isLoading ? "invisible flex items-center gap-2" : "flex items-center gap-2"}>
+        {children}
+      </span>
     </button>
   );
 }

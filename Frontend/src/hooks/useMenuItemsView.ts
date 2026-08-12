@@ -119,10 +119,26 @@ export function useMenuItemsView() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>(undefined);
 
-  const handleFormSubmit = (payload: MenuItemFormData & { available: boolean }) => {
+  const handleFormSubmit = (
+    payload: MenuItemFormData & { available: boolean; imageFile?: File | null }
+  ) => {
+    // Construct FormData for multipart submission if image file is present
+    const formData = new FormData();
+    formData.append("name", payload.name);
+    formData.append("price", String(payload.price));
+    formData.append("restaurant_id", String(payload.restaurant_id));
+    formData.append("available", String(payload.available));
+
+    if (payload.imageFile) {
+      formData.append("image", payload.imageFile);
+    }
+
+    // Fall back to sending raw payload if backend expects JSON/object or process FormData
+    const submissionData = payload.imageFile ? (formData as any) : payload;
+
     if (editingItem) {
       updateMutation.mutate(
-        { id: editingItem.id, data: payload },
+        { id: editingItem.id, data: submissionData },
         {
           onSuccess: () => {
             setIsFormOpen(false);
@@ -131,7 +147,7 @@ export function useMenuItemsView() {
         }
       );
     } else {
-      createMutation.mutate(payload, {
+      createMutation.mutate(submissionData, {
         onSuccess: () => {
           setIsFormOpen(false);
         },

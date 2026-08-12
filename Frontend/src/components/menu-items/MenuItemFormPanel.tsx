@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,7 +18,7 @@ import { Button } from "../../components/ui/Button";
 interface MenuItemFormModalProps {
   open: boolean;
   editingItem?: MenuItem;
-  onSubmit: (data: MenuItemFormData & { available: boolean }) => void;
+  onSubmit: (data: MenuItemFormData & { available: boolean; imageFile?: File | null }) => void;
   onCancel: () => void;
   isPending: boolean;
 }
@@ -33,6 +33,10 @@ export function MenuItemFormPanel({
   const { t } = useTranslation();
   const { isOwner, user } = useAuthUser();
   
+  // Image selection and preview state
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   // Safely extract the restaurant ID regardless of property casing or nesting
   const ownerRestaurantId = 
     (user as any)?.restaurant_id ?? 
@@ -69,13 +73,30 @@ export function MenuItemFormPanel({
           restaurant_id: editingItem.restaurant_id,
         });
         setIsAvailable(editingItem.available);
+        setImagePreview(editingItem.image_url || null);
+        setSelectedFile(null);
       } else {
         const initialRestId = isOwner && ownerRestaurantId ? String(ownerRestaurantId) : "";
         reset({ name: "", price: 0, restaurant_id: initialRestId as any });
         setIsAvailable(true);
+        setImagePreview(null);
+        setSelectedFile(null);
       }
     }
   }, [editingItem, reset, open, isOwner, ownerRestaurantId]);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+  };
 
   const onFormSubmit = (formData: MenuItemFormData) => {
     // Fallback check to ensure owner's restaurant_id is always present
@@ -83,6 +104,7 @@ export function MenuItemFormPanel({
       ...formData,
       restaurant_id: isOwner && ownerRestaurantId ? (ownerRestaurantId as any) : formData.restaurant_id,
       available: isAvailable,
+      imageFile: selectedFile,
     };
     onSubmit(finalData);
   };
@@ -119,6 +141,67 @@ export function MenuItemFormPanel({
           }}
         >
           <div className="flex flex-col gap-4">
+
+            {/* Image Picker */}
+            <div className="w-full flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-text-muted uppercase tracking-wider">
+                {t("menu.form.fieldImage", "Menu Item Image")}
+              </label>
+
+              <div className="flex items-center gap-4">
+                {/* Preview Box */}
+                <div className="w-20 h-20 rounded-xl bg-canvas border border-text-muted/20 overflow-hidden flex items-center justify-center shrink-0">
+                  {imagePreview ? (
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <svg
+                      className="w-8 h-8 text-text-muted/30"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Upload Action Controls */}
+                <div className="flex flex-col gap-2">
+                  <label className="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-xs font-medium bg-canvas border border-text-muted/20 hover:bg-structure/80 cursor-pointer transition-colors text-text-main">
+                    <span>{imagePreview ? t("menu.form.btnChangeImage", "Change Image") : t("menu.form.btnUploadImage", "Upload Image")}</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </label>
+
+                  {imagePreview && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="text-left text-xs text-red-500 hover:underline"
+                    >
+                      {t("menu.form.btnRemoveImage", "Remove Image")}
+                    </button>
+                  )}
+
+                  <p className="text-[10px] text-text-muted">
+                    {t("menu.form.imageConstraints", "JPEG, PNG, or WebP (max 5MB)")}
+                  </p>
+                </div>
+              </div>
+            </div>
             
             {/* Item Name */}
             <Input

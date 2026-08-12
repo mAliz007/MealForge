@@ -233,6 +233,7 @@
     "searchBtn": "Search",
     "table": {
       "id": "ID",
+      "image": "Image",
       "details": "Item Details",
       "price": "Price",
       "status": "Status",
@@ -300,7 +301,7 @@
       "btnEdit": "Edit",
       "btnDelete": "Delete",
       "btnRemoving": "Removing...",
-      "btnAddToTray": "Add to Tray"
+      "btnAddToCart": "Add to Cart"
     },
     "states": {
       "loading": "Mapping catalog references...",

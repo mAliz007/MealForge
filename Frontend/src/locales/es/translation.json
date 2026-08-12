@@ -233,6 +233,7 @@
     "searchBtn": "Buscar",
     "table": {
       "id": "ID",
+      "image": "Imagen",
       "details": "Detalles del artículo",
       "price": "Precio",
       "status": "Estado",
@@ -300,7 +301,7 @@
       "btnEdit": "Editar",
       "btnDelete": "Eliminar",
       "btnRemoving": "Eliminando...",
-      "btnAddToTray": "Agregar a la bandeja"
+      "btnAddToCart": "Agregar a la bandeja"
     },
     "states": {
       "loading": "Asignando referencias del catálogo...",

@@ -1,14 +1,14 @@
 // src/components/ui/NotificationToast.tsx
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, X, ShoppingBag } from "lucide-react";
+import { CheckCircle2, X, ShoppingBag, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { OrderNotificationPayload } from "../../hooks/useOrderNotifications";
+import type { ActionCablePayload } from "../../hooks/useOrderNotifications";
 
 interface NotificationToastProps {
-  notification: OrderNotificationPayload | null;
+  notification: ActionCablePayload | null; // Changed to ActionCablePayload
   onClose: () => void;
-  autoHideDuration?: number; // Defaults to 6000ms (6 seconds)
+  autoHideDuration?: number;
 }
 
 export function NotificationToast({
@@ -36,6 +36,41 @@ export function NotificationToast({
     navigate("/dashboard/orders");
   };
 
+  // 1. Handle Invoice Generated UI (TypeScript automatically discriminates the union type here)
+  if ("event" in notification && notification.event === "invoice_generated") {
+    return (
+      <div
+        role="alert"
+        aria-live="assertive"
+        className="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-structure text-text-main border border-primary/30 shadow-2xl rounded-2xl p-4 transition-all transform duration-300 animate-in slide-in-from-bottom-5 fade-in"
+      >
+        <div className="flex items-start gap-3">
+          <div className="p-2 bg-primary/10 rounded-xl text-primary shrink-0 mt-0.5">
+            <FileText className="h-5 w-5" />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-bold text-text-main leading-snug">
+              Invoice Ready
+            </h4>
+            <p className="text-xs text-text-muted mt-1 leading-relaxed">
+              {notification.message || `Invoice for Order #${notification.order_id} has been downloaded.`}
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="text-text-muted hover:text-text-main p-1 rounded-lg transition-colors"
+            aria-label={t("notifications.dismiss")}
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Handle Order Placed UI (OrderNotificationPayload)
   return (
     <div
       role="alert"

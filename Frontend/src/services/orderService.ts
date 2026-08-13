@@ -64,4 +64,12 @@ export const orderService = {
     link.remove();
     window.URL.revokeObjectURL(downloadUrl);
   },
+
+  // Replace the old downloadInvoice method:
+generateInvoice: async (id: number): Promise<{ message: string; order_id: number }> => {
+  const response = await apiClient.post<{ message: string; order_id: number }>(
+    `/v1/orders/${id}/generate_invoice`
+  );
+  return response.data;
+},
 };

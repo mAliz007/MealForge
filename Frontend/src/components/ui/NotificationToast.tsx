@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import type { ActionCablePayload } from "../../hooks/useOrderNotifications";
 
 interface NotificationToastProps {
-  notification: ActionCablePayload | null; // Changed to ActionCablePayload
+  notification: ActionCablePayload | null;
   onClose: () => void;
   autoHideDuration?: number;
 }
@@ -36,7 +36,7 @@ export function NotificationToast({
     navigate("/dashboard/orders");
   };
 
-  // 1. Handle Invoice Generated UI (TypeScript automatically discriminates the union type here)
+  // 1. Handle Invoice Generated UI
   if ("event" in notification && notification.event === "invoice_generated") {
     return (
       <div
@@ -51,10 +51,12 @@ export function NotificationToast({
 
           <div className="flex-1 min-w-0">
             <h4 className="text-sm font-bold text-text-main leading-snug">
-              Invoice Ready
+              {t("notifications.invoice_ready_title")}
             </h4>
             <p className="text-xs text-text-muted mt-1 leading-relaxed">
-              {notification.message || `Invoice for Order #${notification.order_id} has been downloaded.`}
+              {notification.message_key
+                ? t(notification.message_key, notification.message_params)
+                : `Invoice for Order #${notification.order_id} has been downloaded.`}
             </p>
           </div>
 
@@ -70,7 +72,7 @@ export function NotificationToast({
     );
   }
 
-  // 2. Handle Order Placed UI (OrderNotificationPayload)
+  // 2. Handle Order Placed UI
   return (
     <div
       role="alert"
@@ -86,13 +88,15 @@ export function NotificationToast({
         {/* Content */}
         <div className="flex-1 min-w-0">
           <h4 className="text-sm font-bold text-text-main leading-snug">
-            {t("notifications.orderPlacedTitle")}
+            {t("notifications.order_placed_title")}
           </h4>
           <p className="text-xs text-text-muted mt-1 leading-relaxed">
-            {t("notifications.orderMessage", {
-              id: notification.id,
-              restaurant: notification.restaurant_name,
-            })}
+            {notification.message_key
+              ? t(notification.message_key, notification.message_params)
+              : t("notifications.order_created", {
+                  id: notification.id,
+                  restaurant: notification.restaurant_name,
+                })}
           </p>
 
           {/* Details Pill */}
@@ -110,7 +114,7 @@ export function NotificationToast({
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               <ShoppingBag className="h-3.5 w-3.5" />
-              {t("notifications.viewOrders")}
+              {t("notifications.view_orders")}
             </button>
           </div>
         </div>

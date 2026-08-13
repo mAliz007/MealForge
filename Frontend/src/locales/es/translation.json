@@ -312,12 +312,17 @@
     }
   },
   "notifications": {
-    "orderPlacedTitle": "¡Pedido realizado con éxito!",
-    "orderMessage": "El pedido #{{id}} fue realizado en {{restaurant}}",
+    "orderPlacedTitle": "¡Pedido Realizado con Éxito!",
+    "orderMessage": "El Pedido #{{id}} fue realizado en {{restaurant}}",
     "total": "Total",
     "status": "Estado",
-    "viewOrders": "Ver pedidos",
-    "dismiss": "Descartar"
+    "viewOrders": "Ver Pedidos",
+    "dismiss": "Descartar",
+    "order_placed_title": "Pedido Realizado",
+    "invoice_ready_title": "Factura Lista",
+    "order_created": "¡Pedido #{{id}} realizado con éxito en {{restaurant}}!",
+    "invoice_generated": "La factura del Pedido #{{id}} está lista para descargar.",
+    "view_orders": "Ver Pedidos"
   },
   "staffManagement": {
     "title": "Gestión de Personal y Roles",

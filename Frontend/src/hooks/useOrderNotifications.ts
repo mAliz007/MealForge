@@ -13,7 +13,8 @@ export interface OrderNotificationPayload {
   restaurant_name: string;
   total_amount: number | null;
   created_at: string;
-  message: string;
+  message_key?: string;
+  message_params?: Record<string, any>;
 }
 
 export interface InvoiceGeneratedPayload {
@@ -21,7 +22,8 @@ export interface InvoiceGeneratedPayload {
   order_id: number;
   filename: string;
   pdf_data: string;
-  message?: string;
+  message_key?: string;
+  message_params?: Record<string, any>;
 }
 
 export type ActionCablePayload = OrderNotificationPayload | InvoiceGeneratedPayload;
@@ -53,12 +55,12 @@ export function useOrderNotifications() {
             if (data.pdf_data) {
               downloadBase64Pdf(data.pdf_data, data.filename);
 
-              // Push payload tagged with event: "invoice_generated"
-              // Note: If you want NO popup at all when downloading, simply remove/comment the showNotification line below!
+              // Pass normalized translation payload to Zustand store
               showNotification({
                 event: "invoice_generated",
                 order_id: data.order_id,
-                message: data.message || `Invoice for Order #${data.order_id} generated and downloaded!`,
+                message_key: data.message_key || "notifications.invoice_generated",
+                message_params: data.message_params || { id: data.order_id },
               } as any);
             }
             return;

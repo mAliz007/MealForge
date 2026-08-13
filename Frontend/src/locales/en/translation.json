@@ -317,7 +317,12 @@
     "total": "Total",
     "status": "Status",
     "viewOrders": "View Orders",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "order_placed_title": "Order Placed",
+    "invoice_ready_title": "Invoice Ready",
+    "order_created": "Order #{{id}} placed successfully at {{restaurant}}!",
+    "invoice_generated": "Invoice for Order #{{id}} is ready for download.",
+    "view_orders": "View Orders"
   },
   "staffManagement": {
     "title": "Staff & Role Management",

@@ -109,7 +109,14 @@ export function OrderDetailModal({
   };
 
   const handleDownloadInvoice = () => {
-    downloadInvoice.mutate(order.id);
+    downloadInvoice.mutate(order.id, {
+      onSuccess: () => {
+        console.log("Invoice generation queued; PDF will download automatically when ready.");
+      },
+      onError: (error) => {
+        console.error("Failed to queue invoice generation:", error);
+      },
+    });
   };
 
   const currentStyle =

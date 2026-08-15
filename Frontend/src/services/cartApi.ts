@@ -1,15 +1,5 @@
-import axios from 'axios'
 import type { MenuItem } from '../types'
-
-export const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  // CRUCIAL: Instructs the browser to automatically attach and accept cookies
-  // during cross-origin handshakes with your Rails backend
-  withCredentials: true,
-})
+import { apiClient } from './apiClient'
 
 
 export interface CartItem {
@@ -41,7 +31,7 @@ export interface CartConflictError {
 
 
 export const fetchCart = async (): Promise<CartResponse> => {
-  const { data } = await apiClient.get<CartResponse>('/cart')
+  const { data } = await apiClient.get<CartResponse>('/v1/cart')
   return data
 }
 
@@ -49,7 +39,7 @@ export const fetchCart = async (): Promise<CartResponse> => {
 export const addItemToCart = async (
   payload: AddItemPayload
 ): Promise<CartResponse> => {
-  const { data } = await apiClient.post<CartResponse>('/cart/items', payload)
+  const { data } = await apiClient.post<CartResponse>('/v1/cart/items', payload)
   return data
 }
 
@@ -59,7 +49,7 @@ export const updateCartItemQuantity = async (
   payload: UpdateQuantityPayload
 ): Promise<CartResponse> => {
   const { data } = await apiClient.patch<CartResponse>(
-    `/cart/items/${menuItemId}`,
+    `/v1/cart/items/${menuItemId}`,
     payload
   )
   return data
@@ -70,12 +60,12 @@ export const removeCartItem = async (
   menuItemId: number
 ): Promise<CartResponse> => {
   const { data } = await apiClient.delete<CartResponse>(
-    `/cart/items/${menuItemId}`
+    `/v1/cart/items/${menuItemId}`
   )
   return data
 }
 
 export const clearCart = async (): Promise<CartResponse> => {
-  const { data } = await apiClient.delete<CartResponse>('/cart')
+  const { data } = await apiClient.delete<CartResponse>('/v1/cart')
   return data
 }

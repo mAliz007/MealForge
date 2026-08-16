@@ -1,9 +1,10 @@
 import { createConsumer, Consumer } from "@rails/actioncable";
 
 const getWebSocketUrl = (): string => {
-  // Explicitly target Rails port 3000 for local dev
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-  const wsUrl = apiUrl.replace(/^http/, "ws").replace(/\/api\/?$/, "");
+  
+  // Replaces 'https' with 'wss' and 'http' with 'ws'
+  const wsUrl = apiUrl.replace(/^http(s?):/, "ws$1:").replace(/\/api\/?$/, "");
   
   return `${wsUrl}/cable`;
 };

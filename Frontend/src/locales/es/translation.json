@@ -193,7 +193,8 @@
       "noAccount": "¿No tienes una cuenta?",
       "registerLink": "Regístrate aquí",
       "adminPortalPrefix": "¿Eres gerente de un restaurante?",
-      "adminPortalLink": "Acceso de Admin"
+      "adminPortalLink": "Acceso de Admin",
+      "singingIn":"Acceso Ino.........." 
     },
     "register": {
       "title": "Crear cuenta",

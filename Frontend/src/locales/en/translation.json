@@ -193,7 +193,8 @@
       "noAccount": "Don't have an account?",
       "registerLink": "Register here",
       "adminPortalPrefix": "Are you a restaurant manager?",
-      "adminPortalLink": "Admin Login"
+      "adminPortalLink": "Admin Login",
+      "singingIn":"Logging In.........."   
     },
     "register": {
       "title": "Create Account",
